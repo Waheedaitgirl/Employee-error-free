@@ -1,0 +1,19 @@
+export const AuthRoutes = {
+    SplashScreen:"SplashScreen",
+    WelcomeScreen:"WelcomeScreen",
+    SignInScreen:"SignInScreen",
+    SignUpScreen:"SignUpScreen",
+    ForgotPasswordScreen:"ForgotPasswordScreen"
+}
+
+export const MainRoutes = {
+    HomeScreen:"HomeScreen",
+    EditProfileScreen:"EditProfileScreen",
+    DetailsSheetScreen:"DetailsSheetScreen",
+    AddTimeSheetScreen:"AddTimeSheetScreen",
+    MyExpensesScreen:"MyExpensesScreen",
+    MyTasksScreen:"MyTasksScreen",
+    MyTimeScreen:"MyTimeScreen",
+    LeavesScreen:"LeavesScreen",
+    CalendarScreen:"CalendarScreen"
+}
