@@ -9,11 +9,10 @@ import Animated, {
 import DatePicker from 'react-native-date-picker'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { textStyles } from "../styles/textStyles";
-const CalenderInput = ({value,placeholder,errorMessage, onChangeText}) => {
+const CalenderInput = ({value,placeholder,errorMessage,labelColor=colors.text_primary_color,onChangeText}) => {
     const [open, setOpen] = useState(false)
     const [date, setDate] = useState(new Date())
     const getCurrentDate = (v)=>{
-
         var date = new Date(v).getDate();
         var month = new Date(v).getMonth() + 1;
         var year = new Date(v).getFullYear();
@@ -27,7 +26,7 @@ const CalenderInput = ({value,placeholder,errorMessage, onChangeText}) => {
                     entering={FadeInDown} 
                     exiting={FadeOutDown}
                   
-                    style={textStyles.Label}>
+                    style={{...textStyles.Label,color:labelColor}}>
                         {placeholder}
                 </Animated.Text>
             }
@@ -44,7 +43,7 @@ const CalenderInput = ({value,placeholder,errorMessage, onChangeText}) => {
                     value === "" 
                     ?  
                         <Text
-                            style={textStyles.smallheading}>
+                            style={{...textStyles.smallheading,color:labelColor}}>
                             {placeholder}
                         </Text>  
                     :  

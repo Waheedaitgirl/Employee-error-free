@@ -59,7 +59,7 @@ import { colors } from '../../constants/theme';
                 <Spacer />
                 
                 <CustomButton 
-                    onPress={() => navigation.navigate.goBack()}
+                    onPress={() => navigation.goBack()}
                     loading={false}
                     backgroundColor={colors.blue}
                     text={"Submit Timesheet"}
@@ -67,7 +67,7 @@ import { colors } from '../../constants/theme';
                 />
                  <Spacer />
                  <CustomButton 
-                    onPress={() => navigation.navigate.goBack()}
+                    onPress={() => navigation.goBack()}
                     loading={false}
                     text={"Discard"}
                     loadingText={"Processing"}

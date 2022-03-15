@@ -4,13 +4,10 @@ import AuthStack from './AuthStack';
 import {NavigationContainer} from '@react-navigation/native';
 import {StatusBar} from 'react-native';
 import { colors } from '../constants/theme';
+import {useDispatch,useSelector} from 'react-redux';
 const MainApp = () => {
-    const [is_loggedin , setIsLoggedIn] = useState(false)
-    useEffect(() => {
-        setTimeout(() => {
-            setIsLoggedIn(true)
-        },1000)
-    })
+    const { is_logged_in} = useSelector(state => state.LoginReducer);
+    console.log(is_logged_in,"is_logged_inis_logged_in");
     return(
         <NavigationContainer>
             <StatusBar
@@ -18,7 +15,7 @@ const MainApp = () => {
                 barStyle={'dark-content'}
             />
             {
-                is_loggedin
+                is_logged_in
                 
                 ?
                     <MainStack />

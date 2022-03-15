@@ -1,9 +1,9 @@
 import React from "react";
 import { View } from "react-native";
 import { scale } from "react-native-size-matters";
-const Spacer = () => {
+const Spacer = ({height=scale(10)}) => {
     return(
-        <View style={{height:scale(10)}} />
+        <View style={{height:height}} />
     )
 }
 export default Spacer
