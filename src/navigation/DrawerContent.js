@@ -35,7 +35,7 @@ const DrawerContentt = ({ navigation, props }) => {
                         <Entypo name="edit" color={"#fff"} size={scale(20)} />
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity   
+                {/* <TouchableOpacity   
                     onPress={() => navigation.navigate(MainRoutes.HomeScreen)} 
                     style={styles.btnView}>
                     <View style={{width:scale(20), height:scale(20)}} >
@@ -46,10 +46,10 @@ const DrawerContentt = ({ navigation, props }) => {
                         />
                     </View>
                     <Text style={styles.textStyle}>Home</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
                 <TouchableOpacity   
-                    onPress={() => navigation.navigate(MainRoutes.MyTimeScreen)} 
+                    onPress={() => navigation.navigate(MainRoutes.HomeScreen)} 
                     style={styles.btnView}>
                     <View style={{width:scale(20), height:scale(20)}} >
                         <AntDesign 

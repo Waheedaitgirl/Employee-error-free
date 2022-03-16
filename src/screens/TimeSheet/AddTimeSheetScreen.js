@@ -27,7 +27,6 @@ import { AppScreenWidth } from '../../constants/sacling';
         }
         const [endDate, setEndDate] = useState("")
         const [startDate, setStartDate] = useState("")
-        const refInputs = useRef();
         const DraftSave = () => {
             setDraft(true)
             setTimeout(() =>{
@@ -76,19 +75,23 @@ import { AppScreenWidth } from '../../constants/sacling';
                     hours={item.hours}
                 />
 
-                <CalenderInput 
-                    placeholder={"Start Date"}
-                    value={startDate}
-                    errorMessage={""}
-                    onChangeText={(data) => setStartDate(data) }
-                />
-               
-                <CalenderInput 
-                    placeholder={"End Date"}
-                    value={endDate}
-                    errorMessage={errorMessage}
-                    onChangeText={(data) => getNumberofdays(data) }
-                />
+                <View style={{flexDirection:"row",width:AppScreenWidth, justifyContent:"space-between"}} >
+                    <CalenderInput 
+                        placeholder={"Start Date"}
+                        value={startDate}
+                        errorMessage={""}
+                        w={AppScreenWidth/2-scale(5)}
+                        onChangeText={(data) => setStartDate(data) }
+                    />
+                
+                    <CalenderInput 
+                        placeholder={"End Date"}
+                        value={endDate}
+                        errorMessage={""}
+                        w={AppScreenWidth/2-scale(5)}
+                        onChangeText={(data) => getNumberofdays(data) }
+                    />
+                </View>
                 <Spacer />
                 <UpLoadComponent />
                 <Spacer />

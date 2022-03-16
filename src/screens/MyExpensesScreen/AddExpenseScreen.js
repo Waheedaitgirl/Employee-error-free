@@ -2,7 +2,7 @@ import React,{useState} from 'react';
 import {View,Text,StyleSheet, ScrollView} from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo'
 import {NativeBaseProvider, Select, Icon } from "native-base";
-import { commonStyles, textStyles } from '../../styles';
+import { commonStyles,selectStyles, textStyles } from '../../styles';
 import CustomHeader from '../../components/CustomHeader';
 import AddExpensesItem from './AddExpensesItem';
 import { scale } from 'react-native-size-matters';
@@ -15,7 +15,7 @@ import CustomButton from '../../components/Button';
         const [startDate, setStartDate] = useState("")
         const [submit , setSubmit] = useState(false)
         const [draft, setDraft] = useState(false)
-       let item =  {
+        let item =  {
             "billtype":"Mark Bin",
             "company":"Staffing Manager",
             "name":"Hiring House",
@@ -59,32 +59,6 @@ import CustomButton from '../../components/Button';
             {id:2, name:"Dinner", value:"dinner"},
             {id:2, name:"BreakFast", value:"breakfast"},
             {id:2, name:"Transport", value:"transport"},
-            {id:1, name:"Food", value:"food"},
-            {id:2, name:"Lunch", value:"lunch"},
-            {id:2, name:"Dinner", value:"dinner"},
-            {id:2, name:"BreakFast", value:"breakfast"},
-            {id:2, name:"Transport", value:"transport"},
-            {id:1, name:"Food", value:"food"},
-            {id:2, name:"Lunch", value:"lunch"},
-            {id:2, name:"Dinner", value:"dinner"},
-            {id:2, name:"BreakFast", value:"breakfast"},
-            {id:2, name:"Transport", value:"transport"},
-            {id:1, name:"Food", value:"food"},
-            {id:2, name:"Lunch", value:"lunch"},
-            {id:2, name:"Dinner", value:"dinner"},
-            {id:2, name:"BreakFast", value:"breakfast"},
-            {id:2, name:"Transport", value:"transport"},
-            {id:1, name:"Food", value:"food"},
-            {id:2, name:"Lunch", value:"lunch"},
-            {id:2, name:"Dinner", value:"dinner"},
-            {id:2, name:"BreakFast", value:"breakfast"},
-            {id:2, name:"Transport", value:"transport"},
-            {id:1, name:"Food", value:"food"},
-            {id:2, name:"Lunch", value:"lunch"},
-            {id:2, name:"Dinner", value:"dinner"},
-            {id:2, name:"BreakFast", value:"breakfast"},
-            {id:2, name:"Transport", value:"transport"},
-
         ])
         const [selected_type,setselectedType] = useState(false)
         const DraftSave = () => {
@@ -129,31 +103,14 @@ import CustomButton from '../../components/Button';
                             <Select
                                 selectedValue={selected_type}
                                 width={AppScreenWidth}
-                                pt={0}
-                                pb={0}
-                                bg={"#fff"}
                                 placeholderTextColor={colors.text_primary_color}
                                 fontFamily={fonts.Regular}
-                                fontSize={scale(12)}
                                 maxHeight={"10"}
-                                ml={0}
-                                mr={0}
                                 accessibilityLabel="Please select type"
                                 placeholder="Please select  type"
-                                _item={{
-                                    pt:0,
-                                    pb:0,
-                                    fontWeight:"bold",
-                                    fontFamily:fonts.Bold,
-                                
-                                }}
-                                _selectedItem={{
-                                    bg:colors.dark_primary_color,
-                                    fontFamily:fonts.Bold,
-                                    color:"#fff",
-                                    endIcon: <Icon as={Entypo} name={"check"} size={scale(25)} color={colors.white}  />
-                                }}
-                            
+                                _item={selectStyles._item}
+                                _selectedItem={selectStyles._selectedItem}
+                                bg={"#fff"}
                                 onValueChange={(itemValue) => setselectedType(itemValue)}>
                                 {
                                     type.map((item, index) => {
@@ -181,31 +138,15 @@ import CustomButton from '../../components/Button';
                             <Select
                                 selectedValue={selected_expense_type}
                                 width={AppScreenWidth}
-                                pt={0}
-                                pb={0}
                                 bg={"#fff"}
                                 placeholderTextColor={colors.text_primary_color}
                                 fontFamily={fonts.Regular}
                                 fontSize={scale(12)}
                                 maxHeight={"10"}
-                                ml={0}
-                                mr={0}
                                 accessibilityLabel="Please select type"
                                 placeholder="Please select  type"
-                                _item={{
-                                    pt:0,
-                                    pb:0,
-                                    fontWeight:"bold",
-                                    fontFamily:fonts.Bold,
-                                
-                                }}
-                                _selectedItem={{
-                                    bg:colors.dark_primary_color,
-                                    fontFamily:fonts.Bold,
-                                    color:"#fff",
-                                    endIcon: <Icon as={Entypo} name={"check"} size={scale(25)} color={colors.white}  />
-                                }}
-                            
+                                _item={selectStyles._item}
+                                _selectedItem={selectStyles._selectedItem}
                                 onValueChange={(itemValue) => setselectedExpenseType(itemValue)}>
                                 {
                                     expensetype.map((item, index) => {
@@ -226,30 +167,16 @@ import CustomButton from '../../components/Button';
                             <Select
                                 selectedValue={selected_category_type}
                                 width={AppScreenWidth}
-                                pt={0}
-                                pb={0}
-                                bg={"#fff"}
+                               
                                 placeholderTextColor={colors.text_primary_color}
                                 fontFamily={fonts.Regular}
                                 fontSize={scale(12)}
                                 maxHeight={"10"}
-                                ml={0}
-                                mr={0}
+                                bg={"#fff"}
                                 accessibilityLabel="Please select Category"
                                 placeholder="Please select  Category"
-                                _item={{
-                                    pt:0,
-                                    pb:0,
-                                    fontWeight:"bold",
-                                    fontFamily:fonts.Bold,
-                                
-                                }}
-                                _selectedItem={{
-                                    bg:colors.dark_primary_color,
-                                    fontFamily:fonts.Bold,
-                                    color:"#fff",
-                                    endIcon: <Icon as={Entypo} name={"check"} size={scale(25)} color={colors.white}  />
-                                }}
+                                _item={selectStyles._item}
+                                _selectedItem={selectStyles._selectedItem}
                             
                                 onValueChange={(itemValue) => setselectedCategoryType(itemValue)}>
                                 {
@@ -271,32 +198,17 @@ import CustomButton from '../../components/Button';
                             <Select
                                 selectedValue={selected_bill_type}
                                 width={AppScreenWidth}
-                                pt={0}
-                                pb={0}
                                 bg={"#fff"}
                                 placeholderTextColor={colors.text_primary_color}
                                 color={colors.text_primary_color}
                                 fontFamily={fonts.Regular}
                                 fontSize={scale(12)}
                                 maxHeight={"10"}
-                                ml={0}
-                                mr={0}
+                               
                                 accessibilityLabel="Please select type"
                                 placeholder="Please select  type"
-                                _item={{
-                                    pt:0,
-                                    pb:0,
-                                    fontWeight:"bold",
-                                    fontFamily:fonts.Bold,
-                                
-                                }}
-                                _selectedItem={{
-                                    bg:colors.dark_primary_color,
-                                    fontFamily:fonts.Bold,
-                                    color:"#fff",
-                                    endIcon: <Icon as={Entypo} name={"check"} size={scale(25)} color={colors.white}  />
-                                }}
-                            
+                                _item={selectStyles._item}
+                                _selectedItem={selectStyles._selectedItem}
                                 onValueChange={(itemValue) => setselectedBillType(itemValue)}>
                                 {
                                     billtype.map((item, index) => {

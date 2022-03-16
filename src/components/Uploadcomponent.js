@@ -2,12 +2,7 @@ import React from "react";
 import { View,TouchableOpacity,Text } from "react-native";
 import { scale } from "react-native-size-matters";
 import ImagePicker from 'react-native-image-crop-picker';
-import DocumentPicker, {
-    DirectoryPickerResponse,
-    DocumentPickerResponse,
-    isInProgress,
-    types,
-  } from 'react-native-document-picker'
+import DocumentPicker from 'react-native-document-picker'
 import { AppScreenWidth } from "../constants/sacling";
 import Cloud from '../assets/images/clouds.svg'
 import Camera from '../assets/images/camera.svg'
