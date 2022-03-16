@@ -4,11 +4,12 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import CalenderInput from '../../components/CalenderInput';
 import { commonStyles } from '../../styles';
 import data from './data.json'
-import CustomHeader from './Header';
+import CustomHeader from '../../components/SearchHeader';
 import ExpansesItem from './ExpansesCard';
 import { scale } from 'react-native-size-matters';
 import { colors } from '../../constants/theme';
 import { MainRoutes } from '../../constants/routes';
+import { AppScreenWidth } from '../../constants/sacling';
     const AllExpenseScreen = ({navigation}) => {
         const [endDate, setEndDate] = useState("")
         const [startDate, setStartDate] = useState("")
@@ -31,19 +32,23 @@ import { MainRoutes } from '../../constants/routes';
                     onPress={() => navigation.openDrawer()}
                     title={"All Expenses"}
                 />
-               <CalenderInput 
-                    placeholder={"Start Date"}
-                    value={startDate}
-                    errorMessage={""}
-                    onChangeText={(data) => setStartDate(data) }
-                />
-               
-                <CalenderInput 
-                    placeholder={"End Date"}
-                    value={endDate}
-                    errorMessage={""}
-                    onChangeText={(data) => setEndDate(data) }
-                />
+                <View style={{flexDirection:"row",width:AppScreenWidth, justifyContent:"space-between"}} >
+                    <CalenderInput 
+                        placeholder={"Start Date"}
+                        value={startDate}
+                        errorMessage={""}
+                        w={AppScreenWidth/2-scale(5)}
+                        onChangeText={(data) => setStartDate(data) }
+                    />
+                
+                    <CalenderInput 
+                        placeholder={"End Date"}
+                        value={endDate}
+                        errorMessage={""}
+                        w={AppScreenWidth/2-scale(5)}
+                        onChangeText={(data) => setEndDate(data) }
+                    />
+                </View>
               <FlatList 
                     showsVerticalScrollIndicator={false}
                     data={data}

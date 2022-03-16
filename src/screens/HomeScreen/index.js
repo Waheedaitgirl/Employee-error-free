@@ -5,10 +5,11 @@ import { scale } from 'react-native-size-matters';
 import { commonStyles,textStyles } from '../../styles';
 import TimeSheetItem from './TimeSheetItem'
 import CalenderInput from '../../components/CalenderInput';
-import CustomHeader from './Header';
+import CustomHeader from '../../components/SearchHeader';
 import { MainRoutes } from '../../constants/routes';
 import data from './data.json'
 import { colors } from '../../constants/theme';
+import { AppScreenWidth } from '../../constants/sacling';
            
     const HomeScreen = ({navigation}) => {
         const [endDate, setEndDate] = useState("")
@@ -34,19 +35,23 @@ import { colors } from '../../constants/theme';
                     onPress={() => navigation.openDrawer()}
                     title={"Time Sheet"}
                 />
-                <CalenderInput 
-                    placeholder={"Start Date"}
-                    value={startDate}
-                    errorMessage={""}
-                    onChangeText={(data) => setStartDate(data) }
-                />
-               
-                <CalenderInput 
-                    placeholder={"End Date"}
-                    value={endDate}
-                    errorMessage={""}
-                    onChangeText={(data) => setEndDate(data) }
-                />
+                <View style={{flexDirection:"row",width:AppScreenWidth, justifyContent:"space-between"}} >
+                    <CalenderInput 
+                        placeholder={"Start Date"}
+                        value={startDate}
+                        errorMessage={""}
+                        w={AppScreenWidth/2-scale(5)}
+                        onChangeText={(data) => setStartDate(data) }
+                    />
+                
+                    <CalenderInput 
+                        placeholder={"End Date"}
+                        value={endDate}
+                        errorMessage={""}
+                        w={AppScreenWidth/2-scale(5)}
+                        onChangeText={(data) => setEndDate(data) }
+                    />
+                </View>
                 <FlatList 
                     showsVerticalScrollIndicator={false}
                     data={data}

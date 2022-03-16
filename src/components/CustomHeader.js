@@ -1,15 +1,15 @@
 import React from 'react';
-import {View, Text,TouchableOpacity, Platform, Dimensions, StyleSheet} from 'react-native';
+import {View, Text,TouchableOpacity} from 'react-native';
 import Entypo from  'react-native-vector-icons/Entypo'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { colors, fonts } from '../constants/theme';
-import { scale, verticalScale } from 'react-native-size-matters';
-import { width } from '../constants/sacling';
+import { scale } from 'react-native-size-matters';
+import { commonStyles } from '../styles/commonStyles';
 const CustomHeader = ({isdrawer, show_backButton,title,onPress}) => {
     return (
       <View
         style={{
-            ...styles.touchable_bg,
+            ...commonStyles.headerMianView,
             justifyContent:show_backButton ? 'space-between' : 'center',   
           }}>
         {
@@ -57,17 +57,5 @@ const CustomHeader = ({isdrawer, show_backButton,title,onPress}) => {
     );
   
 };
-const styles = StyleSheet.create({
-  touchable_bg: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems:"flex-end",
-    width:width,
-    position: 'relative',
-    height:verticalScale(55.75),
-    backgroundColor:colors.dark_primary_color,
-    paddingVertical: verticalScale(10),
-  },
-});
 
 export default CustomHeader;

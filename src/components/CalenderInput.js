@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {View,Text,TouchableOpacity,StyleSheet, TextInput} from 'react-native'
+import {View,Text,TouchableOpacity,StyleSheet} from 'react-native'
 import { scale, verticalScale } from "react-native-size-matters";
 import { AppScreenWidth, width } from "../constants/sacling";
 import { colors, fonts } from "../constants/theme";
@@ -9,7 +9,7 @@ import Animated, {
 import DatePicker from 'react-native-date-picker'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { textStyles } from "../styles/textStyles";
-const CalenderInput = ({value,placeholder,errorMessage,labelColor=colors.text_primary_color,onChangeText}) => {
+const CalenderInput = ({value,w=width-scale(20), placeholder,errorMessage,labelColor=colors.text_primary_color,onChangeText}) => {
     const [open, setOpen] = useState(false)
     const [date, setDate] = useState(new Date())
     const getCurrentDate = (v)=>{
@@ -19,7 +19,7 @@ const CalenderInput = ({value,placeholder,errorMessage,labelColor=colors.text_pr
         return date + '-' + month + '-' + year;//format: dd-mm-yyyy;
   }
     return (
-        <View style={styles.mainView} >
+        <View style={{...styles.mainView,width:w}} >
             { 
                 value !== "" && 
                 <Animated.Text 
@@ -33,8 +33,7 @@ const CalenderInput = ({value,placeholder,errorMessage,labelColor=colors.text_pr
             <View 
                 style={{
                     flexDirection:"row", 
-                    width:AppScreenWidth-scale(20), 
-                   
+                    width:w-scale(20), 
                     alignItems:"center",
                     justifyContent:"space-between",
                     backgroundColor:"rgba(0,0,0,0)"

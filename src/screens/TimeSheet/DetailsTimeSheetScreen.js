@@ -14,6 +14,7 @@ import UpLoadComponent from '../../components/Uploadcomponent';
 import { colors } from '../../constants/theme';
     const DetailsSheetScreen = ({navigation, route}) => {
        let item = route.params.item
+      
        let summary = [
            "Mar 14", "Mar 15", "Mar 16", "Mar 17", "Mar 18", "Mar 19", "Mar 20"]
         return (
@@ -35,7 +36,10 @@ import { colors } from '../../constants/theme';
                     onPress={() => {}}
                 />
                 <WeeklySummary summerydays={summary} />
-                <UpLoadComponent />
+                {
+                    item.status == 'drafted' &&
+                        <UpLoadComponent /> 
+                }
                 <View style={{width:AppScreenWidth}} >
                     <Text style={{...textStyles.smallheading,color:"#0090FF"}}>Comments</Text>
                     <DrawLine marginTop={scale(5)} />
@@ -57,21 +61,33 @@ import { colors } from '../../constants/theme';
                     />
                 </View>
                 <Spacer />
-                
-                <CustomButton 
-                    onPress={() => navigation.goBack()}
-                    loading={false}
-                    backgroundColor={colors.blue}
-                    text={"Submit Timesheet"}
-                    loadingText={"Processing"}
-                />
-                 <Spacer />
-                 <CustomButton 
-                    onPress={() => navigation.goBack()}
-                    loading={false}
-                    text={"Discard"}
-                    loadingText={"Processing"}
-                />
+                {
+                    item.status == 'drafted' ?
+                    <View>
+                        <CustomButton 
+                            onPress={() => navigation.goBack()}
+                            loading={false}
+                            backgroundColor={colors.blue}
+                            text={"Submit Timesheet"}
+                            loadingText={"Processing"}
+                        />
+                        <Spacer />
+                        <CustomButton 
+                            onPress={() => navigation.goBack()}
+                            loading={false}
+                            text={"Discard"}
+                            loadingText={"Processing"}
+                        />
+                    </View>
+                    :
+                    <CustomButton 
+                        onPress={() => navigation.goBack()}
+                        loading={false}
+                        backgroundColor={colors.blue}
+                        text={"Back"}
+                        loadingText={"Processing"}
+                    />
+                }
             </View>
         );
     };
