@@ -5,6 +5,7 @@ import HomeScreen from '../screens/HomeScreen/index';
 import EditProfileScreen from '../screens/EditProfileScreen'
 
 // TimeSheet
+import TimeSheetListScreen from '../screens/TimeSheet';
 import AddTimeSheetScreen from '../screens/TimeSheet/AddTimeSheetScreen';
 import DetailsSheetScreen from '../screens/TimeSheet/DetailsTimeSheetScreen';
 
@@ -41,7 +42,14 @@ const MainStack = () => {
                     headerShown:false
                 }}
             />
-
+            
+            <Stack.Screen 
+                name="TimeSheetListScreen" 
+                component={TimeSheetListScreen} 
+                options={{
+                    headerShown:false
+                }}
+            />
             <Stack.Screen 
                 name="DetailsSheetScreen" 
                 component={DetailsSheetScreen} 

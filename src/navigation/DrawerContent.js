@@ -3,10 +3,10 @@ import { colors, fonts } from "../constants/theme";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import { scale } from "react-native-size-matters";
 import LEAVE from '../assets/images/Leave.svg'
 import Entypo from 'react-native-vector-icons/Entypo'
 import {MainRoutes} from '../constants/routes'
+import { scale } from "react-native-size-matters";
 const DrawerContentt = ({ navigation, props }) => {
     return (
         <View style={styles.MainContent}>
@@ -35,7 +35,7 @@ const DrawerContentt = ({ navigation, props }) => {
                         <Entypo name="edit" color={"#fff"} size={scale(20)} />
                     </TouchableOpacity>
                 </View>
-                {/* <TouchableOpacity   
+                <TouchableOpacity   
                     onPress={() => navigation.navigate(MainRoutes.HomeScreen)} 
                     style={styles.btnView}>
                     <View style={{width:scale(20), height:scale(20)}} >
@@ -46,10 +46,10 @@ const DrawerContentt = ({ navigation, props }) => {
                         />
                     </View>
                     <Text style={styles.textStyle}>Home</Text>
-                </TouchableOpacity> */}
+                </TouchableOpacity>
 
                 <TouchableOpacity   
-                    onPress={() => navigation.navigate(MainRoutes.HomeScreen)} 
+                    onPress={() => navigation.navigate(MainRoutes.TimeSheetListScreen)} 
                     style={styles.btnView}>
                     <View style={{width:scale(20), height:scale(20)}} >
                         <AntDesign 

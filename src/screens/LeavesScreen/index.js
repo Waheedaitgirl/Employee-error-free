@@ -88,23 +88,7 @@ const _maxDate = moment().add(100, 'days').format(_format)
                         onDayPress={onDaySelect}
                         markedDates={_markedDates}
                     />
-                    {/* <View style={styles.dateView} >
-                        <CalenderInput 
-                            placeholder={"Start Date"}
-                            value={startDate}
-                            errorMessage={""}
-                            w={AppScreenWidth/2-scale(5)}
-                            onChangeText={(data) => setStartDate(data) }
-                        />
-                    
-                        <CalenderInput 
-                            placeholder={"End Date"}
-                            value={endDate}
-                            errorMessage={""}
-                            w={AppScreenWidth/2-scale(5)}
-                            onChangeText={(data) => setEndDate(data) }
-                        />
-                    </View> */}
+                   
                     <Spacer />
                     <View>
                         <Text
@@ -182,6 +166,7 @@ const styles = StyleSheet.create({
         paddingHorizontal:scale(20), 
         paddingVertical:scale(10),
         position:"absolute",
+        backgroundColor:"#fff",
         bottom:0
     },
     row:{

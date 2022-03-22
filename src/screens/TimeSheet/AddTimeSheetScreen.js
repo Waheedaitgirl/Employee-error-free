@@ -45,18 +45,23 @@ import { AppScreenWidth } from '../../constants/sacling';
             var dates = [];
             var currDate = moment(startDate).startOf('day');
             var lastDate = moment(date).startOf('day');
-            if(currDate.isBefore(lastDate)){
-                currDate  = currDate.add(-1, "days")
-                while(currDate.add(1, 'days').diff(lastDate) < 0) {
-                    dates.push(`${currDate.format("MMM")}`+" "+`0${currDate.clone().toDate().getDate()}`.slice(-2));
+           
+            if(currDate.isSameOrBefore(lastDate)){
+                while(currDate.diff(lastDate) < 1) {
+                    dates.push({date:`${currDate.format("MMM")}`+" "+`0${currDate.clone().toDate().getDate()}`.slice(-2), hours:null} );
+                    currDate  = currDate.add(1, "days")
                 }
                 setSummaryDays(dates)
                 setErrorMessage("")
             }else{
+                setSummaryDays([])
                 setErrorMessage("End date must be grater then start date")
             }
-            
-        
+        }
+        const FunsetHours = (index, text) => {
+            let temparray = [...summerydays]
+            temparray[index].hours =  text
+            setSummaryDays(temparray)
         }
         return (
             <View style={commonStyles.container} >
@@ -67,7 +72,7 @@ import { AppScreenWidth } from '../../constants/sacling';
                     title={"Add TimeSheet"}
                 />
                <ScrollView contentContainerStyle={{paddingBottom:scale(100)}} >
-               <TimeSheetItem 
+                <TimeSheetItem 
                     time={item.time} 
                     name={item.name}
                     submittedto={item.submittedto}
@@ -97,7 +102,11 @@ import { AppScreenWidth } from '../../constants/sacling';
                 <Spacer />
                 <DrawLine />
                 <Spacer />
-                <WeeklySummary summerydays={summerydays} />
+                <WeeklySummary 
+                    
+                    setHours={(index, text) => FunsetHours(index, text)}                
+                    summerydays={summerydays}
+                />    
                 <Spacer />
 
                

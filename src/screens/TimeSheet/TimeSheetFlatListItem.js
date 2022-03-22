@@ -6,7 +6,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { AppScreenWidth } from "../../constants/sacling"
-const TimeSheetItem = memo(({name, time, submittedto, status, hours,onPress}) => {
+
+const TimeSheetFlatListItem = memo(({name, time, submittedto, status, hours,onPress}) => {
     return(
         <TouchableOpacity 
             onPress={onPress}
@@ -66,11 +67,19 @@ const TimeSheetItem = memo(({name, time, submittedto, status, hours,onPress}) =>
                 </View>
                 <Text style={styles.textStyle}>{hours}</Text>
             </View>
+            <View style={styles.buttonView} >
+                <TouchableOpacity style={{...styles.actionButton}} >
+                    <MaterialCommunityIcons name="clock-edit" color={colors.dark_primary_color} size={scale(22)} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.actionButton}>
+                    <MaterialCommunityIcons name="delete" color={'#ff2e2e'} size={scale(22)} />
+                </TouchableOpacity>
+            </View>
         </TouchableOpacity>
     )
 })
 
-export default TimeSheetItem
+export default TimeSheetFlatListItem
 
 const styles = StyleSheet.create({
     mainView:{
@@ -93,4 +102,21 @@ const styles = StyleSheet.create({
         fontFamily:fonts.Medium,
         color: colors.text_primary_color
     },
+    buttonView:{
+        position:"absolute",
+        bottom:scale(5),
+        right:scale(5),
+        height:scale(30),
+        borderWidth:0,
+        borderColor:colors.text_primary_color,
+        borderRadius:5,
+        justifyContent:"space-between",
+        flexDirection:"row"
+    },
+    actionButton:{
+        height:scale(30)-2, 
+        paddingHorizontal:scale(5), 
+        alignItems:"center", 
+        justifyContent:"center"
+    }
 })

@@ -22,32 +22,49 @@ import {colors} from '../../constants/theme';
 import GOOGLE from '../../assets/images/google.svg';
 import CustomHeader from '../../components/CustomHeader';
 import MICROSOFT from '../../assets/images/microsoft.svg';
+import { candidateLogin } from '../../api';
 const SignInScreen = ({navigation}) => {
-  const [username, setUsername] = useState('engr.aftabufaq@gmail.com');
-  const [usernameErrorMesage, setUsernameErrorMessaage] = useState('');
+  const [email_address, setUseremail] = useState('dr.aftabufaq@gmail.com');
+  const [UseremailErrorMesage, setUseremailErrorMessaage] = useState('');
   const [password, setPassword] = useState('123456');
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const  userLogin = () => dispatch(Login({id:2, token:"authtoken",name:"Aftab"}))
+  const  userLogin = (data) => dispatch(Login(data))
   const submitdate = () => {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    if (!reg.test(username)) {
-      setUsernameErrorMessaage('Please enter valid email');
+    if (!reg.test(email_address)) {
+      setUseremailErrorMessaage('Please enter valid email');
       setPasswordErrorMessage('');
       return;
     }
     if (password.trim().length < 4) {
-      setUsernameErrorMessaage('');
+      setUseremailErrorMessaage('');
       setPasswordErrorMessage('Please enter password at least 4 characters');
       return;
     }
     setLoading(true);
     setPasswordErrorMessage('');
-    setUsernameErrorMessaage('');
-    setTimeout(() => {
-      userLogin()
-    }, 2000);
+    setUseremailErrorMessaage('');
+    let data ={
+      email_address:email_address,
+      userpassword:password
+    }
+    candidateLogin(data).then((response) => {
+      setLoading(false);
+        if(response.status == 200){
+          if(response.data.status){
+            userLogin(response.data)
+          }else{
+            alert("Invalid crenditlas")
+          }
+        }else{
+          alert("error")
+        }
+    }).catch((err) => {
+      setLoading(false);
+      console.log(err);
+    })
   };
   return (
     <View style={commonStyles.container}>
@@ -68,9 +85,9 @@ const SignInScreen = ({navigation}) => {
         />
         <CustomTextInput
           placeholder={'Email Address'}
-          value={username}
-          onChangeText={text => setUsername(text)}
-          errorMessage={usernameErrorMesage}
+          value={email_address}
+          onChangeText={text => setUseremail(text)}
+          errorMessage={UseremailErrorMesage}
         />
         <CustomTextInput
           placeholder={'Password'}

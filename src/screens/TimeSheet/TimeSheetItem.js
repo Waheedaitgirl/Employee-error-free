@@ -47,6 +47,7 @@ const TimeSheetItem = memo(({name, time, submittedto, status, hours}) => {
                 </View>
                 <Text style={styles.textStyle}>{hours}</Text>
             </View>
+           
         </TouchableOpacity>
     )
 })
@@ -64,7 +65,6 @@ const styles = StyleSheet.create({
         borderRadius:scale(10)
     },
     btnView: {
-      
         marginBottom:scale(12),
         flexDirection: 'row',
         alignItems:"center"
@@ -74,4 +74,21 @@ const styles = StyleSheet.create({
         fontFamily:fonts.Medium,
         color: colors.text_primary_color
     },
+    buttonView:{
+        position:"absolute",
+        bottom:scale(5),
+        right:scale(5),
+        height:scale(30),
+        borderWidth:1,
+        borderColor:colors.text_primary_color,
+        borderRadius:5,
+        justifyContent:"space-between",
+        flexDirection:"row"
+    },
+    actionButton:{
+        height:scale(30)-2, 
+        paddingHorizontal:10, 
+        alignItems:"center", 
+        justifyContent:"center"
+    }
 })

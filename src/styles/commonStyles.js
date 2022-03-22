@@ -6,7 +6,7 @@ import { colors, fonts } from "../constants/theme";
 export const commonStyles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor:"#0000",
+        backgroundColor:"#fff",
         alignItems:"center"
     },
     headerMianView: {

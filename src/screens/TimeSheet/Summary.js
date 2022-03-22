@@ -5,7 +5,7 @@ import { AppScreenWidth } from "../../constants/sacling";
 import { fonts } from "../../constants/theme";
 import { textStyles } from "../../styles/textStyles";
 import TimeInput from "./TimeInput";
-const WeeklySummary = ({summerydays}) => {
+const WeeklySummary = ({summerydays, setHours}) => {
     const [value , setValue] = useState("")
     return(
         <View style={styles.mainview}>
@@ -15,9 +15,9 @@ const WeeklySummary = ({summerydays}) => {
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item, index) => index.toString()}
-                    renderItem={({item, idex}) => {
+                    renderItem={({item, index}) => {
                         return(
-                           <TimeInput item={item} />
+                           <TimeInput item={item} index={index} setHours={setHours} />
                         )
                     }}
                 />
