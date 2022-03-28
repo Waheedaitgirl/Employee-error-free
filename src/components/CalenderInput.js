@@ -80,7 +80,7 @@ const CalenderInput = ({value,w=width-scale(20), placeholder,errorMessage,labelC
             }
             <DatePicker
                 modal
-                androidVariant={"iosClone"}
+                androidVariant={"nativeAndroid"}
                 open={open}
                 date={date}
                 mode={"date"}

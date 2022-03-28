@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { useSelector } from 'react-redux';
 const service = axios.create({
-  baseURL:'http://3d95-203-82-55-110.ngrok.io/',
+  baseURL:'https://6351-203-82-55-110.ngrok.io/',
   timeout: 50000, // request timeout
 });
 

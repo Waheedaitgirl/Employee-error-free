@@ -38,9 +38,9 @@ export function asddTimeSheet(data){
     });
 }
 
-export function timeSheetDetailsById(timesheet_id){
+export function timeSheetDetailsById(timesheet_id,account_id){
     return request({
-        url: `timesheet/${timesheet_id}`,
+        url: `timesheet?account_id=${account_id}&time_sheet_id=${timesheet_id}&type=timesheet_details`,
         method: 'get',
     });
 }

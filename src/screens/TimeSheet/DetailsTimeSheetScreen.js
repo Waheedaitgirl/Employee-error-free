@@ -1,5 +1,5 @@
-import React from 'react';
-import { SafeAreaView,View,StyleSheet,Text} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { ActivityIndicator,View,StyleSheet,Text} from 'react-native';
 import { commonStyles,textStyles } from '../../styles';
 import CustomButton from '../../components/Button';
 import CustomHeader from '../../components/CustomHeader';
@@ -12,11 +12,43 @@ import DrawLine from '../../components/DrawLine';
 import WeeklySummary from './Summary';
 import UpLoadComponent from '../../components/Uploadcomponent';
 import { colors } from '../../constants/theme';
+import { useSelector } from 'react-redux';
+import { timeSheetDetailsById } from '../../api';
     const DetailsSheetScreen = ({navigation, route}) => {
-       let item = route.params.item
-      
-       let summary = [
-           "Mar 14", "Mar 15", "Mar 16", "Mar 17", "Mar 18", "Mar 19", "Mar 20"]
+        const {user} =  useSelector(state => state.LoginReducer)
+        const [loading , setLoading] = useState(true)
+        const [time_sheet_details , setTimeSheetDetails] = useState(null) 
+        const [logs , setLogs] = useState([])
+        let item = route.params.item
+        const status = item.module_status_name
+        useEffect(() => {
+            timeSheetDetailsById(item.time_sheet_id,user.account_id).then((response) => {
+                if(response.status === 200){
+                   
+                    setTimeSheetDetails(response.data.data)
+                    setLogs(response.data.logs)
+                    setLoading(false)
+                }else{
+                    console.log("errr", response.status);
+                }
+           }).catch((err) => {
+               console.log(err);
+           })
+        },[])
+        if(loading || time_sheet_details === null ){
+            return(
+                <View style={commonStyles.container} >
+                    <CustomHeader 
+                        show_backButton={true}
+                        isdrawer={false}
+                        onPress={() => navigation.goBack()}
+                        title={"Details TimeSheet"}
+                    />
+                    <Spacer height={AppScreenWidth} />
+                    <ActivityIndicator size={"large"} color={colors.dark_primary_color} />
+                </View>
+            )
+        }
         return (
             <View style={commonStyles.container} >
                 <CustomHeader 
@@ -28,17 +60,21 @@ import { colors } from '../../constants/theme';
               
                
                 <TimeSheetItem 
-                    time={item.time} 
-                    name={item.name}
-                    submittedto={item.submittedto}
-                    status={item.status}
-                    hours={item.hours}
+                    time={`${item.time_sheet_view} Starts At ${item.log_date}`} 
+                    name={`${item.job_title} - ${time_sheet_details?.company_name}`}
+                    submittedto={`Time Approver Manager - ${item?.approver_name}`}
+                    contactname={`Contact Manager - ${time_sheet_details?.contact_name}`}
+                    status={item.module_status_name}
+                    status_style={item.status_colour_code}
+                  
                     onPress={() => {}}
                 />
-                <WeeklySummary summerydays={summary} />
+                    <WeeklySummary 
+                        editable={status === 'Draft'?true:false}
+                        summerydays={logs} 
+                    />
                 {
-                    item.status == 'drafted' &&
-                        <UpLoadComponent /> 
+                    status === 'Draft' && <UpLoadComponent /> 
                 }
                 <View style={{width:AppScreenWidth}} >
                     <Text style={{...textStyles.smallheading,color:"#0090FF"}}>Comments</Text>
@@ -47,22 +83,22 @@ import { colors } from '../../constants/theme';
                     <CommentsBox 
                         title={"Approver Comment"}
                         name={"Approver"}
-                        comment={"this is comment by approver"}
+                        comment={time_sheet_details.approver_comments}
                     />
                     <CommentsBox 
                         title={"Submitter Comment"}
-                        name={"Submitter"}
+                        name={time_sheet_details.comments}
                         comment={null}
                     />
 
                     <CommentsBox 
                         title={"Document Attached"}
-                        comment={null}
+                        comment={time_sheet_details.document_title}
                     />
                 </View>
                 <Spacer />
                 {
-                    item.status == 'drafted' ?
+                    status === 'Draft' ?
                     <View>
                         <CustomButton 
                             onPress={() => navigation.goBack()}

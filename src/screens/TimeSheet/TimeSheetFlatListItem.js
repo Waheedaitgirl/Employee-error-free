@@ -1,14 +1,21 @@
 import React, {memo} from "react"
 import { View,Text, StyleSheet, TouchableOpacity } from "react-native"
-import { scale } from "react-native-size-matters"
+import { scale, verticalScale } from "react-native-size-matters"
 import { colors, fonts } from "../../constants/theme"
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Manager from '../../assets/images/Manager.svg'
+import Job from '../../assets/images/job.svg'
 import { AppScreenWidth } from "../../constants/sacling"
-
-const TimeSheetFlatListItem = memo(({name, time, submittedto, status, hours,onPress}) => {
-    return(
+import transform from 'css-to-react-native';
+const TimeSheetFlatListItem = memo(({name, time, submittedto,status_style, status, hours,onPress}) => {
+    let arr = (status_style.split(";"))
+    const ss = transform([
+                [arr[0].split(":")[0].trim(),arr[0].split(":")[1].trim()],
+                [arr[1].split(":")[0].trim(),arr[1].split(":")[1].trim()],
+                [arr[2].split(":")[0].trim(),arr[2].split(":")[1].trim()]
+            ])
+   return(
         <TouchableOpacity 
             onPress={onPress}
             style={styles.mainView}>
@@ -26,22 +33,14 @@ const TimeSheetFlatListItem = memo(({name, time, submittedto, status, hours,onPr
             <View   
                 style={styles.btnView}>
                 <View style={{width:scale(20), height:scale(20)}} >
-                    <Ionicons 
-                        name="md-person-sharp" 
-                        color={colors.dark_primary_color} 
-                        size={scale(18)} 
-                    />
+                    <Job width={scale(20)} height={scale(20)} />
                 </View>
                 <Text style={styles.textStyle}>{name}</Text>
             </View>
             <View   
                 style={styles.btnView}>
                 <View style={{width:scale(20), height:scale(20)}} >
-                    <MaterialCommunityIcons 
-                        name="account-supervisor" 
-                        color={colors.dark_primary_color} 
-                        size={scale(18)} 
-                    />
+                    <Manager width={scale(20)} height={scale(20)} />
                 </View>
                 <Text style={styles.textStyle}>{submittedto}</Text>
             </View>
@@ -54,7 +53,7 @@ const TimeSheetFlatListItem = memo(({name, time, submittedto, status, hours,onPr
                         size={scale(18)} 
                     />
                 </View>
-                <Text style={styles.textStyle}>{status}</Text>
+                <Text style={[styles.textStyle,ss,{paddingHorizontal:10, paddingVertical:2,borderRadius:5,}]}>{status}</Text>
             </View>
             <View   
                 style={styles.btnView}>
@@ -67,14 +66,20 @@ const TimeSheetFlatListItem = memo(({name, time, submittedto, status, hours,onPr
                 </View>
                 <Text style={styles.textStyle}>{hours}</Text>
             </View>
-            <View style={styles.buttonView} >
-                <TouchableOpacity style={{...styles.actionButton}} >
-                    <MaterialCommunityIcons name="clock-edit" color={colors.dark_primary_color} size={scale(22)} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButton}>
-                    <MaterialCommunityIcons name="delete" color={'#ff2e2e'} size={scale(22)} />
-                </TouchableOpacity>
-            </View>
+         {
+            status !== "Approved" &&
+                <View style={styles.buttonView} >
+                    { 
+                        status !== "Submitted" && 
+                            <TouchableOpacity style={{...styles.actionButton}} >
+                                <MaterialCommunityIcons name="clock-edit" color={colors.dark_primary_color} size={scale(22)} />
+                            </TouchableOpacity>
+                    }
+                    <TouchableOpacity style={styles.actionButton}>
+                        <MaterialCommunityIcons name="delete" color={'#ff2e2e'} size={scale(22)} />
+                    </TouchableOpacity>
+                </View>
+        }
         </TouchableOpacity>
     )
 })
@@ -83,9 +88,11 @@ export default TimeSheetFlatListItem
 
 const styles = StyleSheet.create({
     mainView:{
-        width:AppScreenWidth, 
+        width:AppScreenWidth-scale(3), 
+        marginHorizontal:scale(1.5),
         alignSelf:"center",
         elevation:2,
+        height:verticalScale(160),
         backgroundColor:"#fefefe",
         marginVertical:scale(5),
         padding:scale(10),

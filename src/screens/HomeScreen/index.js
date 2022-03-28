@@ -68,7 +68,11 @@ import { AppScreenWidth, hp, width } from '../../constants/sacling';
                         <Text style={styles.textStyle}>Tasks</Text>
                     </TouchableOpacity>
                 </View>
-               <View style={styles.main2} />
+               <View style={styles.main2} >
+                    <Text style={styles.paragraph}>
+                        Copyright @{new Date().getFullYear()} RecruitBPM All Rights Reserved
+                    </Text>
+               </View>
             </View>
             
         );
@@ -90,11 +94,23 @@ const styles = StyleSheet.create({
     main2:{
         height:hp(10),
         width:width,
-        zIndex:-1,
+        zIndex:10,
         position:"absolute",
+        justifyContent:"center",
+        alignItems:"center",
+        paddingHorizontal:scale(5),
         bottom:scale(-10),
-        borderTopLeftRadius:hp(100),
-        borderTopRightRadius:hp(100),
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 12,
+        },
+        shadowOpacity: 0.58,
+        shadowRadius: 16.00,
+
+        elevation: 24,
+        borderTopLeftRadius:hp(5),
+        borderTopRightRadius:hp(5),
         backgroundColor:colors.dark_primary_color
     },
     headingtext:{

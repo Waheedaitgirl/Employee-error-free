@@ -1,13 +1,12 @@
 import React,{useState} from 'react';
-import {View,Text,StyleSheet, ScrollView} from 'react-native';
-import Entypo from 'react-native-vector-icons/Entypo'
-import {NativeBaseProvider, Select, Icon } from "native-base";
+import {View,Text,ScrollView} from 'react-native';
+import {NativeBaseProvider, Select } from "native-base";
 import { commonStyles,selectStyles, textStyles } from '../../styles';
 import CustomHeader from '../../components/CustomHeader';
 import AddExpensesItem from './AddExpensesItem';
 import { scale } from 'react-native-size-matters';
 import { colors, fonts } from '../../constants/theme';
-import { AppScreenWidth, width } from '../../constants/sacling';
+import { AppScreenWidth} from '../../constants/sacling';
 import Spacer from '../../components/Spacer';
 import CalenderInput from '../../components/CalenderInput';
 import CustomButton from '../../components/Button';

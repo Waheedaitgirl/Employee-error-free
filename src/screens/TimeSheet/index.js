@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList,View,StyleSheet,TouchableOpacity} from 'react-native';
+import { FlatList,View,StyleSheet,ActivityIndicator,TouchableOpacity} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import { scale } from 'react-native-size-matters';
+import { scale, verticalScale } from 'react-native-size-matters';
 import { commonStyles,textStyles } from '../../styles';
 import TimeSheetFlatListItem from './TimeSheetFlatListItem'
 import CalenderInput from '../../components/CalenderInput';
 import CustomHeader from '../../components/SearchHeader';
 import { MainRoutes } from '../../constants/routes';
-import data from './data.json'
 import { colors } from '../../constants/theme';
 import { AppScreenWidth } from '../../constants/sacling';
 import { useSelector } from 'react-redux';
 import { listTimeSheetByCandidateId } from '../../api';
+import Spacer from '../../components/Spacer';
     const TimeSheetListScreen = ({navigation}) => {
         const {user} = useSelector(state => state.LoginReducer)
-       
+        const [data, setData] = useState([])
         const [endDate, setEndDate] = useState("")
         const [startDate, setStartDate] = useState("")
-
+        const [loading, setLoading ] = useState(true)
         useEffect(() => {
             listTimeSheetByCandidateId(user.account_id, user.candidate_id)
             .then((response) => {
                 if(response.status == 200){
-                   console.log(response.data);
-                   
+                    setData(response.data.data);
+                    setLoading(false)
                 }else{
                     console.log("Some Error",response.status);
                 }
@@ -34,14 +34,33 @@ import { listTimeSheetByCandidateId } from '../../api';
 
         const renderItem = ({ item }) => (
             <TimeSheetFlatListItem 
-                time={item.time} 
-                name={item.name}
-                submittedto={item.submittedto}
-                status={item.status}
-                hours={item.hours}
+                time={`${item.time_sheet_view} Starts At ${item.log_date}`} 
+                name={item.job_title}
+                submittedto={item?.approver_name}
+                status={item.module_status_name}
+                status_style={item.status_colour_code}
+                hours={`${item.log_hours} Hours`}
                 onPress={() => navigation.navigate(MainRoutes.DetailsSheetScreen, {item})}
             />
           ); 
+          if(loading){
+
+            return(
+                <View style={commonStyles.container} >
+                    <CustomHeader 
+                        show_backButton={true}
+                        isdrawer={true}
+                        SearchPress={() => alert("Search Press")}
+                        NotificationPress={() => alert("NotificationPress")}
+                        FilterPress={(data) => alert(data)}
+                        onPress={() => navigation.openDrawer()}
+                        title={"Time Sheet"}
+                    />
+                    <Spacer height={verticalScale(100)} />
+                    <ActivityIndicator size={"large"} color={colors.dark_primary_color} />
+                </View>
+            )
+          }
         return (
             <View style={commonStyles.container} >
                 <CustomHeader 
@@ -78,6 +97,13 @@ import { listTimeSheetByCandidateId } from '../../api';
                     updateCellsBatchingPeriod={80}
                     initialNumToRender={20}
                     windowSize={35}
+                    getItemLayout={(data, index) => {
+                        return {
+                          length: verticalScale(100),
+                          offset: verticalScale(100) * data.length,
+                          index,
+                        }
+                    }}
                     keyExtractor={(item, index) => index.toString()}
                 />
                <TouchableOpacity 
@@ -87,7 +113,8 @@ import { listTimeSheetByCandidateId } from '../../api';
                         paddingHorizontal:scale(20), 
                         paddingVertical:scale(10),
                         position:"absolute",
-                        bottom:0
+                        right:scale(10),
+                        bottom:verticalScale(30)
                     }}>
                     <AntDesign name={"pluscircle"} size={scale(35)} color={colors.dark_primary_color} />
                </TouchableOpacity>
