@@ -5,19 +5,24 @@ import { AppScreenWidth } from "../../constants/sacling";
 import { fonts } from "../../constants/theme";
 import { textStyles } from "../../styles/textStyles";
 import TimeInput from "./TimeInput";
-const WeeklySummary = ({summerydays}) => {
+const WeeklySummary = ({summerydays,editable, setHours}) => {
     const [value , setValue] = useState("")
     return(
         <View style={styles.mainview}>
-            <Text style={{...textStyles.smallheading,backgroundColor:"#0000",alignSelf:"flex-start", textAlign:"left"}}>Enter Summary</Text>
+            <Text style={styles.text}>{editable?"Enter Summary":"Daily Summary"}</Text>
                 <FlatList 
                     data={summerydays}
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item, index) => index.toString()}
-                    renderItem={({item, idex}) => {
+                    renderItem={({item, index}) => {
                         return(
-                           <TimeInput item={item} />
+                           <TimeInput 
+                                item={item} 
+                                editable={editable} 
+                                index={index} 
+                                setHours={setHours} 
+                            />
                         )
                     }}
                 />
@@ -28,6 +33,12 @@ const WeeklySummary = ({summerydays}) => {
 export default WeeklySummary
 
 const styles = StyleSheet.create({
+    text:{
+        ...textStyles.smallheading,
+        backgroundColor:"#0000",
+        alignSelf:"flex-start", 
+        textAlign:"left"
+    },
     textinput:{
         backgroundColor:"rgba(0,0,0,.1)",
         paddingTop:0,

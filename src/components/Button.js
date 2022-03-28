@@ -1,12 +1,16 @@
 import React from "react";
 import {View, StyleSheet, Text ,ActivityIndicator, TouchableOpacity} from 'react-native'
 import { scale, verticalScale } from "react-native-size-matters";
-import { width } from "../constants/sacling";
+import { AppScreenWidth, width } from "../constants/sacling";
 import {colors, fonts} from '../constants/theme'
-const CustomButton = ({onPress, loading ,backgroundColor= colors.dark_primary_color, text, loadingText}) => {
+const CustomButton = ({onPress,width=AppScreenWidth, loading ,backgroundColor= colors.dark_primary_color, text, loadingText}) => {
     return(
     <TouchableOpacity
-        style={{...styles.button,backgroundColor:backgroundColor }}
+        style={{
+        ...styles.button,
+        width:width,
+        backgroundColor:backgroundColor
+    }}
         onPress={onPress}
         disabled={loading}
     >   

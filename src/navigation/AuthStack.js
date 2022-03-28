@@ -10,12 +10,15 @@ import { colors, fonts } from '../constants/theme';
 const Stack = createNativeStackNavigator();
 const options = { 
     title: 'Welcome',
+    
     headerStyle: {
         backgroundColor:colors.dark_primary_color,
     },
     headerTintColor:colors.text_primary_color,
         headerTitleStyle: {
             fontSize:scale(18),
+            color:colors.white,
+            
             fontFamily:fonts.Bold
         }, 
 }
@@ -37,7 +40,7 @@ const AuthStack = () => {
             <Stack.Screen 
                 name="SignInScreen" 
                 component={SignInScreen} 
-                options={{...options,headerBackVisible:false, headerTitleAlign:"center",  title:"Sign In"}}
+                options={{headerShown:false}}
             />
             <Stack.Screen 
                 name="SignUpScreen" 
@@ -47,7 +50,7 @@ const AuthStack = () => {
             <Stack.Screen 
                 name="ForgotPasswordScreen" 
                 component={ForgotPasswordScreen} 
-                options={{...options,headerBackVisible:false, headerTitleAlign:"center", title:"Forgot Password"}}
+                options={{headerShown:false}}
             />
 
         </Stack.Navigator>

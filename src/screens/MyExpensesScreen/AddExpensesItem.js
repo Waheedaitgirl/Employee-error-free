@@ -2,11 +2,13 @@ import React, {memo} from "react"
 import { View,Text, StyleSheet, TouchableOpacity } from "react-native"
 import { scale } from "react-native-size-matters"
 import { colors, fonts } from "../../constants/theme"
-import AntDesign from 'react-native-vector-icons/AntDesign'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { AppScreenWidth } from "../../constants/sacling"
-const TimeSheetItem = memo(({name, time, submittedto, status, hours,onPress}) => {
+import MPerson from '../../assets/images/mperson.svg'
+import Company from '../../assets/images/company.svg'
+import Person from '../../assets/images/person.svg'
+import Job from '../../assets/images/job.svg'
+import Status from '../../assets/images/status.svg'
+const AddExpensesItem = memo(({billtype, company, name,date, job, status=null,onPress}) => {
     return(
         <TouchableOpacity 
             onPress={onPress}
@@ -14,63 +16,53 @@ const TimeSheetItem = memo(({name, time, submittedto, status, hours,onPress}) =>
             <View   
                 style={styles.btnView}>
                 <View style={{width:scale(20), height:scale(20)}} >
-                    <AntDesign 
-                        name="clockcircle" 
-                        color={colors.dark_primary_color} 
-                        size={scale(18)} 
-                    />
+                    <MPerson width={scale(20)} height={scale(20)} />
                 </View>
-                <Text style={styles.textStyle}>{time}</Text>
+                <Text style={styles.textStyle}>{billtype}</Text>
             </View>
             <View   
                 style={styles.btnView}>
                 <View style={{width:scale(20), height:scale(20)}} >
-                    <Ionicons 
-                        name="md-person-sharp" 
-                        color={colors.dark_primary_color} 
-                        size={scale(18)} 
-                    />
+                    <Job width={scale(20)} height={scale(20)} />
+                </View>
+                <Text style={styles.textStyle}>{company}</Text>
+            </View>
+            <View   
+                style={styles.btnView}>
+                <View style={{width:scale(20), height:scale(20)}} >
+                    <Company width={scale(20)} height={scale(20)} />
                 </View>
                 <Text style={styles.textStyle}>{name}</Text>
             </View>
             <View   
                 style={styles.btnView}>
                 <View style={{width:scale(20), height:scale(20)}} >
-                    <MaterialCommunityIcons 
-                        name="account-supervisor" 
-                        color={colors.dark_primary_color} 
-                        size={scale(18)} 
-                    />
+                    <Person width={scale(20)} height={scale(20)} />
                 </View>
-                <Text style={styles.textStyle}>{submittedto}</Text>
+                <Text style={styles.textStyle}>{job}</Text>
             </View>
             <View   
                 style={styles.btnView}>
                 <View style={{width:scale(20), height:scale(20)}} >
-                    <MaterialCommunityIcons 
-                        name="lightning-bolt" 
-                        color={colors.dark_primary_color} 
-                        size={scale(18)} 
-                    />
+                    <Person width={scale(20)} height={scale(20)} />
                 </View>
-                <Text style={styles.textStyle}>{status}</Text>
+                <Text style={styles.textStyle}>{date}</Text>
             </View>
-            <View   
-                style={styles.btnView}>
-                <View style={{width:scale(20), height:scale(20)}} >
-                    <AntDesign 
-                        name="clockcircle" 
-                        color={colors.dark_primary_color} 
-                        size={scale(18)} 
-                    />
+            {
+                status !== null &&
+                <View  
+                    style={styles.btnView}>
+                    <View style={{width:scale(20), height:scale(20)}} >
+                        <Status width={scale(20)} height={scale(20)} />
+                    </View>
+                    <Text style={styles.textStyle}>{status}</Text>
                 </View>
-                <Text style={styles.textStyle}>{hours}</Text>
-            </View>
+            }
         </TouchableOpacity>
     )
 })
 
-export default TimeSheetItem
+export default AddExpensesItem
 
 const styles = StyleSheet.create({
     mainView:{

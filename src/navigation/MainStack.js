@@ -3,9 +3,17 @@ import { createNativeStackNavigator, } from '@react-navigation/native-stack';
 import {createDrawerNavigator} from '@react-navigation/drawer'
 import HomeScreen from '../screens/HomeScreen/index';
 import EditProfileScreen from '../screens/EditProfileScreen'
+
+// TimeSheet
+import TimeSheetListScreen from '../screens/TimeSheet';
 import AddTimeSheetScreen from '../screens/TimeSheet/AddTimeSheetScreen';
 import DetailsSheetScreen from '../screens/TimeSheet/DetailsTimeSheetScreen';
+
+// Expenses screen
 import MyExpensesScreen from '../screens/MyExpensesScreen';
+import ExpenseDetailsScreen from '../screens/MyExpensesScreen/ExpansesDetails';
+import AddExpenseScreen from '../screens/MyExpensesScreen/AddExpenseScreen';
+
 import MyTasksScreen from '../screens/MyTasksScreen';
 import MyTimeScreen from '../screens/MyTimeScreen';
 import LeavesScreen from '../screens/LeavesScreen';
@@ -34,7 +42,14 @@ const MainStack = () => {
                     headerShown:false
                 }}
             />
-
+            
+            <Stack.Screen 
+                name="TimeSheetListScreen" 
+                component={TimeSheetListScreen} 
+                options={{
+                    headerShown:false
+                }}
+            />
             <Stack.Screen 
                 name="DetailsSheetScreen" 
                 component={DetailsSheetScreen} 
@@ -57,6 +72,23 @@ const MainStack = () => {
                     headerShown:false
                 }}
             />
+            <Stack.Screen 
+                name="ExpenseDetailsScreen" 
+                component={ExpenseDetailsScreen} 
+                options={{
+                    headerShown:false
+                }}
+            />
+
+            <Stack.Screen 
+                name="AddExpenseScreen" 
+                component={AddExpenseScreen} 
+                options={{
+                    headerShown:false
+                }}
+            />
+
+
             <Stack.Screen 
                 name="MyTasksScreen" 
                 component={MyTasksScreen} 

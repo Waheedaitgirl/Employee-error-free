@@ -1,26 +1,22 @@
-import React, {useEffect, useState} from "react";
-import { View,TextInput,Text,InteractionManager,FlatList, StyleSheet } from "react-native";
+import React from "react";
+import { View,TextInput,Text,StyleSheet } from "react-native";
 import { scale } from "react-native-size-matters";
 import { AppScreenWidth } from "../../constants/sacling";
-import { fonts } from "../../constants/theme";
+import { colors, fonts } from "../../constants/theme";
 import { textStyles } from "../../styles/textStyles";
-const TimeInput = ({item}) => {
-  
-    const [value , setValue] = useState("")
-    // useEffect(() => {
-    //     InteractionManager.runAfterInteractions(() => {
-    //         inputRef.current.focus()
-    //       });
-    // },[])
+import moment from "moment";
+const TimeInput = ({item , index ,editable, setHours}) => {
     return(
-        <View style={{width:scale(70),marginTop:scale(5), marginRight:scale(5)}} >
-            <Text style={{...textStyles.title,alignSelf:"center", backgroundColor:"#0000"}} >{item}</Text>
+        <View style={styles.mainview} >
+            <Text style={styles.label} >{moment(item.date).format('DD-MMM')}</Text>
+            {item.type && 
+            <Text style={{...styles.label, color:colors.dark_primary_color}} >{item.type}</Text>}
             <TextInput 
-               
                 keyboardType={"numeric"}
                 placeholder={"0.0"}
-                value={value}
-                onChangeText={(data) => setValue(data)}
+                value={item.hours}
+                editable={editable}
+                onChangeText={(data) => setHours(index, data)}
                 style={styles.textinput}
             />
         </View>
@@ -32,6 +28,7 @@ const styles = StyleSheet.create({
         backgroundColor:"rgba(0,0,0,.1)",
         paddingTop:0,
         paddingBottom:0, 
+        width:AppScreenWidth/3,
         marginTop:scale(5),
         textAlign:"center",
         height:scale(30),
@@ -39,11 +36,17 @@ const styles = StyleSheet.create({
         borderRadius:5,
     },
     mainview:{
-        width:AppScreenWidth-scale(10),
-        marginTop:scale(10),
-        flex:1, 
-        alignSelf:"center",
-       
-        flex:1,
+        width:((AppScreenWidth/3) + scale(10)),
+        marginTop:scale(5), 
+        marginRight:scale(5),
+        borderWidth:1,
+        borderColor:"rgba(0,0,0,.3)",
+        borderRadius:5,
+        padding:scale(5)
+    },
+    label:{
+        ...textStyles.title,
+        alignSelf:"center", 
+        backgroundColor:"#0000"
     }
 })

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {View,Text,TouchableOpacity,StyleSheet, TextInput} from 'react-native'
+import {View,Text,TouchableOpacity,StyleSheet} from 'react-native'
 import { scale, verticalScale } from "react-native-size-matters";
 import { AppScreenWidth, width } from "../constants/sacling";
 import { colors, fonts } from "../constants/theme";
@@ -9,33 +9,31 @@ import Animated, {
 import DatePicker from 'react-native-date-picker'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { textStyles } from "../styles/textStyles";
-const CalenderInput = ({value,placeholder,errorMessage, onChangeText}) => {
+const CalenderInput = ({value,w=width-scale(20), placeholder,errorMessage,labelColor=colors.text_primary_color,onChangeText}) => {
     const [open, setOpen] = useState(false)
     const [date, setDate] = useState(new Date())
     const getCurrentDate = (v)=>{
-
         var date = new Date(v).getDate();
         var month = new Date(v).getMonth() + 1;
         var year = new Date(v).getFullYear();
         return date + '-' + month + '-' + year;//format: dd-mm-yyyy;
   }
     return (
-        <View style={styles.mainView} >
+        <View style={{...styles.mainView,width:w}} >
             { 
                 value !== "" && 
                 <Animated.Text 
                     entering={FadeInDown} 
                     exiting={FadeOutDown}
                   
-                    style={textStyles.Label}>
+                    style={{...textStyles.Label,color:labelColor}}>
                         {placeholder}
                 </Animated.Text>
             }
             <View 
                 style={{
                     flexDirection:"row", 
-                    width:AppScreenWidth-scale(20), 
-                   
+                    width:w-scale(20), 
                     alignItems:"center",
                     justifyContent:"space-between",
                     backgroundColor:"rgba(0,0,0,0)"
@@ -44,7 +42,7 @@ const CalenderInput = ({value,placeholder,errorMessage, onChangeText}) => {
                     value === "" 
                     ?  
                         <Text
-                            style={textStyles.smallheading}>
+                            style={{...textStyles.smallheading,color:labelColor}}>
                             {placeholder}
                         </Text>  
                     :  
@@ -82,7 +80,7 @@ const CalenderInput = ({value,placeholder,errorMessage, onChangeText}) => {
             }
             <DatePicker
                 modal
-                androidVariant={"iosClone"}
+                androidVariant={"nativeAndroid"}
                 open={open}
                 date={date}
                 mode={"date"}

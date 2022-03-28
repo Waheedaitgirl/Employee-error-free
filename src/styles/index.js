@@ -1,3 +1,4 @@
 import { commonStyles } from "./commonStyles";
 import { textStyles } from "./textStyles";
-export {commonStyles, textStyles}
+import selectStyles from "./selectStyles";
+export {commonStyles,selectStyles, textStyles}
