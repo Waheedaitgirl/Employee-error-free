@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View,Text,FlatList, StyleSheet } from "react-native";
+import { View,Text,FlatList,TouchableOpacity, StyleSheet } from "react-native";
 import { scale } from "react-native-size-matters";
 import { AppScreenWidth } from "../../constants/sacling";
 import { colors, fonts } from "../../constants/theme";
@@ -8,20 +8,32 @@ import TimeInput from "./TimeInput";
 import {NativeBaseProvider, Select } from "native-base";
 import { selectStyles } from "../../styles";
 import Spacer from "../../components/Spacer";
-const AddWeeklySummary = ({summerydays,editable,job_time_types, setHours}) => {
-    console.log(job_time_types);
-    const [value , setValue] = useState("")
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+const AddWeeklySummary = ({
+        localTimeType,
+        time_type,
+        alldata,
+        editable,
+        job_time_types,
+        deleteItem, 
+        setHours,
+        job_working_days
+    }) => {
     return(
         <NativeBaseProvider>
-            <View style={styles.mainview}>
-            <View>
-                        <Text
-                            style={styles.label}>
-                            Time Type
-                        </Text>
-                          <Spacer />
+            {alldata.map((item, index) => {
+                console.log(item);
+                return(
+                    <View style={styles.mainview} key={`${index}`}>
+                    <View  style={styles.Row}>
+                        <View>
+                            <Text
+                                style={styles.label}>
+                                Time Type
+                            </Text>
+                            <Spacer />
                             <Select
-                                selectedValue={value}
+                                selectedValue={time_type[index]?.name}
                                 width={AppScreenWidth/2}
                                 placeholderTextColor={colors.text_primary_color}
                                 fontFamily={fonts.Regular}
@@ -30,7 +42,7 @@ const AddWeeklySummary = ({summerydays,editable,job_time_types, setHours}) => {
                                 placeholder="Please select  type"
                                 _item={selectStyles._item}
                                 _selectedItem={selectStyles._selectedItem}
-                                onValueChange={(itemValue) => { setValue(itemValue)}}>
+                                onValueChange={(itemValue) => {localTimeType(itemValue, index)}}>
                                 {
                                     job_time_types.map((item, index) => {
                                         return(
@@ -39,26 +51,35 @@ const AddWeeklySummary = ({summerydays,editable,job_time_types, setHours}) => {
                                     })
                                 }
                             </Select>
+                        </View>
+                        <TouchableOpacity 
+                            onPress={() =>deleteItem(index)}           
+                            style={styles.deletebutton}>
+                                <MaterialCommunityIcons name={'delete'} color={"red"} size={24} />
+                        </TouchableOpacity>
                     </View>
                     <Spacer />
-                <Text style={styles.text}>{editable?"Enter Summary":"Daily Summary"}</Text>
-                    <FlatList 
-                        data={summerydays}
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({item, index}) => {
-                            return(
-                            <TimeInput 
-                                    item={item} 
-                                    editable={editable} 
-                                    index={index} 
-                                    setHours={setHours} 
-                                />
-                            )
-                        }}
-                    />
-            </View>
+                    <Text style={styles.text}>{editable?"Enter Summary":"Daily Summary"}</Text>
+                        <FlatList 
+                            data={item}
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={({item, index}) => {
+                                return(
+                                <TimeInput 
+                                        item={item} 
+                                        editable={editable} 
+                                        index={index} 
+                                        setHours={setHours} 
+                                    />
+                                )
+                            }}
+                        />
+                </View>
+                )
+            })}
+           
         </NativeBaseProvider>
     )
 }
@@ -81,6 +102,18 @@ const styles = StyleSheet.create({
         fontFamily:fonts.Regular,
         borderRadius:5,
     },
+    deletebutton:{
+        width:50, 
+        marginHorizontal:10,
+        justifyContent:"center",
+        alignItems:"center", 
+        height:40, 
+        borderRadius:5,
+        borderWidth:1,
+        borderColor:"red",
+        backgroundColor:"#fff"
+        
+    },
     mainview:{
         width:AppScreenWidth,
         padding:scale(5),
@@ -91,7 +124,14 @@ const styles = StyleSheet.create({
     },
     label:{
         ...textStyles.smallheading , 
-        color:colors.dark_primary_color,
+        fontSize:scale(12),
+        color:colors.text_primary_color,
         paddingTop:scale(5)
+    },
+    Row:{
+        flexDirection:"row",
+        width:AppScreenWidth, 
+        alignItems:"flex-end",
+        
     },
 })

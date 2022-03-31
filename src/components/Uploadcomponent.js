@@ -11,7 +11,9 @@ import Drive from '../assets/images/Drive.svg'
 import Disk from '../assets/images/Disk.svg'
 import {  } from "react-native-gesture-handler";
 import { textStyles } from "../styles";
-const UpLoadComponent = () => {
+import { colors } from "../constants/theme";
+const dropbox_access_token = "sl.BEofU_P7d88q3oJXzBKw9I-Kkpb7wNxndrc35M-HJr_UBLMe2hNwyrkq9LffCBnaKaztUIBtLpMiopOa0_xGyV2cl-e6iBpSBjxl46MaIu5YMEP4LNt1JbXSRvJOXY6mAJS3tLU"
+const UpLoadComponent = ({wdt= AppScreenWidth-scale(10)}) => {
     const Pickimage = () => {
         ImagePicker.openPicker({
             width: 300,
@@ -48,9 +50,12 @@ const UpLoadComponent = () => {
         }
       }
     return(
-        <View style={{width:AppScreenWidth-scale(10), alignSelf:"center", marginVertical:scale(10), justifyContent:"center", alignItems:"center"}}>
-            <Text style={{...textStyles.smallheading,backgroundColor:"#0000",alignSelf:"flex-start", textAlign:"left"}}>Upload Document</Text>
-            <View style={{width:AppScreenWidth-scale(10),marginTop:scale(10), flexDirection:"row", justifyContent:"space-between"}}>
+        <View style={{width:wdt, alignSelf:"center", marginVertical:scale(10), justifyContent:"center", alignItems:"center"}}>
+            <Text style={{...textStyles.smallheading,
+                 fontSize:scale(12),
+                 color:colors.dark_primary_color,
+                backgroundColor:"#0000",alignSelf:"flex-start", textAlign:"left"}}>Upload Document</Text>
+            <View style={{width:wdt,marginTop:scale(10), flexDirection:"row", justifyContent:"space-between"}}>
                 <TouchableOpacity
                     onPress={() => {
                         Pickimage()

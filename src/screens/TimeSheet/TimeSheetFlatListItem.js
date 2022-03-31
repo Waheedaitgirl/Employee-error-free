@@ -66,14 +66,14 @@ const TimeSheetFlatListItem = memo(({name, time, submittedto,status_style, statu
                 </View>
                 <Text style={styles.textStyle}>{hours}</Text>
             </View>
-         {
+        {
             status !== "Approved" &&
                 <View style={styles.buttonView} >
                     { 
                         status !== "Submitted" && 
-                            <TouchableOpacity style={{...styles.actionButton}} >
-                                <MaterialCommunityIcons name="clock-edit" color={colors.dark_primary_color} size={scale(22)} />
-                            </TouchableOpacity>
+                        <TouchableOpacity style={{...styles.actionButton}} >
+                            <MaterialCommunityIcons name="clock-edit" color={colors.dark_primary_color} size={scale(22)} />
+                        </TouchableOpacity>
                     }
                     <TouchableOpacity style={styles.actionButton}>
                         <MaterialCommunityIcons name="delete" color={'#ff2e2e'} size={scale(22)} />

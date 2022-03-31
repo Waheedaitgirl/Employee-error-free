@@ -1,27 +1,28 @@
-import React,{useState} from 'react';
-import {View,Text,ScrollView} from 'react-native';
+import React,{useEffect, useState} from 'react';
+import {View,Text,StyleSheet,TouchableOpacity, ScrollView} from 'react-native';
 import {NativeBaseProvider, Select } from "native-base";
+import { useSelector } from 'react-redux';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { commonStyles,selectStyles, textStyles } from '../../styles';
 import CustomHeader from '../../components/CustomHeader';
-import AddExpensesItem from './AddExpensesItem';
-import { scale } from 'react-native-size-matters';
+import { scale, verticalScale } from 'react-native-size-matters';
 import { colors, fonts } from '../../constants/theme';
 import { AppScreenWidth} from '../../constants/sacling';
 import Spacer from '../../components/Spacer';
 import CalenderInput from '../../components/CalenderInput';
 import CustomButton from '../../components/Button';
+import UpLoadComponent from "../../components/Uploadcomponent"
+import {getExpenseslist, listCandidateJobs } from '../../api';
+import BlockLoading from '../../components/BlockLoading';
     const AddExpenseScreen = ({navigation}) => {
+        const {user} = useSelector(state => state.LoginReducer)
         const [startDate, setStartDate] = useState("")
         const [submit , setSubmit] = useState(false)
         const [draft, setDraft] = useState(false)
-        let item =  {
-            "billtype":"Mark Bin",
-            "company":"Staffing Manager",
-            "name":"Hiring House",
-            "job":"Jorden Shah",
-            "date":"Time Approver Manager",
-            "price":"Time"
-        }
+        const [selected_job,set_selected_job] = useState(null)
+        const [jobs , setJobs] = useState([])
+        const [loading, setLoading ] = useState(true)
         const [expensetype , setExpenseType] = useState([
             {id:1, name:"Expense 1", value:"Expense 1"},
             {id:2, name:"Expense 2", value:"Expense 2"},
@@ -60,6 +61,15 @@ import CustomButton from '../../components/Button';
             {id:2, name:"Transport", value:"transport"},
         ])
         const [selected_type,setselectedType] = useState(false)
+
+        useEffect(() => {
+            listCandidateJobs(user.account_id, user.candidate_id).then((response) => {
+                setJobs(response.data.data);
+                setLoading(false)
+            }).catch((err) => {
+                console.log(err)
+            })
+        },[])
         const DraftSave = () => {
             setDraft(true)
             setTimeout(() =>{
@@ -82,160 +92,293 @@ import CustomButton from '../../components/Button';
                         onPress={() => navigation.goBack()}
                         title={"Add Expense"}
                     />
-                    <ScrollView>
-                        <AddExpensesItem 
-                            billtype={item.billtype} 
-                            company={item.company} 
-                            name={item.name}
-                            date={item.date}
-                            job={item.job}
-                            price={null}
-                            onPress={() => {}}
-                        />
-                        <Spacer/>
-                        <View>
-                            <Text
-                                style={{...textStyles.smallheading , color:colors.dark_primary_color}}>
-                                Select type
-                            </Text>
-                            <Spacer  height={scale(5)}  />
-                            <Select
-                                selectedValue={selected_type}
-                                width={AppScreenWidth}
-                                placeholderTextColor={colors.text_primary_color}
-                                fontFamily={fonts.Regular}
-                                maxHeight={"10"}
-                                accessibilityLabel="Please select type"
-                                placeholder="Please select  type"
-                                _item={selectStyles._item}
-                                _selectedItem={selectStyles._selectedItem}
-                                bg={"#fff"}
-                                onValueChange={(itemValue) => setselectedType(itemValue)}>
-                                {
-                                    type.map((item, index) => {
-                                        return(
-                                            <Select.Item key={`${index}`} label={item.name} value={item.name} />
-                                        )
-                                    })
-                                }
-                            </Select>
-                        </View>
-                        <CalenderInput 
-                            placeholder={"Date"}
-                            value={startDate}
-                            errorMessage={""}
-                            labelColor={colors.dark_primary_color}
-                            onChangeText={(data) => setStartDate(data) }
-                        />
-                        <Spacer/>
-                        <View>
-                            <Text
-                                style={{...textStyles.smallheading, color:colors.dark_primary_color}}>
-                                Expense type
-                            </Text>
-                            <Spacer  height={scale(5)}  />
-                            <Select
-                                selectedValue={selected_expense_type}
-                                width={AppScreenWidth}
-                                bg={"#fff"}
-                                placeholderTextColor={colors.text_primary_color}
-                                fontFamily={fonts.Regular}
-                                fontSize={scale(12)}
-                                maxHeight={"10"}
-                                accessibilityLabel="Please select type"
-                                placeholder="Please select  type"
-                                _item={selectStyles._item}
-                                _selectedItem={selectStyles._selectedItem}
-                                onValueChange={(itemValue) => setselectedExpenseType(itemValue)}>
-                                {
-                                    expensetype.map((item, index) => {
-                                        return(
-                                            <Select.Item key={`${index}`} label={item.name} value={item.name} />
-                                        )
-                                    })
-                                }
-                            </Select>
-                        </View>
-                        <Spacer/>
-                        <View>
-                            <Text
-                                style={{...textStyles.smallheading, color:colors.dark_primary_color}}>
-                                Category type
-                            </Text>
-                            <Spacer  height={scale(5)}  />
-                            <Select
-                                selectedValue={selected_category_type}
-                                width={AppScreenWidth}
-                               
-                                placeholderTextColor={colors.text_primary_color}
-                                fontFamily={fonts.Regular}
-                                fontSize={scale(12)}
-                                maxHeight={"10"}
-                                bg={"#fff"}
-                                accessibilityLabel="Please select Category"
-                                placeholder="Please select  Category"
-                                _item={selectStyles._item}
-                                _selectedItem={selectStyles._selectedItem}
+                    <ScrollView 
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={{paddingBottom:verticalScale(115)}} >
+                        <View style={styles.Row} >
+                            <View>
+                                <Text
+                                    style={styles.label}>
+                                    Select Job
+                                </Text>
+                                <Spacer height={scale(3)} />
+                                <Select
+                                    selectedValue={selected_job}
+                                    width={AppScreenWidth/2-scale(10)}
+                                    placeholderTextColor={colors.text_primary_color}
+                                    fontFamily={fonts.Regular}
+                                    maxHeight={"10"}
+                                    accessibilityLabel="Please select type"
+                                    placeholder="Please select  type"
+                                    _item={selectStyles._item}
+                                    _selectedItem={selectStyles._selectedItem}
+                                    onValueChange={(itemValue) => {
+                                        set_selected_job(itemValue)
+                                        getJobtimetype()
+                                        }}>
+                                    {
+                                        jobs.map((item, index) => {
+                                            return(
+                                                <Select.Item key={`${item.job_id}`} label={item.job_title} value={item.job_id} />
+                                            )
+                                        })
+                                    }
+                                </Select>
+                            </View>
+                            <View>
+                                <Text
+                                    style={styles.label}>
+                                    Select Date
+                                </Text>
                             
-                                onValueChange={(itemValue) => setselectedCategoryType(itemValue)}>
-                                {
-                                    caregory.map((item, index) => {
-                                        return(
-                                            <Select.Item key={`${index}`} label={item.name} value={item.name} />
-                                        )
-                                    })
-                                }
-                            </Select>
+                                <CalenderInput 
+                                    placeholder={"Expense Date"}
+                                    value={startDate}
+                                    errorMessage={""}
+                                    w={AppScreenWidth/2-scale(5)}
+                                    show_label={false}
+                                    hght={scale(40)}
+                                    onChangeText={(data) => setStartDate(data) }
+                                />
+                            </View>
+                            
                         </View>
+
                         <Spacer/>
-                        <View>
-                            <Text
-                                style={{...textStyles.smallheading, color:colors.dark_primary_color}}>
-                                Bill type
-                            </Text>
-                            <Spacer  height={scale(5)}  />
-                            <Select
-                                selectedValue={selected_bill_type}
-                                width={AppScreenWidth}
-                                bg={"#fff"}
-                                placeholderTextColor={colors.text_primary_color}
-                                color={colors.text_primary_color}
-                                fontFamily={fonts.Regular}
-                                fontSize={scale(12)}
-                                maxHeight={"10"}
-                               
-                                accessibilityLabel="Please select type"
-                                placeholder="Please select  type"
-                                _item={selectStyles._item}
-                                _selectedItem={selectStyles._selectedItem}
-                                onValueChange={(itemValue) => setselectedBillType(itemValue)}>
-                                {
-                                    billtype.map((item, index) => {
-                                        return(
-                                            <Select.Item key={`${index}`} label={item.name} value={item.name} />
-                                        )
-                                    })
-                                }
-                            </Select>
+
+                        <View style={styles.cardView} >
+                            <View style={styles.Row} >
+                                <View>
+                                    <Text
+                                        style={styles.label}>
+                                        Select type
+                                    </Text>
+                                    <Spacer  height={scale(5)}  />
+                                    <Select
+                                        selectedValue={selected_type}
+                                        width={AppScreenWidth/2-scale(10)}
+                                        placeholderTextColor={colors.text_primary_color}
+                                        fontFamily={fonts.Regular}
+                                        maxHeight={"10"}
+                                        accessibilityLabel="Please select type"
+                                        placeholder="Please select  type"
+                                        _item={selectStyles._item}
+                                        _selectedItem={selectStyles._selectedItem}
+                                        bg={"#fff"}
+                                        onValueChange={(itemValue) => setselectedType(itemValue)}>
+                                        {
+                                            type.map((item, index) => {
+                                                return(
+                                                    <Select.Item key={`${index}`} label={item.name} value={item.name} />
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                </View>
+                                <View>
+                                    <Text
+                                        style={styles.label}>
+                                        Expense type
+                                    </Text>
+                                    <Spacer  height={scale(5)}  />
+                                    <Select
+                                        selectedValue={selected_expense_type}
+                                        width={AppScreenWidth/2-scale(10)}
+                                        bg={"#fff"}
+                                        placeholderTextColor={colors.text_primary_color}
+                                        fontFamily={fonts.Regular}
+                                        fontSize={scale(12)}
+                                        maxHeight={"10"}
+                                        accessibilityLabel="Please select type"
+                                        placeholder="Please select  type"
+                                        _item={selectStyles._item}
+                                        _selectedItem={selectStyles._selectedItem}
+                                        onValueChange={(itemValue) => setselectedExpenseType(itemValue)}>
+                                        {
+                                            expensetype.map((item, index) => {
+                                                return(
+                                                    <Select.Item key={`${index}`} label={item.name} value={item.name} />
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                </View>
+                            </View>
+                            <Spacer/>
+                           
+                            <View style={styles.Row} >
+                                <View>
+                                    <Text
+                                        style={styles.label}>
+                                        Category type
+                                    </Text>
+                                    <Spacer  height={scale(5)}  />
+                                    <Select
+                                        selectedValue={selected_category_type}
+                                        width={AppScreenWidth/1.5-scale(10)}
+                                        placeholderTextColor={colors.text_primary_color}
+                                        fontFamily={fonts.Regular}
+                                        fontSize={scale(12)}
+                                        maxHeight={"10"}
+                                        bg={"#fff"}
+                                        accessibilityLabel="Please select Category"
+                                        placeholder="Please select  Category"
+                                        _item={selectStyles._item}
+                                        _selectedItem={selectStyles._selectedItem}
+                                    
+                                        onValueChange={(itemValue) => setselectedCategoryType(itemValue)}>
+                                        {
+                                            caregory.map((item, index) => {
+                                                return(
+                                                    <Select.Item key={`${index}`} label={item.name} value={item.name} />
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                </View>
+                            </View>
+                            <View style={styles.Row} >
+                                <UpLoadComponent wdt={AppScreenWidth/1.5} />
+                                <TouchableOpacity 
+                                    onPress={() =>deleteItem(index)}           
+                                    style={styles.deletebutton}>
+                                    <MaterialCommunityIcons name={'delete'} color={"red"} size={24} />
+                                </TouchableOpacity>
+                            </View>
                         </View>
+                        <View style={styles.cardView} >
+                            <View style={styles.Row} >
+                                <View>
+                                    <Text
+                                        style={styles.label}>
+                                        Select type
+                                    </Text>
+                                    <Spacer  height={scale(5)}  />
+                                    <Select
+                                        selectedValue={selected_type}
+                                        width={AppScreenWidth/2-scale(10)}
+                                        placeholderTextColor={colors.text_primary_color}
+                                        fontFamily={fonts.Regular}
+                                        maxHeight={"10"}
+                                        accessibilityLabel="Please select type"
+                                        placeholder="Please select  type"
+                                        _item={selectStyles._item}
+                                        _selectedItem={selectStyles._selectedItem}
+                                        bg={"#fff"}
+                                        onValueChange={(itemValue) => setselectedType(itemValue)}>
+                                        {
+                                            type.map((item, index) => {
+                                                return(
+                                                    <Select.Item key={`${index}`} label={item.name} value={item.name} />
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                </View>
+                                <View>
+                                    <Text
+                                        style={styles.label}>
+                                        Expense type
+                                    </Text>
+                                    <Spacer  height={scale(5)}  />
+                                    <Select
+                                        selectedValue={selected_expense_type}
+                                        width={AppScreenWidth/2-scale(10)}
+                                        bg={"#fff"}
+                                        placeholderTextColor={colors.text_primary_color}
+                                        fontFamily={fonts.Regular}
+                                        fontSize={scale(12)}
+                                        maxHeight={"10"}
+                                        accessibilityLabel="Please select type"
+                                        placeholder="Please select  type"
+                                        _item={selectStyles._item}
+                                        _selectedItem={selectStyles._selectedItem}
+                                        onValueChange={(itemValue) => setselectedExpenseType(itemValue)}>
+                                        {
+                                            expensetype.map((item, index) => {
+                                                return(
+                                                    <Select.Item key={`${index}`} label={item.name} value={item.name} />
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                </View>
+                            </View>
+                            <Spacer/>
+                           
+                            <View style={styles.Row} >
+                                <View>
+                                    <Text
+                                        style={styles.label}>
+                                        Category type
+                                    </Text>
+                                    <Spacer  height={scale(5)}  />
+                                    <Select
+                                        selectedValue={selected_category_type}
+                                        width={AppScreenWidth/1.5-scale(10)}
+                                        placeholderTextColor={colors.text_primary_color}
+                                        fontFamily={fonts.Regular}
+                                        fontSize={scale(12)}
+                                        maxHeight={"10"}
+                                        bg={"#fff"}
+                                        accessibilityLabel="Please select Category"
+                                        placeholder="Please select  Category"
+                                        _item={selectStyles._item}
+                                        _selectedItem={selectStyles._selectedItem}
+                                    
+                                        onValueChange={(itemValue) => setselectedCategoryType(itemValue)}>
+                                        {
+                                            caregory.map((item, index) => {
+                                                return(
+                                                    <Select.Item key={`${index}`} label={item.name} value={item.name} />
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                </View>
+                            </View>
+                            <View style={styles.Row} >
+                                <UpLoadComponent wdt={AppScreenWidth/1.5} />
+                                <TouchableOpacity 
+                                    onPress={() =>deleteItem(index)}           
+                                    style={styles.deletebutton}>
+                                    <MaterialCommunityIcons name={'delete'} color={"red"} size={24} />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                     
+                        
                         <Spacer/>
-                        <CustomButton
-                            loading={submit}
-                            loadingText={"Submitting"}
-                            onPress={() => Submit()}
-                            backgroundColor={"#0073B4"}
-                            text={"Submit"}
-                            marginTop={scale(10)}
-                        />
-                        <Spacer />
-                        <CustomButton
-                            loading={draft}
-                            loadingText={"Saving"}
-                            onPress={() =>DraftSave() }
-                            text={"Save as a Draft"}
-                            marginTop={scale(10)}
-                        />
+                        
+                        <TouchableOpacity 
+                            onPress={() => alert("Add")}
+                            style={styles.button} >
+                                  <FontAwesome name={"plus"} size={scale(16)} color={"#fff"} />
+                                <Text style={styles.text} >Add</Text>
+                        </TouchableOpacity>
+                        <Spacer/>
+                      
                     </ScrollView>
+                        <View style={{position:"absolute", justifyContent:"center", alignItems:"center", width:AppScreenWidth+scale(20),paddingVertical:10, backgroundColor:"#fff", alignSelf:"center", bottom:10,}} >
+                            <CustomButton
+                                loading={submit}
+                                loadingText={"Submitting"}
+                                onPress={() => Submit()}
+                                backgroundColor={"#0073B4"}
+                                text={"Submit"}
+                                marginTop={scale(10)}
+                            />
+                            <Spacer />
+                            <CustomButton
+                                loading={draft}
+                                loadingText={"Saving"}
+                                onPress={() =>DraftSave() }
+                                text={"Save as a Draft"}
+                                marginTop={scale(10)}
+                            />
+                        </View>
+                        {
+                loading && <BlockLoading/>}
                 </View>
             </NativeBaseProvider>
         );
@@ -243,3 +386,62 @@ import CustomButton from '../../components/Button';
 
 
 export default AddExpenseScreen;
+
+const styles = StyleSheet.create({
+    Row:{
+        flexDirection:"row",
+        width:AppScreenWidth, 
+        alignItems:"flex-end",
+        justifyContent:"space-between",
+        marginTop:5
+    },
+    cardView:{
+        elevation:5,
+        padding:scale(2.5), 
+        margin:3,
+        borderColor:colors.divide_color, 
+        borderWidth:0,
+        borderRadius:scale(5),marginVertical:scale(10),
+        backgroundColor:"#fff"
+    },
+    label:{
+        ...textStyles.smallheading , 
+        fontSize:scale(12),
+        color:colors.dark_primary_color,
+       
+    },
+    button:{
+        backgroundColor:"green",
+        padding:scale(10),
+        width:scale(100),
+        alignItems:"center",
+        flexDirection:"row",
+        justifyContent:"center",
+        alignSelf:"flex-start",
+        borderWidth:1,
+        
+        borderColor:"rgba(0,0,0,.3)",
+        borderRadius:scale(5)
+    }, 
+    text:{
+        ...textStyles.smallheading,
+        backgroundColor:"#0000",
+        alignSelf:"flex-start", 
+        includeFontPadding:false,
+        color:"#fff",
+        marginLeft:scale(5),
+        textAlign:"left"
+    },
+    deletebutton:{
+        width:50, 
+        marginHorizontal:10,
+        justifyContent:"center",
+        alignItems:"center", 
+        height:40, 
+        borderRadius:5,
+        borderWidth:1,
+        borderColor:"red",
+        backgroundColor:"#fff"
+        
+    },
+})

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList,View,StyleSheet,ActivityIndicator,TouchableOpacity} from 'react-native';
+import { FlatList,View,ActivityIndicator,TouchableOpacity} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { scale, verticalScale } from 'react-native-size-matters';
 import { commonStyles,textStyles } from '../../styles';
@@ -127,8 +127,3 @@ import Spacer from '../../components/Spacer';
 
 export default TimeSheetListScreen;
 
-const styles = StyleSheet.create({
-    main:{
-
-    }
-})

@@ -58,3 +58,11 @@ export function getJobWorkingDays(account_id,job_id){
         method: 'get',
     });
 }
+
+export function getExpenseslist(account_id,candidate_id){
+   
+    return request({
+        url: `expenses?account_id=${account_id}&candidate_id=${candidate_id}&type=expenses_list`,
+        method: 'get'
+    });
+}
