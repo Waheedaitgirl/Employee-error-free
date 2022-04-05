@@ -398,7 +398,7 @@ import BaseUrl from '../../api/BaseUrl';
                                     ...styles.tabitem,
                                     backgroundColor:time_sheet_type === "Day"?colors.dark_primary_color:"#fff",
                                     borderRightWidth:1}} >
-                                    <Text  style={styles.label}>Day</Text>
+                                    <Text  style={{...styles.label,color:time_sheet_type === "Day"?"#fff":"#000"}}>Day</Text>
                             </TouchableOpacity>
                             <TouchableOpacity 
                                 onPress={() => changeTab("Week")}
@@ -406,7 +406,7 @@ import BaseUrl from '../../api/BaseUrl';
                                     ...styles.tabitem,
                                     backgroundColor:time_sheet_type === "Week"?colors.dark_primary_color:"#fff",
                                     }} >
-                                <Text  style={styles.label}>Week</Text>
+                                <Text  style={{...styles.label,color:time_sheet_type === "Week"?"#fff":"#000"}}>Week</Text>
                             </TouchableOpacity>
                         </View>
                         {

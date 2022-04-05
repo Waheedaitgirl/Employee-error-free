@@ -21,5 +21,6 @@ export const colors = {
     divide_color:"#BDBDBD",
     error_text:"rgba(255, 0, 0,1)",
     white:"#fff",
-    delete_icon:"#C00"
+    delete_icon:"#C00",
+    success_icon:"#067000"
 }

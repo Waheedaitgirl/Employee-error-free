@@ -10,7 +10,7 @@ import CustomHeader from '../../components/CustomHeader';
 import { MainRoutes } from '../../constants/routes';
 import { colors, fonts } from '../../constants/theme';
 import { AppScreenWidth, hp, width } from '../../constants/sacling';
-
+import ErrorModal from '../../components/ErrorModal';
            
     const HomeScreen = ({navigation}) => {
    
@@ -73,7 +73,7 @@ import { AppScreenWidth, hp, width } from '../../constants/sacling';
                         Copyright @{new Date().getFullYear()} RecruitBPM All Rights Reserved
                     </Text>
                 </View>
-               
+             
             </View>
             
         );

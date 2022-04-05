@@ -87,3 +87,21 @@ export async function uploadFile(data){
     return fetch("https://0a7f-203-82-55-110.ngrok.io/files", requestOptions)
   
 }
+
+
+// delete request 
+
+export async function DeleteTimeSheet (id)  {
+    return request({
+        url: `timesheet/${id}`,
+        method: 'delete'
+    });
+}
+
+
+export async function DeleteExpense (id){
+    return request({
+        url: `expenses/${id}`,
+        method: 'delete'
+    });
+}
