@@ -13,7 +13,7 @@ import Spacer from '../../components/Spacer';
 import CalenderInput from '../../components/CalenderInput';
 import CustomButton from '../../components/Button';
 import UpLoadComponent from "../../components/Uploadcomponent"
-import {getExpenseslist, listCandidateJobs } from '../../api';
+import {getExpenseslist, getExpenseTypeCategoryBillType, listCandidateJobs } from '../../api';
 import BlockLoading from '../../components/BlockLoading';
 import Entypo from 'react-native-vector-icons/Entypo'
     const AddExpenseScreen = ({navigation}) => {
@@ -26,45 +26,29 @@ import Entypo from 'react-native-vector-icons/Entypo'
         const [loading, setLoading ] = useState(true)
         const [comment, setcomments] = useState("");
         const [expenses_report_title, setExpensesReportTitle] = useState('');
-        const [expensetype , setExpenseType] = useState([
-            {id:1, name:"Expense 1", value:"Expense 1"},
-            {id:2, name:"Expense 2", value:"Expense 2"},
-            {id:2, name:"Expense 3", value:"Expense 3"},
-            {id:2, name:"Expense 4", value:"Expense 4"},
-            {id:2, name:"Expense 4", value:"Expense 5"},
-
-        ])
+        const [filepath, setFilePath] = useState({
+            path:null, ext:null, name:null
+        })
         const [selected_expense_type,setselectedExpenseType] = useState(false)
-
-        const [billtype , setBillType] = useState([
-            {id:1, name:"Bill 1", value:"Bill 1"},
-            {id:2, name:"Bill 2", value:"Bill 2"},
-            {id:2, name:"Bill 3", value:"Bill 3"},
-            {id:2, name:"Bill 4", value:"Bill 4"},
-            {id:2, name:"Bill 5", value:"Bill 5"},
-
-        ])
-        const [selected_bill_type,setselectedBillType] = useState(false)
-
-        const [caregory , setCategoryType] = useState([
-            {id:1, name:"Category 1", value:"Category 1"},
-            {id:2, name:"Category 2", value:"Category 2"},
-            {id:2, name:"Category 3", value:"Category 3"},
-            {id:2, name:"Category 4", value:"Category 4"},
-            {id:2, name:"Category 5", value:"Category 5"},
-
-        ])
         const [selected_category_type,setselectedCategoryType] = useState(false)
-
-        const [type , setType] = useState([
-            {id:1, name:"Food", value:"food"},
-            {id:2, name:"Lunch", value:"lunch"},
-            {id:2, name:"Dinner", value:"dinner"},
-            {id:2, name:"BreakFast", value:"breakfast"},
-            {id:2, name:"Transport", value:"transport"},
+        const [selected_bill_type,setSelectedBillType] = useState(false)
+        const [bill_type , setBillType] = useState([])
+        const [caregory , setCategoryType] = useState([])
+        const [expensetype , setExpenseType] = useState([])
+        const [amount , setAmount] = useState("")
+        const [expense_list , setExpenseList] = useState([
+            {
+                date:"",
+                expense_categor:"",
+                expense_type:"",
+                expense_bill_type:"",
+                document:"",
+                comments:"",
+                filepath:{
+                    path:null, ext:null, name:null
+                }
+            }
         ])
-        const [selected_type,setselectedType] = useState(false)
-
         useEffect(() => {
             listCandidateJobs(user.account_id, user.candidate_id).then((response) => {
                 setJobs(response.data.data);
@@ -90,6 +74,53 @@ import Entypo from 'react-native-vector-icons/Entypo'
             },2000)
         }
 
+        const fun_set_selected_job = (itemValue) => {
+            setLoading(true)
+            set_selected_job(itemValue)
+            let result = jobs.find(obj =>obj.job_id === itemValue)
+           
+            getExpenseTypeCategoryBillType(user.account_id, result.company_id)
+            .then((response) => {
+                setLoading(false)
+                if(response.status === 200){
+                    setCategoryType(response.data.categories)
+                    setExpenseType(response.data.expenses_type)
+                    setBillType(response.data.expense_bill_types)
+                }else{
+                    alert("Some Error with stauts code" , response.status)
+                }
+            }).catch((err) => {
+                console.log(error);
+                setLoading(false)
+            })
+        }
+        const addNewCard =  () => {
+                const temp = [...expense_list]
+                let obj =  {
+                    date:"",
+                    expense_categor:"",
+                    expense_type:"",
+                    expense_bill_type:"",
+                    document:"",
+                    comments:"",
+                    filepath:{
+                        path:null, ext:null, name:null
+                    }
+                }
+                temp.push(obj)
+                setExpenseList(temp)
+        }
+
+        const deleteCard = (index) =>{
+            if(expense_list.length> 1){
+                let temp = [...expense_list]
+                temp.splice(index, 1)
+                setExpenseList(temp)
+            }else{
+                alert("Must have a least one item")
+            }
+        }
+        
         return (
             <NativeBaseProvider>
                 <View style={commonStyles.container} >
@@ -122,9 +153,8 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                     _item={selectStyles._item}
                                     _selectedItem={selectStyles._selectedItem}
                                     onValueChange={(itemValue) => {
-                                        set_selected_job(itemValue)
-                                        getJobtimetype()
-                                        }}>
+                                        fun_set_selected_job(itemValue)
+                                    }}>
                                     {
                                         jobs.map((item, index) => {
                                             return(
@@ -146,137 +176,172 @@ import Entypo from 'react-native-vector-icons/Entypo'
                             </View>
                             
                             <Spacer/>
-                            <View style={styles.cardView} >
-                                <View style={styles.Row} >
-                                    <View>
-                                        <Text
-                                            style={styles.label}>
-                                            Select type
-                                        </Text>
-                                        <Spacer  height={scale(5)}  />
-                                        <Select
-                                            selectedValue={selected_type}
-                                            width={AppScreenWidth/2-scale(10)}
-                                            placeholderTextColor={colors.text_primary_color}
-                                            fontFamily={fonts.Medium}
-                                            fontSize={scale(13)}
-                                            maxHeight={"10"}
-                                            placeholder="Select type"
-                                            _item={selectStyles._item}
-                                            _selectedItem={selectStyles._selectedItem}
-                                            bg={"#fff"}
-                                            onValueChange={(itemValue) => setselectedType(itemValue)}>
-                                            {
-                                                type.map((item, index) => {
-                                                    return(
-                                                        <Select.Item key={`${index}`} label={item.name} value={item.name} />
-                                                    )
-                                                })
-                                            }
-                                        </Select>
-                                    </View>
-                                    <View>
-                                        <Text
-                                            style={styles.label}>
-                                            Select Date
-                                        </Text>
-                                
-                                        <CalenderInput 
-                                            placeholder={"Expense Date"}
-                                            value={startDate}
-                                            errorMessage={""}
-                                            w={AppScreenWidth/2-scale(5)}
-                                            show_label={false}
-                                            hght={scale(40)}
-                                            onChangeText={(data) => setStartDate(data) }
-                                        />
-                                    </View>
-                                </View>
-                                
-                                <Spacer/>
-                           
-                                <View style={styles.Row} >
-                                    <View>
-                                        <Text
-                                            style={styles.label}>
-                                            Category type
-                                        </Text>
-                                        <Spacer  height={scale(5)}  />
-                                        <Select
-                                            selectedValue={selected_category_type}
-                                            width={AppScreenWidth/2-scale(10)}
-                                            placeholderTextColor={colors.text_primary_color}
-                                            fontFamily={fonts.Medium}
-                                            fontSize={scale(13)}
-                                            maxHeight={"10"}
-                                            bg={"#fff"}
+                            {
+                                expense_list.map((item, index) => {
+                                    return(
+                                        <View key={`${index}`} style={styles.cardView} >
+                                        <View style={styles.Row} >
                                            
-                                            placeholder="Select category"
-                                            _item={selectStyles._item}
-                                            _selectedItem={selectStyles._selectedItem}
+                                            <View>
+                                                <Text
+                                                    style={styles.label}>
+                                                    Select Date
+                                                </Text>
                                         
-                                            onValueChange={(itemValue) => setselectedCategoryType(itemValue)}>
-                                            {
-                                                caregory.map((item, index) => {
-                                                    return(
-                                                        <Select.Item key={`${index}`} label={item.name} value={item.name} />
-                                                    )
-                                                })
-                                            }
-                                        </Select>
+                                                <CalenderInput 
+                                                    placeholder={"Expense Date"}
+                                                    value={startDate}
+                                                    errorMessage={""}
+                                                    w={AppScreenWidth/2-scale(5)}
+                                                    show_label={false}
+                                                    hght={scale(40)}
+                                                    onChangeText={(data) => setStartDate(data) }
+                                                />
+                                            </View>
+        
+                                            <View>
+                                                <Text style={styles.label}>Expense type</Text>
+                                                <Spacer  height={scale(5)}  />
+                                                <Select
+                                                    selectedValue={selected_expense_type}
+                                                    width={AppScreenWidth/2-scale(10)}
+                                                    bg={"#fff"}
+                                                    placeholderTextColor={colors.text_primary_color}
+                                                   
+                                                    fontFamily={fonts.Medium}
+                                                    fontSize={scale(13)}
+                                                    maxHeight={"10"}
+                                                    accessibilityLabel="Select type"
+                                                    placeholder="Select type"
+                                                    _item={selectStyles._item}
+                                                    _selectedItem={selectStyles._selectedItem}
+                                                    onValueChange={(itemValue) => setselectedExpenseType(itemValue)}>
+                                                    {
+                                                        expensetype.map((item, index) => {
+                                                            return(
+                                                                <Select.Item key={`${index}`} label={item.name} value={item.name} />
+                                                            )
+                                                        })
+                                                    }
+                                                </Select>
+                                            </View>
+                                        </View>
+                                   
+                                        <View style={styles.Row} >
+                                            <View>
+                                                <Text
+                                                    style={styles.label}>
+                                                    Expense Bill type
+                                                </Text>
+                                                <Spacer  height={scale(5)}  />
+                                                <Select
+                                                    selectedValue={selected_bill_type}
+                                                    width={AppScreenWidth/2-scale(10)}
+                                                    placeholderTextColor={colors.text_primary_color}
+                                                    fontFamily={fonts.Medium}
+                                                    fontSize={scale(13)}
+                                                    maxHeight={"10"}
+                                                    placeholder="Select type"
+                                                    _item={selectStyles._item}
+                                                    _selectedItem={selectStyles._selectedItem}
+                                                    bg={"#fff"}
+                                                    onValueChange={(itemValue) => setSelectedBillType(itemValue)}>
+                                                    {
+                                                        bill_type.map((item, index) => {
+                                                            return(
+                                                                <Select.Item key={`${index}`} label={item.name} value={item.name} />
+                                                            )
+                                                        })
+                                                    }
+                                                </Select>
+                                            </View>
+                                            <View>
+                                                <Text
+                                                    style={styles.label}>
+                                                    Category type
+                                                </Text>
+                                                <Spacer  height={scale(5)}  />
+                                                <Select
+                                                    selectedValue={selected_category_type}
+                                                    width={AppScreenWidth/2-scale(10)}
+                                                    placeholderTextColor={colors.text_primary_color}
+                                                    fontFamily={fonts.Medium}
+                                                    fontSize={scale(13)}
+                                                    maxHeight={"10"}
+                                                    bg={"#fff"}
+                                                   
+                                                    placeholder="Select category"
+                                                    _item={selectStyles._item}
+                                                    _selectedItem={selectStyles._selectedItem}
+                                                
+                                                    onValueChange={(itemValue) => setselectedCategoryType(itemValue)}>
+                                                    {
+                                                        caregory.map((item, index) => {
+                                                            return(
+                                                                <Select.Item key={`${index}`} label={item.name} value={item.name} />
+                                                            )
+                                                        })
+                                                    }
+                                                </Select>
+                                            </View>
+                                        </View>
+                                        <View>
+                                            <CustomTextInput
+                                                placeholder={'Amount'}
+                                                value={item.amount}
+                                                borderWidth={1}
+                                                lableColor={colors.dark_primary_color}
+                                                borderRadius={scale(5)}
+                                                onChangeText={text => {
+                                                    let temp = [...expense_list]
+                                                    temp[index].amount = text
+                                                    setExpenseList(temp)
+                                                }}
+                                                errorMessage={""}
+                                            />
+                                        </View>
+                                        <View>
+                                            <CustomTextInput
+                                                placeholder={'Comments'}
+                                                value={item.comments}
+                                                borderWidth={1}
+                                                lableColor={colors.dark_primary_color}
+                                                borderRadius={scale(5)}
+                                                onChangeText={text => {
+                                                    let temp = [...expense_list]
+                                                    temp[index].comments = text
+                                                    setExpenseList(temp)
+                                                }}
+                                                errorMessage={""}
+                                            />
+                                        </View>
+                                        <View style={styles.Row} >
+                                            <UpLoadComponent 
+                                                filepath={item.filepath}
+                                                setFilePath={(file) => {
+                                                    let temp = [...expense_list]
+                                                    temp[index].filepath = file
+                                                    setExpenseList(temp)
+                                                }}
+                                                wdt={AppScreenWidth/1.2} 
+                                            />
+                                            <TouchableOpacity 
+                                              
+                                                onPress={() =>deleteCard(index)}           
+                                                style={styles.deletebutton}>
+                                                <Entypo name={'squared-cross'} color={colors.delete_icon} size={scale(30)} />
+                                            </TouchableOpacity>
+                                        </View>
+        
+                                       
                                     </View>
-                                    <View>
-                                        <Text style={styles.label}>Expense type</Text>
-                                        <Spacer  height={scale(5)}  />
-                                        <Select
-                                            selectedValue={selected_expense_type}
-                                            width={AppScreenWidth/2-scale(10)}
-                                            bg={"#fff"}
-                                            placeholderTextColor={colors.text_primary_color}
-                                           
-                                            fontFamily={fonts.Medium}
-                                            fontSize={scale(13)}
-                                            maxHeight={"10"}
-                                            accessibilityLabel="Select type"
-                                            placeholder="Select type"
-                                            _item={selectStyles._item}
-                                            _selectedItem={selectStyles._selectedItem}
-                                            onValueChange={(itemValue) => setselectedExpenseType(itemValue)}>
-                                            {
-                                                expensetype.map((item, index) => {
-                                                    return(
-                                                        <Select.Item key={`${index}`} label={item.name} value={item.name} />
-                                                    )
-                                                })
-                                            }
-                                        </Select>
-                                    </View>
-                                </View>
-                                <View style={styles.Row} >
-                                    <UpLoadComponent wdt={AppScreenWidth/1.5} />
-                                    <TouchableOpacity 
-                                      
-                                        onPress={() =>deleteItem(index)}           
-                                        style={styles.deletebutton}>
-                                        <Entypo name={'squared-cross'} color={colors.delete_icon} size={scale(30)} />
-                                    </TouchableOpacity>
-                                </View>
-                                <View>
-                                <CustomTextInput
-                                    placeholder={'Comments'}
-                                    value={comment}
-                                    borderWidth={1}
-                                    lableColor={colors.dark_primary_color}
-                                    borderRadius={scale(5)}
-                                    onChangeText={text => setcomments(text)}
-                                    errorMessage={""}
-                                />
-                                </View>
-                            </View>
+                                )})
+                            }
+                        
                             <Spacer/>
                         
                             <TouchableOpacity 
-                                onPress={() => alert("Add")}
+                                onPress={() => addNewCard()}
                                 style={styles.button} >
                                     <FontAwesome name={"plus"} size={scale(16)} color={"#fff"} />
                                     <Text style={styles.text} >Add</Text>

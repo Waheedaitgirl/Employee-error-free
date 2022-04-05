@@ -9,7 +9,7 @@ import { colors } from '../../constants/theme';
 import { AppScreenWidth } from '../../constants/sacling';
 import Spacer from '../../components/Spacer';
 import Modal from "react-native-modal";
-import CommentsBox from '../TimeSheet/CommentsBox';
+import CommentsBox from '../TimeSheetScreen/CommentsBox';
 import DrawLine from '../../components/DrawLine';
 import UpLoadComponent from '../../components/Uploadcomponent'
 const Item = () => {

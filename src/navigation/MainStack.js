@@ -5,14 +5,14 @@ import HomeScreen from '../screens/HomeScreen/index';
 import EditProfileScreen from '../screens/EditProfileScreen'
 
 // TimeSheet
-import TimeSheetListScreen from '../screens/TimeSheet';
-import AddTimeSheetScreen from '../screens/TimeSheet/AddTimeSheetScreen';
-import DetailsSheetScreen from '../screens/TimeSheet/DetailsTimeSheetScreen';
+import TimeSheetListScreen from '../screens/TimeSheetScreen';
+import AddTimeSheetScreen from '../screens/TimeSheetScreen/AddTimeSheetScreen';
+import DetailsSheetScreen from '../screens/TimeSheetScreen/DetailsTimeSheetScreen';
 
 // Expenses screen
-import MyExpensesScreen from '../screens/MyExpensesScreen';
-import ExpenseDetailsScreen from '../screens/MyExpensesScreen/ExpansesDetails';
-import AddExpenseScreen from '../screens/MyExpensesScreen/AddExpenseScreen';
+import MyExpensesScreen from '../screens/ExpensesScreen';
+import ExpenseDetailsScreen from '../screens/ExpensesScreen/ExpansesDetails';
+import AddExpenseScreen from '../screens/ExpensesScreen/AddExpenseScreen';
 
 import MyTasksScreen from '../screens/MyTasksScreen';
 import MyTimeScreen from '../screens/MyTimeScreen';

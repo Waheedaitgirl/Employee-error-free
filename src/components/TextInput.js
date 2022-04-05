@@ -27,7 +27,7 @@ const CustomTextInput = ({
                 borderWidth:0,  
                 alignSelf:"center",
                 minHeight:verticalScale(50),
-                paddingVertical:scale(5), 
+                paddingTop:scale(5), 
                 marginVertical:scale(0)
             }} >
             { 

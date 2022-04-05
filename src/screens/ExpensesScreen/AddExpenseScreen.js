@@ -18,37 +18,41 @@ import BlockLoading from '../../components/BlockLoading';
 import Entypo from 'react-native-vector-icons/Entypo'
     const AddExpenseScreen = ({navigation}) => {
         const {user} = useSelector(state => state.LoginReducer)
-        const [startDate, setStartDate] = useState("")
+     
         const [submit , setSubmit] = useState(false)
         const [draft, setDraft] = useState(false)
         const [selected_job,set_selected_job] = useState(null)
+        const [selected_job_error,set_selected_job_error] = useState(false)
         const [jobs , setJobs] = useState([])
         const [loading, setLoading ] = useState(true)
-        const [comment, setcomments] = useState("");
-        const [expenses_report_title, setExpensesReportTitle] = useState('');
-        const [filepath, setFilePath] = useState({
-            path:null, ext:null, name:null
-        })
-        const [selected_expense_type,setselectedExpenseType] = useState(false)
-        const [selected_category_type,setselectedCategoryType] = useState(false)
-        const [selected_bill_type,setSelectedBillType] = useState(false)
+       
+        const [expenses_report_title, setExpensesReportTitle] = useState(null);
+        const [expenses_report_title_error, setExpensesReportTitle_error] = useState(false);
+
         const [bill_type , setBillType] = useState([])
         const [caregory , setCategoryType] = useState([])
         const [expensetype , setExpenseType] = useState([])
-        const [amount , setAmount] = useState("")
+   
         const [expense_list , setExpenseList] = useState([
             {
                 date:"",
-                expense_categor:"",
+                date_error:false,
+                expense_category:"",
+                expense_category_error:false,
                 expense_type:"",
+                expense_type_error:false,
                 expense_bill_type:"",
-                document:"",
+                expense_bill_type_error:false,
                 comments:"",
+                amount:null,
+                amount_error:false,
                 filepath:{
                     path:null, ext:null, name:null
-                }
+                },
+                filepath_error:false,
             }
         ])
+
         useEffect(() => {
             listCandidateJobs(user.account_id, user.candidate_id).then((response) => {
                 setJobs(response.data.data);
@@ -68,10 +72,61 @@ import Entypo from 'react-native-vector-icons/Entypo'
         }
 
         const Submit = () => {
-            setSubmit(true)
-            setTimeout(() =>{
-                setSubmit(false)
-            },2000)
+            
+           if(selected_job == null){
+                set_selected_job_error(true)
+                return;
+           }
+           if(expenses_report_title === null || expenses_report_title.trim().length < 1){
+                setExpensesReportTitle_error(true)
+                set_selected_job_error(false)
+                return;
+           }
+           let temp = [...expense_list]
+           setExpensesReportTitle_error(false)
+        
+           temp.map((item, index) => {
+                if(item.date === ""){
+                    item.date_error = true;
+                }
+                if(item.expense_type === ""){
+                    item.expense_type_error = true
+                }
+                if(item.expense_bill_type === ""){
+                    item.expense_bill_type_error = true
+                }
+                if(item.expense_category === ""){
+                    item.expense_category_error = true
+                }
+                if(item.amount === "" || item.amount < 1){
+                    item.amount_error = true
+                }
+                if(item.filepath.path === null){
+                        item.filepath_error = true
+                }
+                if(item.date !== ""){
+                    item.date_error = false;
+                }
+                if(item.expense_type !== ""){
+                    item.expense_type_error = false
+                }
+                if(item.expense_bill_type !== ""){
+                    item.expense_bill_type_error = false
+                }
+                if(item.expense_category !== ""){
+                    item.expense_category_error = false
+                }
+                if(item.amount !== "" || item.amount > 1){
+                    item.amount_error = false
+                }
+                if(item.filepath.path !== null){
+                        item.filepath_error = false
+                }
+           })
+         
+            setExpenseList(temp)
+           
+           
         }
 
         const fun_set_selected_job = (itemValue) => {
@@ -94,18 +149,25 @@ import Entypo from 'react-native-vector-icons/Entypo'
                 setLoading(false)
             })
         }
+
         const addNewCard =  () => {
                 const temp = [...expense_list]
                 let obj =  {
                     date:"",
-                    expense_categor:"",
+                    date_error:false,
+                    expense_category:"",
+                    expense_category_error:false,
                     expense_type:"",
+                    expense_type_error:false,
                     expense_bill_type:"",
-                    document:"",
+                    expense_bill_type_error:false,
                     comments:"",
+                    amount:null,
+                    amount_error:false,
                     filepath:{
                         path:null, ext:null, name:null
-                    }
+                    },
+                    filepath_error:false,
                 }
                 temp.push(obj)
                 setExpenseList(temp)
@@ -120,7 +182,9 @@ import Entypo from 'react-native-vector-icons/Entypo'
                 alert("Must have a least one item")
             }
         }
-        
+        useEffect(() => {
+
+        },[expense_list])
         return (
             <NativeBaseProvider>
                 <View style={commonStyles.container} >
@@ -163,6 +227,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                         })
                                     }
                                 </Select>
+                                {selected_job_error && <Text style={{...textStyles.errorText, marginLeft:scale(5)}}>Please select job</Text>}
                                 <Spacer height={scale(3)} />
                                 <CustomTextInput
                                     placeholder={'Expenses Report Title'}
@@ -173,6 +238,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                     onChangeText={text => setExpensesReportTitle(text)}
                                     errorMessage={""}
                                 />
+                                {expenses_report_title_error && <Text style={{...textStyles.errorText, marginLeft:scale(5)}}>Please enter title</Text> }
                             </View>
                             
                             <Spacer/>
@@ -190,20 +256,31 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                         
                                                 <CalenderInput 
                                                     placeholder={"Expense Date"}
-                                                    value={startDate}
+                                                    value={item.date}
                                                     errorMessage={""}
                                                     w={AppScreenWidth/2-scale(5)}
                                                     show_label={false}
                                                     hght={scale(40)}
-                                                    onChangeText={(data) => setStartDate(data) }
+                                                    onChangeText={(data) => {
+                                                        let temp = [...expense_list]
+                                                        temp[index].date = data
+                                                        setExpenseList(temp)  
+                                                    }}
                                                 />
+                                                {
+                                                    item.date_error  &&
+                                                    <Text
+                                                        style={textStyles.errorText}>
+                                                            Please select date
+                                                    </Text>
+                                                }
                                             </View>
         
                                             <View>
                                                 <Text style={styles.label}>Expense type</Text>
                                                 <Spacer  height={scale(5)}  />
                                                 <Select
-                                                    selectedValue={selected_expense_type}
+                                                    selectedValue={item.expense_type}
                                                     width={AppScreenWidth/2-scale(10)}
                                                     bg={"#fff"}
                                                     placeholderTextColor={colors.text_primary_color}
@@ -215,7 +292,11 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                                     placeholder="Select type"
                                                     _item={selectStyles._item}
                                                     _selectedItem={selectStyles._selectedItem}
-                                                    onValueChange={(itemValue) => setselectedExpenseType(itemValue)}>
+                                                    onValueChange={(itemValue) => {
+                                                        let temp = [...expense_list]
+                                                        temp[index].expense_type = itemValue
+                                                        setExpenseList(temp)  
+                                                    }}>
                                                     {
                                                         expensetype.map((item, index) => {
                                                             return(
@@ -224,6 +305,13 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                                         })
                                                     }
                                                 </Select>
+                                                {
+                                                    item.expense_type_error &&
+                                                    <Text
+                                                        style={textStyles.errorText}>
+                                                            Please select expense type
+                                                    </Text>
+                                                }
                                             </View>
                                         </View>
                                    
@@ -235,7 +323,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                                 </Text>
                                                 <Spacer  height={scale(5)}  />
                                                 <Select
-                                                    selectedValue={selected_bill_type}
+                                                    selectedValue={item.expense_bill_type}
                                                     width={AppScreenWidth/2-scale(10)}
                                                     placeholderTextColor={colors.text_primary_color}
                                                     fontFamily={fonts.Medium}
@@ -245,7 +333,12 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                                     _item={selectStyles._item}
                                                     _selectedItem={selectStyles._selectedItem}
                                                     bg={"#fff"}
-                                                    onValueChange={(itemValue) => setSelectedBillType(itemValue)}>
+                                                    onValueChange={(itemValue) => { 
+                                                        let temp = [...expense_list]
+                                                        temp[index].expense_bill_type = itemValue
+                                                        setExpenseList(temp)  
+                                                            
+                                                    }}>
                                                     {
                                                         bill_type.map((item, index) => {
                                                             return(
@@ -254,6 +347,13 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                                         })
                                                     }
                                                 </Select>
+                                                {
+                                                    item.expense_bill_type_error &&
+                                                    <Text
+                                                        style={textStyles.errorText}>
+                                                            Please select expense bill
+                                                    </Text>
+                                                }
                                             </View>
                                             <View>
                                                 <Text
@@ -262,7 +362,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                                 </Text>
                                                 <Spacer  height={scale(5)}  />
                                                 <Select
-                                                    selectedValue={selected_category_type}
+                                                    selectedValue={item.expense_category}
                                                     width={AppScreenWidth/2-scale(10)}
                                                     placeholderTextColor={colors.text_primary_color}
                                                     fontFamily={fonts.Medium}
@@ -274,7 +374,12 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                                     _item={selectStyles._item}
                                                     _selectedItem={selectStyles._selectedItem}
                                                 
-                                                    onValueChange={(itemValue) => setselectedCategoryType(itemValue)}>
+                                                    onValueChange={(itemValue) => {                                                       
+                                                            let temp = [...expense_list]
+                                                            temp[index].expense_category = itemValue
+                                                            setExpenseList(temp)
+                                                        
+                                                        }}>
                                                     {
                                                         caregory.map((item, index) => {
                                                             return(
@@ -283,8 +388,17 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                                         })
                                                     }
                                                 </Select>
+                                                {
+                                                    item.expense_category_error &&
+                                                    <Text
+                                                        style={textStyles.errorText}>
+                                                            Please select category
+                                                    </Text>
+                                                }
                                             </View>
                                         </View>
+
+
                                         <View>
                                             <CustomTextInput
                                                 placeholder={'Amount'}
@@ -299,7 +413,15 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                                 }}
                                                 errorMessage={""}
                                             />
+                                            {
+                                                item.amount_error && 
+                                                <Text
+                                                    style={textStyles.errorText}>
+                                                        Please select Amount
+                                                </Text> 
+                                            }
                                         </View>
+
                                         <View>
                                             <CustomTextInput
                                                 placeholder={'Comments'}
@@ -329,10 +451,19 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                               
                                                 onPress={() =>deleteCard(index)}           
                                                 style={styles.deletebutton}>
-                                                <Entypo name={'squared-cross'} color={colors.delete_icon} size={scale(30)} />
+                                                <Entypo 
+                                                    name={'cross'} 
+                                                    color={"#fff"} 
+                                                    size={scale(40)} />
                                             </TouchableOpacity>
                                         </View>
-        
+                                        {
+                                        item.filepath_error && 
+                                        <Text
+                                            style={textStyles.errorText}>
+                                                Please select attachment
+                                        </Text> 
+                                        }
                                        
                                     </View>
                                 )})
@@ -344,7 +475,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                 onPress={() => addNewCard()}
                                 style={styles.button} >
                                     <FontAwesome name={"plus"} size={scale(16)} color={"#fff"} />
-                                    <Text style={styles.text} >Add</Text>
+                                  
                             </TouchableOpacity>
                             
                             <Spacer/>
@@ -406,7 +537,7 @@ const styles = StyleSheet.create({
     button:{
         backgroundColor:"green",
         padding:scale(10),
-        width:scale(100),
+        width:scale(60),
         alignItems:"center",
         flexDirection:"row",
         justifyContent:"center",
@@ -426,15 +557,16 @@ const styles = StyleSheet.create({
         textAlign:"left"
     },
     deletebutton:{
-        width:50, 
-      
-        justifyContent:"center",
-        alignItems:"center", 
+        width:scale(40), 
+        marginRight:scale(5),
         height:scale(40),
+        backgroundColor:colors.delete_icon,
         borderRadius:5,
+        justifyContent:"center",
+        alignItems:"center",
         borderWidth:0,
-        borderColor:"red",
-        backgroundColor:"#fff"
+      
+        marginBottom:scale(10)
         
     },
     bottomView:{
