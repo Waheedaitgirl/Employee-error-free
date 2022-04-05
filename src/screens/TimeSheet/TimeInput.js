@@ -1,24 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { View,TextInput,Text,StyleSheet } from "react-native";
 import { scale } from "react-native-size-matters";
 import { AppScreenWidth } from "../../constants/sacling";
 import { colors, fonts } from "../../constants/theme";
 import { textStyles } from "../../styles/textStyles";
-import moment from "moment";
 const TimeInput = ({item , index ,editable, setHours}) => {
+   
+  const [error , isError] = useState(false)
     return(
         <View style={styles.mainview} >
-            <Text style={styles.label} >{moment(item.date).format('DD-MMM')}</Text>
-            {item.type && 
-            <Text style={{...styles.label, color:colors.dark_primary_color}} >{item.type}</Text>}
+            <Text style={styles.label} >{item.date}</Text>
+            {
+                item.type && 
+                <Text style={{...styles.label, color:colors.dark_primary_color}} >
+                    {item.type}
+                </Text>
+            }
             <TextInput 
                 keyboardType={"numeric"}
-                placeholder={"0.0"}
+                placeholder={editable?"0.0":"Disable"}
                 value={item.hours}
                 editable={editable}
-                onChangeText={(data) => setHours(index, data)}
-                style={styles.textinput}
+                onChangeText={(data) =>  {
+                    if(data < 0 || data > 24){
+                        isError(true)
+                        setHours(index, data)
+                    }else{
+                        isError(false)
+                        setHours(index, data)
+                    }  
+                }}
+                style={{...styles.textinput, backgroundColor:editable?"rgba(0,0,0,.1)":"rgba(0,0,0,.4)"}}
             />
+            {error &&  <Text style={{...styles.label, color:colors.delete_icon}} >Invalid</Text>}
         </View>
     )
 }

@@ -30,6 +30,8 @@ import moment from 'moment';
                 }
             }).catch((error) => {
                 console.log(error ,"error");
+                alert("Error")
+                setLoading(false)
             })
         },[])
         const renderItem = ({ item }) => (
@@ -43,7 +45,7 @@ import moment from 'moment';
                 price={`$ ${parseFloat(item.total_amount).toFixed(2)}`}
                 onPress={() => {navigation.navigate(MainRoutes.ExpenseDetailsScreen,{item:item})}}
             />
-          ); 
+        ); 
           if(loading){
 
             return(

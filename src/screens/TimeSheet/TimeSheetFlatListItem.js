@@ -1,4 +1,4 @@
-import React, {memo} from "react"
+import React, {memo, useState} from "react"
 import { View,Text, StyleSheet, TouchableOpacity } from "react-native"
 import { scale, verticalScale } from "react-native-size-matters"
 import { colors, fonts } from "../../constants/theme"
@@ -8,8 +8,10 @@ import Manager from '../../assets/images/Manager.svg'
 import Job from '../../assets/images/job.svg'
 import { AppScreenWidth } from "../../constants/sacling"
 import transform from 'css-to-react-native';
+import DeleteModal from "../../components/DeleteModal"
 const TimeSheetFlatListItem = memo(({name, time, submittedto,status_style, status, hours,onPress}) => {
     let arr = (status_style.split(";"))
+    const [isVisible , setIsVisible] = useState(false)
     const ss = transform([
                 [arr[0].split(":")[0].trim(),arr[0].split(":")[1].trim()],
                 [arr[1].split(":")[0].trim(),arr[1].split(":")[1].trim()],
@@ -75,11 +77,16 @@ const TimeSheetFlatListItem = memo(({name, time, submittedto,status_style, statu
                             <MaterialCommunityIcons name="clock-edit" color={colors.dark_primary_color} size={scale(22)} />
                         </TouchableOpacity>
                     }
-                    <TouchableOpacity style={styles.actionButton}>
-                        <MaterialCommunityIcons name="delete" color={'#ff2e2e'} size={scale(22)} />
+                    <TouchableOpacity onPress={() =>setIsVisible(true)} style={styles.actionButton}>
+                        <MaterialCommunityIcons name="delete" color={colors.delete_icon} size={scale(22)} />
                     </TouchableOpacity>
                 </View>
         }
+        <DeleteModal 
+            isVisible={isVisible}
+            onCancel={() => setIsVisible(false)}
+            onDelete={() => setIsVisible(false)}
+        />
         </TouchableOpacity>
     )
 })

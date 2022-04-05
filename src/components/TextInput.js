@@ -4,21 +4,39 @@ import { scale, verticalScale } from "react-native-size-matters";
 import { width } from "../constants/sacling";
 import { colors, fonts } from "../constants/theme";
 import Animated, {
-   LightSpeedInRight, LightSpeedOutLeft, FadeOutDown, FadeInUp, FadeInDown
+   LightSpeedInRight, LightSpeedOutLeft, FadeOutDown, FadeInDown
   } from 'react-native-reanimated';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { textStyles } from "../styles/textStyles";
-const CustomTextInput = ({value,placeholder,errorMessage,secureTextEntry = false, onChangeText}) => {
+const CustomTextInput = ({
+            value,
+            borderRadius=0,
+            placeholder,
+            errorMessage,
+            lableColor=colors.text_primary_color,
+            borderWidth=0, 
+            secureTextEntry = false, 
+            onChangeText
+        }) => {
     const [eyeon , setEyeOn] = useState(secureTextEntry)
     return (
-        <View style={{ width:width-scale(20),justifyContent:"center",  minHeight:verticalScale(50),paddingVertical:scale(5), marginVertical:scale(0) }} >
+        <View 
+            style={{ 
+                width:width-scale(20),
+                justifyContent:"center",
+                borderWidth:0,  
+                alignSelf:"center",
+                minHeight:verticalScale(50),
+                paddingVertical:scale(5), 
+                marginVertical:scale(0)
+            }} >
             { 
                 value !== "" && 
                 <Animated.Text 
                     entering={FadeInDown} 
                     exiting={FadeOutDown}
                   
-                    style={textStyles.Label}>
+                    style={{...textStyles.Label, color:lableColor}}>
                         {placeholder}
                 </Animated.Text>
             }
@@ -35,7 +53,8 @@ const CustomTextInput = ({value,placeholder,errorMessage,secureTextEntry = false
                     width:width-scale(20), 
                     borderColor:colors.divide_color,
                     borderBottomWidth:1,
-                  //  borderRadius:scale(5),
+                    borderRadius:borderRadius,
+                    borderWidth:borderWidth,
                     height:verticalScale(40),
                     fontFamily:fonts.Medium,
                     paddingHorizontal:scale(10),

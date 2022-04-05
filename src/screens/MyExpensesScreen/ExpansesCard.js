@@ -90,10 +90,10 @@ const ExpansesItem = memo(({billtype, company, status,date, job,status_colour_co
                         </TouchableOpacity>
                     }
                     <TouchableOpacity style={styles.actionButton}>
-                        <MaterialCommunityIcons name="delete" color={'#ff2e2e'} size={scale(22)} />
+                        <MaterialCommunityIcons name="delete" color={colors.delete_icon} size={scale(22)} />
                     </TouchableOpacity>
                 </View>
-        }
+            }
         </TouchableOpacity>
     )
 })

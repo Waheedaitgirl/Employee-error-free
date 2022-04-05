@@ -8,7 +8,7 @@ import TimeInput from "./TimeInput";
 import {NativeBaseProvider, Select } from "native-base";
 import { selectStyles } from "../../styles";
 import Spacer from "../../components/Spacer";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Entypo from 'react-native-vector-icons/Entypo'
 const AddWeeklySummary = ({
         localTimeType,
         time_type,
@@ -19,12 +19,14 @@ const AddWeeklySummary = ({
         setHours,
         job_working_days
     }) => {
+     
     return(
         <NativeBaseProvider>
-            {alldata.map((item, index) => {
-                console.log(item);
+            {
+               alldata.map((item, maindex) => {
+             
                 return(
-                    <View style={styles.mainview} key={`${index}`}>
+                    <View style={styles.mainview} key={`${maindex}`}>
                     <View  style={styles.Row}>
                         <View>
                             <Text
@@ -33,7 +35,7 @@ const AddWeeklySummary = ({
                             </Text>
                             <Spacer />
                             <Select
-                                selectedValue={time_type[index]?.name}
+                                selectedValue={time_type[maindex]?.name}
                                 width={AppScreenWidth/2}
                                 placeholderTextColor={colors.text_primary_color}
                                 fontFamily={fonts.Regular}
@@ -42,22 +44,29 @@ const AddWeeklySummary = ({
                                 placeholder="Please select  type"
                                 _item={selectStyles._item}
                                 _selectedItem={selectStyles._selectedItem}
-                                onValueChange={(itemValue) => {localTimeType(itemValue, index)}}>
+                                onValueChange={(itemValue) => {localTimeType(itemValue, maindex)}}>
                                 {
                                     job_time_types.map((item, index) => {
                                         return(
-                                            <Select.Item key={`${item.job_id}`} label={item.name} value={item.name} />
+                                            <Select.Item key={`${item.job_id}`} label={item.name} value={item.id} />
                                         )
                                     })
                                 }
                             </Select>
+                           
                         </View>
+                        
                         <TouchableOpacity 
-                            onPress={() =>deleteItem(index)}           
+                            onPress={() =>deleteItem(maindex)}           
                             style={styles.deletebutton}>
-                                <MaterialCommunityIcons name={'delete'} color={"red"} size={24} />
+                                <Entypo 
+                                    name={'squared-cross'} 
+                                    color={colors.delete_icon} 
+                                    size={scale(32)} 
+                                />
                         </TouchableOpacity>
                     </View>
+                    {time_type[maindex]?.error &&<Text style={{...styles.label, color:colors.delete_icon}} >Please select time type</Text> }
                     <Spacer />
                     <Text style={styles.text}>{editable?"Enter Summary":"Daily Summary"}</Text>
                         <FlatList 
@@ -65,13 +74,51 @@ const AddWeeklySummary = ({
                             horizontal={true}
                             showsHorizontalScrollIndicator={false}
                             keyExtractor={(item, index) => index.toString()}
-                            renderItem={({item, index}) => {
+                            renderItem={({item,index}) => {
+                                let local_edit = false
+                                if(alldata[maindex].length === 1){
+                                    local_edit = job_working_days.some(item => (
+                                        item['day'] === 'first-day' ||
+                                        item['day'] === 'second-day' ||
+                                        item['day'] === 'third-day' ||
+                                        item['day'] === 'fourth-day' ||
+                                        item['day'] === 'fifth-day' ||
+                                        item['day'] === 'sixth-day' ||
+                                        item['day'] === 'seventh-day'
+
+                                    ))
+                                }else{
+                                    if(index === 0){
+                                        local_edit = job_working_days.some(item => item['day'] === 'first-day')
+                                    }
+                                    if(index === 1){
+                                        local_edit = job_working_days.some(item => item['day'] === 'second-day')
+                                    }
+                                    if(index === 2){
+                                        local_edit = job_working_days.some(item => item['day'] === 'third-day')
+                                    }
+                                    if(index === 3){
+                                        local_edit = job_working_days.some(item => item['day'] === 'fourth-day')
+                                    }
+                                    if(index === 4){
+                                        local_edit = job_working_days.some(item => item['day'] === 'fifth-day')
+                                    }
+                                    if(index === 5){
+                                        local_edit = job_working_days.some(item => item['day'] === 'sixth-day')
+                                    }
+                                    if(index === 6){
+                                        local_edit = job_working_days.some(item => item['day'] === 'seventh-day')
+                                    }
+                                }
+                               
+                                
+                               
                                 return(
-                                <TimeInput 
+                                    <TimeInput 
                                         item={item} 
-                                        editable={editable} 
+                                        editable={local_edit} 
                                         index={index} 
-                                        setHours={setHours} 
+                                        setHours={(i, d) => setHours(i,d, maindex)} 
                                     />
                                 )
                             }}
@@ -109,7 +156,7 @@ const styles = StyleSheet.create({
         alignItems:"center", 
         height:40, 
         borderRadius:5,
-        borderWidth:1,
+        borderWidth:0,
         borderColor:"red",
         backgroundColor:"#fff"
         
@@ -119,6 +166,7 @@ const styles = StyleSheet.create({
         padding:scale(5),
         alignSelf:"center",
         borderWidth:1,
+        marginBottom:scale(5),
         borderColor:"rgba(0,0,0,.05)",
         borderRadius:scale(5)
     },

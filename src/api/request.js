@@ -1,6 +1,7 @@
 import axios from 'axios';
+import BaseUrl from './BaseUrl';
 const service = axios.create({
-  baseURL:'https://e98f-203-82-55-110.ngrok.io/',
+  baseURL: `${BaseUrl}`,
   timeout: 50000, // request timeout
 });
 
@@ -10,6 +11,7 @@ service.interceptors.request.use(
     config.headers['Authorization'] = '';
     if (true) {
       config.headers['Authorization'] =  'Bearer 4545980ce66bd555d903f7dc739f91e631606eb1';
+     
     }
     return config;
   },

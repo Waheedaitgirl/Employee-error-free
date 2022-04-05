@@ -8,12 +8,12 @@ import { scale, verticalScale } from 'react-native-size-matters';
 import { commonStyles,textStyles } from '../../styles';
 import CustomHeader from '../../components/CustomHeader';
 import { MainRoutes } from '../../constants/routes';
-
 import { colors, fonts } from '../../constants/theme';
 import { AppScreenWidth, hp, width } from '../../constants/sacling';
 
            
     const HomeScreen = ({navigation}) => {
+   
         return (
             <View style={commonStyles.container} >
                 <CustomHeader 
@@ -68,11 +68,12 @@ import { AppScreenWidth, hp, width } from '../../constants/sacling';
                         <Text style={styles.textStyle}>Tasks</Text>
                     </TouchableOpacity>
                 </View>
-               <View style={styles.main2} >
+                <View style={styles.main2} >
                     <Text style={styles.paragraph}>
                         Copyright @{new Date().getFullYear()} RecruitBPM All Rights Reserved
                     </Text>
-               </View>
+                </View>
+               
             </View>
             
         );
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
         backgroundColor:colors.dark_primary_color
     },
     main2:{
-        height:hp(10),
+        height:hp(7),
         width:width,
         zIndex:10,
         position:"absolute",
@@ -109,8 +110,8 @@ const styles = StyleSheet.create({
         shadowRadius: 16.00,
 
         elevation: 24,
-        borderTopLeftRadius:hp(5),
-        borderTopRightRadius:hp(5),
+        borderTopLeftRadius:hp(3),
+        borderTopRightRadius:hp(3),
         backgroundColor:colors.dark_primary_color
     },
     headingtext:{

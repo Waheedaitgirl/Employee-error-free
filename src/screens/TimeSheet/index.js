@@ -12,12 +12,14 @@ import { AppScreenWidth } from '../../constants/sacling';
 import { useSelector } from 'react-redux';
 import { listTimeSheetByCandidateId } from '../../api';
 import Spacer from '../../components/Spacer';
+import DeleteModal from '../../components/DeleteModal';
     const TimeSheetListScreen = ({navigation}) => {
         const {user} = useSelector(state => state.LoginReducer)
         const [data, setData] = useState([])
         const [endDate, setEndDate] = useState("")
         const [startDate, setStartDate] = useState("")
         const [loading, setLoading ] = useState(true)
+        const [isVisible , setIsVisible] = useState(false)
         useEffect(() => {
             listTimeSheetByCandidateId(user.account_id, user.candidate_id)
             .then((response) => {

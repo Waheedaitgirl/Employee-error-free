@@ -101,33 +101,33 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
                                     contentContainerStyle={{flexDirection:"row"}} >
                                     {
                                         item.map((item, index) => {
-                                            let magenicVendors = false
+                                            let editable = false
                                             if(index === 0){
-                                                magenicVendors = w_array.some(item => item['day'] === 'first-day')
+                                                editable = w_array.some(item => item['day'] === 'first-day')
                                             }
                                             if(index === 1){
-                                                magenicVendors = w_array.some(item => item['day'] === 'second-day')
+                                                editable = w_array.some(item => item['day'] === 'second-day')
                                             }
                                             if(index === 2){
-                                                magenicVendors = w_array.some(item => item['day'] === 'third-day')
+                                                editable = w_array.some(item => item['day'] === 'third-day')
                                             }
                                             if(index === 3){
-                                                magenicVendors = w_array.some(item => item['day'] === 'fourth-day')
+                                                editable = w_array.some(item => item['day'] === 'fourth-day')
                                             }
                                             if(index === 4){
-                                                magenicVendors = w_array.some(item => item['day'] === 'fifth-day')
+                                                editable = w_array.some(item => item['day'] === 'fifth-day')
                                             }
                                             if(index === 5){
-                                                magenicVendors = w_array.some(item => item['day'] === 'sixth-day')
+                                                editable = w_array.some(item => item['day'] === 'sixth-day')
                                             }
                                             if(index === 6){
-                                                magenicVendors = w_array.some(item => item['day'] === 'seventh-day')
+                                                editable = w_array.some(item => item['day'] === 'seventh-day')
                                             }
                                         
                                             
                                                 return(
                                                     <View key={`${index}`} 
-                                                        style={{...styles.input,  backgroundColor:magenicVendors?"green":"gray",}} >
+                                                        style={{...styles.input,  backgroundColor:editable?"green":"gray",}} >
                                                         <Text  style={{...textStyles.Label, color:"#fff"}} >{item}</Text>
                                                     </View>
                                                 )

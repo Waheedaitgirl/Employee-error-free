@@ -42,7 +42,7 @@ const CalenderInput = ({value,w=width-scale(20),show_label = true, hght=vertical
                     value === "" 
                     ?  
                         <Text
-                            style={{...textStyles.smallheading,color:labelColor}}>
+                            style={{...textStyles.smallheading,fontSize:scale(13), color:labelColor}}>
                             {placeholder}
                         </Text>  
                     :  
