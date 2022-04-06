@@ -13,9 +13,10 @@ import Spacer from '../../components/Spacer';
 import CalenderInput from '../../components/CalenderInput';
 import CustomButton from '../../components/Button';
 import UpLoadComponent from "../../components/Uploadcomponent"
-import {getExpenseslist, getExpenseTypeCategoryBillType, listCandidateJobs } from '../../api';
+import {addExpense, getExpenseTypeCategoryBillType, listCandidateJobs } from '../../api';
 import BlockLoading from '../../components/BlockLoading';
 import Entypo from 'react-native-vector-icons/Entypo'
+import moment from 'moment';
     const AddExpenseScreen = ({navigation}) => {
         const {user} = useSelector(state => state.LoginReducer)
      
@@ -64,20 +65,17 @@ import Entypo from 'react-native-vector-icons/Entypo'
             })
         },[])
 
-        const DraftSave = () => {
-            setDraft(true)
-            setTimeout(() =>{
-                setDraft(false)
-            },2000)
-        }
+       
 
-        const Submit = () => {
-            
+        const Submit = (is_draft) => {
+            let error = false
            if(selected_job == null){
+                error = true
                 set_selected_job_error(true)
                 return;
            }
            if(expenses_report_title === null || expenses_report_title.trim().length < 1){
+                error = true
                 setExpensesReportTitle_error(true)
                 set_selected_job_error(false)
                 return;
@@ -88,21 +86,27 @@ import Entypo from 'react-native-vector-icons/Entypo'
            temp.map((item, index) => {
                 if(item.date === ""){
                     item.date_error = true;
+                    error = true
                 }
                 if(item.expense_type === ""){
                     item.expense_type_error = true
+                    error = true
                 }
                 if(item.expense_bill_type === ""){
                     item.expense_bill_type_error = true
+                    error = true
                 }
                 if(item.expense_category === ""){
                     item.expense_category_error = true
+                    error = true
                 }
                 if(item.amount === "" || item.amount < 1){
                     item.amount_error = true
+                    error = true
                 }
                 if(item.filepath.path === null){
                         item.filepath_error = true
+                        error = true
                 }
                 if(item.date !== ""){
                     item.date_error = false;
@@ -123,9 +127,61 @@ import Entypo from 'react-native-vector-icons/Entypo'
                         item.filepath_error = false
                 }
            })
-         
-            setExpenseList(temp)
-           
+           setExpenseList(temp)
+              if(!error){
+                expense_list.map((item, index) => {
+                    let s_job = jobs.find(x => x.job_id = selected_job)
+                    let data = {
+                        expense_report_title:expenses_report_title,
+                        job_id:selected_job,
+                        type:"employee",
+                        placement_id:s_job.placement_id,
+                        module_status_id:is_draft?"902196":"902197",
+                        candidate_id:user.candidate_id,
+                        approver_id:"0",
+                        account_id:user.account_id,
+                        user_id:"0",
+                        is_log:"0"
+                    }
+                    addExpense(data).then((response) => {
+                        if(response.status === 201 ||response.status === 200){
+                          
+                           let logsss =  {
+                                "expense_id":response.data.data,
+                                "expense_date":moment(item.date).format("YYYY-MM-DD"),
+                                "expense_category":item.expense_category,
+                                "expense_type":item.expense_type,
+                                "expense_bill_type":item.expense_bill_type,
+                                "expense_receipt":item.filepath.name,
+                                "expense_comments":item.comments,
+                                "expense_amount":item.amount,
+                                "is_log":"1"
+                            }
+                           
+                            addExpense(logsss).then((response) => {
+                                if(response.status === 201 ||response.status === 200){
+                                    console.log(response.status)
+                                }else{
+                                    alert("Some Error in Adding Expenses lOG")
+                                    setLoading(false)
+                                }
+                               
+                            }).catch((err) => {
+                                console.log(err.status);
+                                alert("Some Error in Adding Expenses LOG")
+                                setLoading(false)
+                            })
+                        }else{
+                            alert("Some Error in Adding Expenses")
+                            setLoading(false)
+                        }
+                       
+                    }).catch((err) => {
+                        alert("Some Error in Adding Expenses")
+                        setLoading(false)
+                    })
+                })
+            }
            
         }
 
@@ -145,7 +201,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
                     alert("Some Error with stauts code" , response.status)
                 }
             }).catch((err) => {
-                console.log(error);
+                console.log(err);
                 setLoading(false)
             })
         }
@@ -182,9 +238,11 @@ import Entypo from 'react-native-vector-icons/Entypo'
                 alert("Must have a least one item")
             }
         }
+
         useEffect(() => {
 
         },[expense_list])
+        
         return (
             <NativeBaseProvider>
                 <View style={commonStyles.container} >
@@ -300,7 +358,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                                     {
                                                         expensetype.map((item, index) => {
                                                             return(
-                                                                <Select.Item key={`${index}`} label={item.name} value={item.name} />
+                                                                <Select.Item key={`${index}`} label={item.name} value={item.id} />
                                                             )
                                                         })
                                                     }
@@ -342,7 +400,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                                     {
                                                         bill_type.map((item, index) => {
                                                             return(
-                                                                <Select.Item key={`${index}`} label={item.name} value={item.name} />
+                                                                <Select.Item key={`${index}`} label={item.name} value={item.id} />
                                                             )
                                                         })
                                                     }
@@ -383,7 +441,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
                                                     {
                                                         caregory.map((item, index) => {
                                                             return(
-                                                                <Select.Item key={`${index}`} label={item.name} value={item.name} />
+                                                                <Select.Item key={`${index}`} label={item.name} value={item.id} />
                                                             )
                                                         })
                                                     }
@@ -485,7 +543,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
                         <CustomButton
                             loading={submit}
                             loadingText={"Submitting"}
-                            onPress={() => Submit()}
+                            onPress={() => Submit(false)}
                             backgroundColor={"#0073B4"}
                             text={"Submit"}
                             marginTop={scale(10)}
@@ -494,7 +552,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
                         <CustomButton
                             loading={draft}
                             loadingText={"Saving"}
-                            onPress={() =>DraftSave() }
+                            onPress={() =>Submit(true) }
                             text={"Save as a Draft"}
                             marginTop={scale(10)}
                         />

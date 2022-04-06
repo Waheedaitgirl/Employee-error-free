@@ -1,5 +1,6 @@
 import request from './request';
 
+// post requests with data
 export function candidateLogin(data){
     return request({
         url: 'candidatemobilelogin',
@@ -8,6 +9,23 @@ export function candidateLogin(data){
     });
 }
 
+export function addTimeSheet(data){
+    return request({
+        url: `timesheet`,
+        method: 'post',
+        data
+    });
+}
+
+export function addExpense(data){
+    return request({
+        url: `expenses`,
+        method: 'post',
+        data
+    });
+}
+
+/// get requests
 export function getCandidateDetailsById(id){
     return request({
         url: `candidates/${id}`,
@@ -30,13 +48,7 @@ export function jobTimeTypes(account_id,job_id){
     });
 }
 
-export function addTimeSheet(data){
-    return request({
-        url: `timesheet`,
-        method: 'post',
-        data
-    });
-}
+
 
 export function timeSheetDetailsById(timesheet_id,account_id){
     return request({
