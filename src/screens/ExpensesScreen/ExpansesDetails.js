@@ -67,7 +67,7 @@ const Item = () => {
                     }}
                 />
                
-                <UpLoadComponent />
+                {/* <UpLoadComponent /> */}
                 
                <Item />
                 <Spacer  />

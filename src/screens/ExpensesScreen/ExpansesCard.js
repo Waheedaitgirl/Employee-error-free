@@ -22,7 +22,7 @@ const ExpansesItem = memo(({item, billtype, company, status,date, job,status_col
             ])
         const DeleteItem = () => {
             setIsVisible(false)
-            DeleteExpense(item.id).then((response) => {
+            DeleteExpense(item.expense_id).then((response) => {
                 console.log(response.status);
             }).catch((err) => {
                 console.log(err.status);
@@ -97,7 +97,11 @@ const ExpansesItem = memo(({item, billtype, company, status,date, job,status_col
                     { 
                         status !== "Submitted" && 
                         <TouchableOpacity style={{...styles.actionButton}} >
-                            <MaterialCommunityIcons name="clock-edit" color={colors.dark_primary_color} size={scale(22)} />
+                            <MaterialCommunityIcons 
+                                name="clock-edit" 
+                                color={colors.dark_primary_color} 
+                                size={scale(22)} 
+                            />
                         </TouchableOpacity>
                     }
                     <TouchableOpacity onPress={() => setIsVisible(true)}  style={styles.actionButton}>
