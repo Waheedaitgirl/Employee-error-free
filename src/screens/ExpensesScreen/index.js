@@ -11,8 +11,9 @@ import { MainRoutes } from '../../constants/routes';
 import { AppScreenWidth } from '../../constants/sacling';
 import { useSelector } from 'react-redux';
 import Spacer from '../../components/Spacer';
-import { getExpenseslist } from '../../api';
+import { getExpenseslist, DeleteExpense } from '../../api';
 import moment from 'moment';
+
     const AllExpenseScreen = ({navigation}) => {
         const {user} = useSelector(state => state.LoginReducer)
         const [endDate, setEndDate] = useState("")
@@ -36,6 +37,7 @@ import moment from 'moment';
         },[])
         const renderItem = ({ item }) => (
             <ExpansesItem 
+                item={item}
                 billtype={item.expense_report_title} 
                 company={item.type} 
                 status={item.module_status_name}

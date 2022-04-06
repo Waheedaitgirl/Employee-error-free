@@ -1,4 +1,4 @@
-import React, {memo} from "react"
+import React, {memo, useState} from "react"
 import { View,Text, StyleSheet, TouchableOpacity } from "react-native"
 import { scale } from "react-native-size-matters"
 import { colors, fonts } from "../../constants/theme"
@@ -10,13 +10,24 @@ import Price from '../../assets/images/price.svg'
 import Person from '../../assets/images/person.svg'
 import Job from '../../assets/images/job.svg'
 import transform from 'css-to-react-native';
-const ExpansesItem = memo(({billtype, company, status,date, job,status_colour_code, price,onPress}) => {
+import DeleteModal from '../../components/DeleteModal';
+import { DeleteExpense } from '../../api';
+const ExpansesItem = memo(({item, billtype, company, status,date, job,status_colour_code, price,onPress}) => {
     let arr = (status_colour_code.split(";"))
+    const [isVisible ,setIsVisible] = useState(false)
     const ss = transform([
                 [arr[0].split(":")[0].trim(),arr[0].split(":")[1].trim()],
                 [arr[1].split(":")[0].trim(),arr[1].split(":")[1].trim()],
                 [arr[2].split(":")[0].trim(),arr[2].split(":")[1].trim()]
             ])
+        const DeleteItem = () => {
+            setIsVisible(false)
+            DeleteExpense(item.id).then((response) => {
+                console.log(response.status);
+            }).catch((err) => {
+                console.log(err.status);
+            })
+        }
     return(
         <TouchableOpacity 
             onPress={onPress}
@@ -89,11 +100,16 @@ const ExpansesItem = memo(({billtype, company, status,date, job,status_colour_co
                             <MaterialCommunityIcons name="clock-edit" color={colors.dark_primary_color} size={scale(22)} />
                         </TouchableOpacity>
                     }
-                    <TouchableOpacity style={styles.actionButton}>
+                    <TouchableOpacity onPress={() => setIsVisible(true)}  style={styles.actionButton}>
                         <MaterialCommunityIcons name="delete" color={colors.delete_icon} size={scale(22)} />
                     </TouchableOpacity>
                 </View>
             }
+            <DeleteModal 
+                isVisible={isVisible} 
+                onCancel={() =>  setIsVisible(false)}
+                onDelete={() => DeleteItem()}
+            />
         </TouchableOpacity>
     )
 })

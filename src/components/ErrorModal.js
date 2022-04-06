@@ -7,7 +7,7 @@ import { AppScreenWidth } from '../constants/sacling';
 import {colors, fonts} from '../constants/theme'
 import { textStyles } from '../styles';
 import Spacer from './Spacer';
-const ErrorModal = ({isVisible, onCancel ,title="Some Error with your request", onDelete}) => {
+const ErrorModal = ({isVisible, title="Some Error with your request", onClose}) => {
     return(
         <Modal
             style={styles.ModalView}
@@ -18,7 +18,7 @@ const ErrorModal = ({isVisible, onCancel ,title="Some Error with your request", 
             backdropOpacity={.1}
             animationOutTiming={500}
             isVisible={isVisible}
-            onBackdropPress={() => onCancel()}>
+            onBackdropPress={() => onClose()}>
 
             <View  style={styles.mainView}>
                 <AntDesign name='error' size={scale(62)} color={colors.delete_icon} />
@@ -30,7 +30,7 @@ const ErrorModal = ({isVisible, onCancel ,title="Some Error with your request", 
                     <TouchableOpacity
                         style={styles.Button}
                         onPress={() => {
-                            onDelete()
+                            onClose()
                         }}>
                          <Text style={styles.whitetext}>
                             GO BACK

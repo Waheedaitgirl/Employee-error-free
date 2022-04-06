@@ -17,6 +17,8 @@ import {addExpense, getExpenseTypeCategoryBillType, listCandidateJobs } from '..
 import BlockLoading from '../../components/BlockLoading';
 import Entypo from 'react-native-vector-icons/Entypo'
 import moment from 'moment';
+import ErrorModal from '../../components/ErrorModal';
+import SuccessModal from '../../components/SuccessModal';
     const AddExpenseScreen = ({navigation}) => {
         const {user} = useSelector(state => state.LoginReducer)
      
@@ -33,7 +35,8 @@ import moment from 'moment';
         const [bill_type , setBillType] = useState([])
         const [caregory , setCategoryType] = useState([])
         const [expensetype , setExpenseType] = useState([])
-   
+        const [All_Done , setAllDone] = useState(false)
+        const [submissionError , setsubmissionError] = useState(false)
         const [expense_list , setExpenseList] = useState([
             {
                 date:"",
@@ -128,9 +131,9 @@ import moment from 'moment';
                 }
            })
            setExpenseList(temp)
+         
               if(!error){
-                expense_list.map((item, index) => {
-                    let s_job = jobs.find(x => x.job_id = selected_job)
+                let s_job = jobs.find(x => x.job_id = selected_job)
                     let data = {
                         expense_report_title:expenses_report_title,
                         job_id:selected_job,
@@ -145,7 +148,9 @@ import moment from 'moment';
                     }
                     addExpense(data).then((response) => {
                         if(response.status === 201 ||response.status === 200){
-                          
+                            expense_list.map((item, index) => {
+                                setLoading(true)
+                            
                            let logsss =  {
                                 "expense_id":response.data.data,
                                 "expense_date":moment(item.date).format("YYYY-MM-DD"),
@@ -158,29 +163,50 @@ import moment from 'moment';
                                 "is_log":"1"
                             }
                            
-                            addExpense(logsss).then((response) => {
-                                if(response.status === 201 ||response.status === 200){
-                                    console.log(response.status)
-                                }else{
-                                    alert("Some Error in Adding Expenses lOG")
-                                    setLoading(false)
-                                }
+                            // new Promise((resolve, reject) => {
+                                addExpense(logsss).then((response) => {
+                                    if(response.status === 201 ||response.status === 200){
+                                        console.log(index === (expense_list.length-1), "index === (expense_list.length-1)");
+                                       if(index === (expense_list.length-1)){
+                                        setAllDone(true)
+                                        setsubmissionError(false)
+                                       }
+                                       setLoading(false)
+                                    }else{
+                                        if(index === (expense_list.length-1)){
+                                            setAllDone(true)
+                                            setsubmissionError(true)
+                                        }
+                                        alert("Some Error in Adding Expenses lOG")
+                                        setLoading(false)
+                                    }
+                            //}) 
                                
                             }).catch((err) => {
-                                console.log(err.status);
+                                if(index === (expense_list.length-1)){
+                                    setAllDone(true)
+                                    setsubmissionError(true)
+                                }
                                 alert("Some Error in Adding Expenses LOG")
                                 setLoading(false)
                             })
+                        })
                         }else{
-                            alert("Some Error in Adding Expenses")
+                            if(index === (expense_list.length-1)){
+                                setAllDone(true)
+                                setsubmissionError(true)
+                            }
                             setLoading(false)
                         }
                        
                     }).catch((err) => {
-                        alert("Some Error in Adding Expenses")
+                       
+                            setAllDone(true)
+                            setsubmissionError(true)
+                      
                         setLoading(false)
                     })
-                })
+              
             }
            
         }
@@ -562,6 +588,24 @@ import moment from 'moment';
                         <BlockLoading/>
                     }
                 </View>
+                {
+                    All_Done
+                    ?
+                    submissionError ? 
+                            <ErrorModal 
+                                isVisible={All_Done}
+                                title='Some Error in Adding Expense'
+                                onClose={() =>  setAllDone(false)}
+                            /> 
+                        : 
+                            <SuccessModal 
+                                isVisible={All_Done}
+                                title='Expense Added Successfully'
+                                onClose={() =>  setAllDone(false)}
+                            /> 
+                    :
+                    null
+                }
             </NativeBaseProvider>
         );
     };

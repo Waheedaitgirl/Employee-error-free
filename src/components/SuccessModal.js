@@ -7,7 +7,7 @@ import { AppScreenWidth } from '../constants/sacling';
 import {colors, fonts} from '../constants/theme'
 import { textStyles } from '../styles';
 import Spacer from './Spacer';
-const SuccessModal = ({isVisible, onCancel ,title="Timesheet Added Successfully", onDelete}) => {
+const SuccessModal = ({isVisible, title="Timesheet Added Successfully", onClose}) => {
     return(
         <Modal
             style={styles.ModalView}
@@ -18,7 +18,7 @@ const SuccessModal = ({isVisible, onCancel ,title="Timesheet Added Successfully"
             backdropOpacity={.1}
             animationOutTiming={500}
             isVisible={isVisible}
-            onBackdropPress={() => onCancel()}>
+            onBackdropPress={() => onClose()}>
 
             <View  style={styles.mainView}>
                 <AntDesign name='checkcircle' size={scale(62)} color={colors.success_icon} />
@@ -30,7 +30,7 @@ const SuccessModal = ({isVisible, onCancel ,title="Timesheet Added Successfully"
                     <TouchableOpacity
                         style={{...styles.Button, backgroundColor:colors.success_icon}}
                         onPress={() => {
-                            onDelete()
+                            onClose()
                         }}>
                          <Text style={styles.whitetext}>
                             GO BACK
