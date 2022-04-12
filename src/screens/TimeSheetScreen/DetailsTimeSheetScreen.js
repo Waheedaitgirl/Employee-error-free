@@ -19,14 +19,24 @@ import { timeSheetDetailsById } from '../../api';
         const [loading , setLoading] = useState(true)
         const [time_sheet_details , setTimeSheetDetails] = useState(null) 
         const [logs , setLogs] = useState([])
+        const [time_types,setTimeTypes] = useState([])
+        const [filepath, setFilePath] = useState({
+            path:null, ext:null, name:null
+        })
         let item = route.params.item
         const status = item.module_status_name
         useEffect(() => {
+           
             timeSheetDetailsById(item.time_sheet_id,user.account_id).then((response) => {
                 if(response.status === 200){
-                   
+                    if(response.data.data.document_file !== null){
+                       
+                        setFilePath({...filepath, path:response.data.data.document_file, name:response.data.data.document_title})
+                    }
+                    let data = groupBy(response.data.logs, 'type')
                     setTimeSheetDetails(response.data.data)
-                    setLogs(response.data.logs)
+                    setTimeTypes(response.data.time_types)
+                    setLogs(Object.entries(data))
                     setLoading(false)
                 }else{
                     console.log("errr", response.status);
@@ -35,6 +45,15 @@ import { timeSheetDetailsById } from '../../api';
                console.log(err);
            })
         },[])
+
+        function groupBy(arr, property) {
+            return arr.reduce(function(memo, x) {
+              if (!memo[x[property]]) { memo[x[property]] = []; }
+              memo[x[property]].push(x);
+              return memo;
+            }, {});
+        }
+
         if(loading || time_sheet_details === null ){
             return(
                 <View style={commonStyles.container} >
@@ -71,11 +90,10 @@ import { timeSheetDetailsById } from '../../api';
                 />
                     <WeeklySummary 
                         editable={status === 'Draft'?true:false}
-                        summerydays={logs} 
+                        logs={logs} 
+                        time_types={time_types}
                     />
-                {
-                    status === 'Draft' && <UpLoadComponent /> 
-                }
+               
                 <View style={{width:AppScreenWidth}} >
                     <Text style={{...textStyles.smallheading,color:"#0090FF"}}>Comments</Text>
                     <DrawLine marginTop={scale(5)} />
@@ -83,12 +101,12 @@ import { timeSheetDetailsById } from '../../api';
                     <CommentsBox 
                         title={"Approver Comment"}
                         name={"Approver"}
-                        comment={time_sheet_details.approver_comments}
+                        comment={time_sheet_details.approver_comments === ""?null:time_sheet_details.approver_comments }
                     />
                     <CommentsBox 
                         title={"Submitter Comment"}
                         name={time_sheet_details.comments}
-                        comment={null}
+                        comment={time_sheet_details.comments}
                     />
 
                     <CommentsBox 

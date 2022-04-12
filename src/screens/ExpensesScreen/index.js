@@ -45,7 +45,7 @@ import moment from 'moment';
                 job={item.job_title}
                 status_colour_code={item.status_colour_code}
                 price={`$ ${parseFloat(item.total_amount).toFixed(2)}`}
-                onPress={() => {navigation.navigate(MainRoutes.ExpenseDetailsScreen,{item:item})}}
+                onPress={() => {navigation.navigate(MainRoutes.EditExpenseScreen,{item:item})}}
             />
         ); 
           if(loading){

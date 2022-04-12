@@ -11,9 +11,10 @@ import { MainRoutes } from '../../constants/routes';
 import { colors, fonts } from '../../constants/theme';
 import { AppScreenWidth, hp, width } from '../../constants/sacling';
 import ErrorModal from '../../components/ErrorModal';
-           
+import { useSelector } from 'react-redux';
     const HomeScreen = ({navigation}) => {
-   
+        const {user} = useSelector(state => state.LoginReducer)
+      
         return (
             <View style={commonStyles.container} >
                 <CustomHeader 
@@ -24,7 +25,7 @@ import ErrorModal from '../../components/ErrorModal';
                 />
                 <View style={{width:AppScreenWidth,marginVertical:scale(5) ,alignItems:"flex-start", alignSelf:"center"}} >
                     <Text style={styles.headingtext} >Welcome !</Text>
-                    <Text style={styles.nameText} >Aftab Ameen</Text>
+                    <Text style={styles.nameText} >{user.preferred_name}</Text>
                     <Text style={styles.paragraph} >Streamline your company’s business efficiently managing candidates, jobs and placements</Text>
                 </View>
                 <View style={styles.main} />
@@ -54,7 +55,11 @@ import ErrorModal from '../../components/ErrorModal';
                     <TouchableOpacity 
                         onPress={() => navigation.navigate(MainRoutes.LeavesScreen) } 
                         style={styles.box} >
-                        <LEAVE width={scale(50)} height={scale(50)} />
+                        <Entypo 
+                            name="calendar" 
+                            color={colors.dark_primary_color} 
+                            size={scale(50)} 
+                        />
                         <Text style={styles.textStyle}>Leaves</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
@@ -160,7 +165,7 @@ const styles = StyleSheet.create({
     textStyle: {
         marginTop:scale(10),
         fontFamily:fonts.Medium,
-        fontSize:scale(16),
+        fontSize:scale(14),
         color: colors.secondary_text_color
     },
 })

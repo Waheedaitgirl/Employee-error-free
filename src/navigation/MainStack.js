@@ -8,11 +8,13 @@ import EditProfileScreen from '../screens/EditProfileScreen'
 import TimeSheetListScreen from '../screens/TimeSheetScreen';
 import AddTimeSheetScreen from '../screens/TimeSheetScreen/AddTimeSheetScreen';
 import DetailsSheetScreen from '../screens/TimeSheetScreen/DetailsTimeSheetScreen';
+import EditTimeSheetScreen from '../screens/TimeSheetScreen/EditTimeSheetScreen';
 
 // Expenses screen
 import MyExpensesScreen from '../screens/ExpensesScreen';
 import ExpenseDetailsScreen from '../screens/ExpensesScreen/ExpansesDetails';
 import AddExpenseScreen from '../screens/ExpensesScreen/AddExpenseScreen';
+import EditExpenseScreen from '../screens/ExpensesScreen/EditExpenseScreen';
 
 import MyTasksScreen from '../screens/MyTasksScreen';
 import MyTimeScreen from '../screens/MyTimeScreen';
@@ -65,6 +67,15 @@ const MainStack = () => {
                     headerShown:false
                 }}
             />
+
+            <Stack.Screen 
+                name="EditTimeSheetScreen" 
+                component={EditTimeSheetScreen} 
+                options={{
+                    headerShown:false
+                }}
+            />
+
             <Stack.Screen 
                 name="MyExpensesScreen" 
                 component={MyExpensesScreen} 
@@ -83,6 +94,14 @@ const MainStack = () => {
             <Stack.Screen 
                 name="AddExpenseScreen" 
                 component={AddExpenseScreen} 
+                options={{
+                    headerShown:false
+                }}
+            />
+
+            <Stack.Screen 
+                name="EditExpenseScreen" 
+                component={EditExpenseScreen} 
                 options={{
                     headerShown:false
                 }}

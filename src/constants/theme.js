@@ -1,12 +1,12 @@
 export const fonts = {
-    Bold:"Ubuntu-Bold",
-    BoldItalic:"Ubuntu-BoldItalic",
-    Italic:"Ubuntu-Italic",
-    Medium:"Ubuntu-Medium",
-    MediumItalic:"Ubuntu-MediumItalic",
-    Light:"Ubuntu-Light",
-    LightItalic:"Ubuntu-LightItalic",
-    Regular:"Ubuntu-Regular"
+    Bold:"Poppins-Bold",
+    BoldItalic:"Poppins-BoldItalic",
+    Italic:"Poppins-Italic",
+    Medium:"Poppins-Medium",
+    MediumItalic:"Poppins-MediumItalic",
+    Light:"Poppins-Light",
+    LightItalic:"Poppins-LightItalic",
+    Regular:"Poppins-Regular"
 }
 
 export const colors = {

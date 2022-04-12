@@ -4,18 +4,14 @@ import { scale } from "react-native-size-matters";
 import { AppScreenWidth } from "../../constants/sacling";
 import { colors, fonts } from "../../constants/theme";
 import { textStyles } from "../../styles/textStyles";
+import moment from "moment";
 const TimeInput = ({item , index ,editable, setHours}) => {
    
   const [error , isError] = useState(false)
     return(
         <View style={styles.mainview} >
             <Text style={styles.label} >{item.date}</Text>
-            {
-                item.type && 
-                <Text style={{...styles.label, color:colors.dark_primary_color}} >
-                    {item.type}
-                </Text>
-            }
+           
             <TextInput 
                 keyboardType={"numeric"}
                 placeholder={editable?"0.0":"Disable"}
@@ -30,7 +26,7 @@ const TimeInput = ({item , index ,editable, setHours}) => {
                         setHours(index, data)
                     }  
                 }}
-                style={{...styles.textinput, backgroundColor:editable?"rgba(0,0,0,.1)":"rgba(0,0,0,.4)"}}
+                style={{...styles.textinput, backgroundColor:editable?"rgba(0,0,0,1)":"rgba(0,0,0,1)"}}
             />
             {error &&  <Text style={{...styles.label, color:colors.delete_icon}} >Invalid</Text>}
         </View>
@@ -39,11 +35,12 @@ const TimeInput = ({item , index ,editable, setHours}) => {
 export default TimeInput
 const styles = StyleSheet.create({
     textinput:{
-        backgroundColor:"rgba(0,0,0,.1)",
+        backgroundColor:"rgba(0,0,0,1)",
         paddingTop:0,
         paddingBottom:0, 
         width:AppScreenWidth/3,
         marginTop:scale(5),
+        color:"#fff",
         textAlign:"center",
         height:scale(30),
         fontFamily:fonts.Regular,

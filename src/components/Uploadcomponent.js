@@ -68,7 +68,7 @@ const UpLoadComponent = ({wdt= AppScreenWidth-scale(10),filepath, setFilePath}) 
                 <Text 
                 ellipsizeMode={"middle"}
                     numberOfLines={1}
-                    style={{...styles.textplaceholder, width:wdt-scale(45)}}>{filepath.path === null ?"Click here to choose file":filepath.name} </Text>
+                    style={{...styles.textplaceholder, width:wdt-scale(45)}}>{filepath?.path === null ?"Click here to choose file":filepath?.name} </Text>
                 <View style={{width:scale(25),alignItems:"center", justifyContent:"center", height:scale(25)}}>
                     <Entypo 
                         size={scale(20)} 

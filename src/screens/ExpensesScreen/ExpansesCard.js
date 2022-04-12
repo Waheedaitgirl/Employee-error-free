@@ -70,12 +70,14 @@ const ExpansesItem = memo(({item, billtype, company, status,date, job,status_col
                             <Bill width={scale(20)} height={scale(20)} />
                         </View>
                         <Text 
+                            
                             style={{
                                 ...styles.textStyle, 
                                 backgroundColor:"#34CE44",
                                 color:"#fff",
+                                textAlign:"center",
                                 paddingHorizontal:scale(10),
-                                paddingVertical:scale(2),
+                                includeFontPadding:false,
                                 borderRadius:scale(5)
                             }}>{price}</Text>
                     </View>
@@ -89,7 +91,12 @@ const ExpansesItem = memo(({item, billtype, company, status,date, job,status_col
                         size={scale(18)} 
                     />
                 </View>
-                <Text style={[styles.textStyle,ss,{paddingHorizontal:10, paddingVertical:2,borderRadius:5,}]}>{status}</Text>
+                <Text style={[styles.textStyle,ss,{
+                      textAlign:"center",
+                      borderRadius:scale(5),
+                      paddingHorizontal:scale(10),
+                      includeFontPadding:false,
+                    }]}>{status}</Text>
             </View>
             {
             status !== "Approved" &&
@@ -133,7 +140,7 @@ const styles = StyleSheet.create({
     },
     btnView: {
       
-        marginBottom:scale(12),
+        marginBottom:scale(2),
         flexDirection: 'row',
         alignItems:"center"
     },

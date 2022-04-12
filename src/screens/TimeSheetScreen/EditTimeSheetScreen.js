@@ -19,7 +19,7 @@ import BlockLoading from '../../components/BlockLoading';
 import AlertModal from '../../components/AlertModal';
 import { getJobWorkingDays,uploadFile,addTimeSheet, jobTimeTypes, listCandidateJobs } from '../../api';
 import BaseUrl from '../../api/BaseUrl';
-    const AddTimeSheetScreen = ({navigation}) => {
+    const EditTimeSheetScreen = ({navigation}) => {
         const {user} = useSelector(state => state.LoginReducer)
         const [submit , setSubmit] = useState(false)
         const [draft, setDraft] = useState(false)
@@ -258,7 +258,7 @@ import BaseUrl from '../../api/BaseUrl';
                         is_attachment:"0",
                         logs:logs
                     } 
-                    console.log(data, "Data");
+                   
                     addTimeSheet(data).then((data) => {
                        alert("TimeSheet Added Successfully")
                        setLoading(false)
@@ -336,7 +336,7 @@ import BaseUrl from '../../api/BaseUrl';
                         show_backButton={true}
                         isdrawer={false}
                         onPress={() =>  navigation.goBack()}
-                        title={"Add TimeSheet"}
+                        title={"Edit TimeSheet"}
                     />
                     <View style={styles.Row} >
                         <View>
@@ -488,7 +488,7 @@ import BaseUrl from '../../api/BaseUrl';
     };
 
 
-export default AddTimeSheetScreen;
+export default EditTimeSheetScreen;
 
 
 const styles = StyleSheet.create({

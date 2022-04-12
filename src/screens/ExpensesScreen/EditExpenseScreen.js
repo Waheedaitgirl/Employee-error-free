@@ -21,7 +21,7 @@ import ErrorModal from '../../components/ErrorModal';
 import SuccessModal from '../../components/SuccessModal';
 import BaseUrl from '../../api/BaseUrl';
 
-    const AddExpenseScreen = ({navigation}) => {
+    const EditExpenseScreen = ({navigation}) => {
         const {user} = useSelector(state => state.LoginReducer)
      
         const [submit , setSubmit] = useState(false)
@@ -597,7 +597,7 @@ import BaseUrl from '../../api/BaseUrl';
     };
 
 
-export default AddExpenseScreen;
+export default EditExpenseScreen;
 
 const styles = StyleSheet.create({
     Row:{

@@ -42,7 +42,7 @@ import DeleteModal from '../../components/DeleteModal';
                 status={item.module_status_name}
                 status_style={item.status_colour_code}
                 hours={`${item.log_hours} Hours`}
-                onPress={() => navigation.navigate(MainRoutes.DetailsSheetScreen, {item})}
+                onPress={() => navigation.navigate(MainRoutes.EditTimeSheetScreen, {item})}
             />
           ); 
           if(loading){

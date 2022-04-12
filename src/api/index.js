@@ -57,9 +57,9 @@ export function timeSheetDetailsById(timesheet_id,account_id){
     });
 }
 
-export function listCandidateJobs(account_id,candidate_id){
+export function listCandidateJobs(account_id,candidate_id, approver_type = 1){
     return request({
-        url: `timesheet?account_id=${account_id}&candidate_id=${candidate_id}&type=job_list`,
+        url: `timesheet?account_id=${account_id}&approver_type=${approver_type}&candidate_id=${candidate_id}&type=job_list`,
         method: 'get',
     });
 }
@@ -78,6 +78,12 @@ export function getExpenseslist(account_id,candidate_id){
     });
 }
 
+export function getExpensesDetails(account_id,expense_id){
+    return request({
+        url: `expenses?account_id=${account_id}&expense_id=${expense_id}&type=expenses_details`,
+        method: 'get'
+    });
+}
 export function getExpenseTypeCategoryBillType(account_id,company_id){
     return request({
         url: `expenses?account_id=${account_id}&company_id=${company_id}&type=expenses_type`,
