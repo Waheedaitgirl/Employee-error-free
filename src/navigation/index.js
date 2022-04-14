@@ -7,7 +7,7 @@ import { colors } from '../constants/theme';
 import {useDispatch,useSelector} from 'react-redux';
 const MainApp = () => {
     const { is_logged_in} = useSelector(state => state.LoginReducer);
-    console.log(is_logged_in,"is_logged_inis_logged_in");
+   
     return(
         <NavigationContainer>
             <StatusBar

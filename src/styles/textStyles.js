@@ -34,7 +34,7 @@ export const textStyles = StyleSheet.create({
         backgroundColor:"#0000",
     },
     Label:{
-        fontFamily:fonts.Regular,
+        fontFamily:fonts.Medium,
         fontSize:scale(12),
         color:colors.text_primary_color,
         backgroundColor:"#0000",

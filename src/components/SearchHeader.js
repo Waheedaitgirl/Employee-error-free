@@ -29,31 +29,41 @@ const CustomHeader = ({title,onPress,NotificationPress,FilterPress,SearchPress})
           <Animated.View 
             style={{
 
-              backgroundColor:"rgba(0,0,0,.1)",
+              backgroundColor:"rgba(255,255,255,1)",
               justifyContent:"space-between",
-              paddingHorizontal:scale(7),
+              paddingRight:scale(7),
               alignItems:"center", 
               flexDirection:"row", 
               borderRadius:scale(5),
+              overflow:"hidden",
               alignSelf:"center",
               height:verticalScale(35),
               width:width-scale(10)
             }}
               entering={LightSpeedInRight.duration(1000)} 
               exiting={LightSpeedOutLeft.duration(1000)} >
-              <TouchableOpacity  onPress={() => setShowSearch(!show_search)} >
-                  <FontAwesome name={"search"} color={"#fff"} size={scale(20)} />
+              <TouchableOpacity 
+                  style={{
+                    backgroundColor:"rgba(0,0,0,.3)",
+                    justifyContent:"center", 
+                    alignItems:"center", 
+                    width:scale(35), 
+                    height:verticalScale(35)
+                    }}  
+                  onPress={() => setShowSearch(!show_search)} >
+                  <FontAwesome name={"search"} color={"#000"} size={scale(20)} />
               </TouchableOpacity>
               <TextInput
                   placeholder={"Search Here"}
-                  placeholderTextColor={"#fff"}
+                  placeholderTextColor={"#000"}
                   style={{
                     paddingTop:0,
                     paddingBottom:0,
                     paddingHorizontal:scale(10),
                     fontFamily:fonts.Light,
                     fontSize:scale(12),
-                    color:"#fff",
+                    color:"#000",
+                    includeFontPadding:false,
                     height:verticalScale(30),
                     width:AppScreenWidth-scale(60),
                     borderRadius:scale(5), 
@@ -62,7 +72,7 @@ const CustomHeader = ({title,onPress,NotificationPress,FilterPress,SearchPress})
               />
         
               <TouchableOpacity  onPress={() => setShowSearch(!show_search)} >
-                  <AntDesign name={"close"} color={"#fff"} size={scale(20)} />
+                  <AntDesign name={"close"} color={"#000"} size={scale(20)} />
               </TouchableOpacity>
           </Animated.View>
         </View>
@@ -136,8 +146,8 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     title:{
-        fontFamily:fonts.Bold,
-        fontSize: scale(18),
+        fontFamily:fonts.Medium,
+        fontSize: scale(15),
         color: colors.white,
     },
     LeftIconView:{

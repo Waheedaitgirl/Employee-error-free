@@ -8,12 +8,13 @@ import { scale, verticalScale } from 'react-native-size-matters';
 import { commonStyles,textStyles } from '../../styles';
 import CustomHeader from '../../components/CustomHeader';
 import { MainRoutes } from '../../constants/routes';
-
 import { colors, fonts } from '../../constants/theme';
 import { AppScreenWidth, hp, width } from '../../constants/sacling';
-
-           
+import ErrorModal from '../../components/ErrorModal';
+import { useSelector } from 'react-redux';
     const HomeScreen = ({navigation}) => {
+        const {user} = useSelector(state => state.LoginReducer)
+      
         return (
             <View style={commonStyles.container} >
                 <CustomHeader 
@@ -24,7 +25,7 @@ import { AppScreenWidth, hp, width } from '../../constants/sacling';
                 />
                 <View style={{width:AppScreenWidth,marginVertical:scale(5) ,alignItems:"flex-start", alignSelf:"center"}} >
                     <Text style={styles.headingtext} >Welcome !</Text>
-                    <Text style={styles.nameText} >Aftab Ameen</Text>
+                    <Text style={styles.nameText} >{user.preferred_name}</Text>
                     <Text style={styles.paragraph} >Streamline your company’s business efficiently managing candidates, jobs and placements</Text>
                 </View>
                 <View style={styles.main} />
@@ -54,7 +55,11 @@ import { AppScreenWidth, hp, width } from '../../constants/sacling';
                     <TouchableOpacity 
                         onPress={() => navigation.navigate(MainRoutes.LeavesScreen) } 
                         style={styles.box} >
-                        <LEAVE width={scale(50)} height={scale(50)} />
+                        <Entypo 
+                            name="calendar" 
+                            color={colors.dark_primary_color} 
+                            size={scale(50)} 
+                        />
                         <Text style={styles.textStyle}>Leaves</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
@@ -68,11 +73,12 @@ import { AppScreenWidth, hp, width } from '../../constants/sacling';
                         <Text style={styles.textStyle}>Tasks</Text>
                     </TouchableOpacity>
                 </View>
-               <View style={styles.main2} >
+                <View style={styles.main2} >
                     <Text style={styles.paragraph}>
                         Copyright @{new Date().getFullYear()} RecruitBPM All Rights Reserved
                     </Text>
-               </View>
+                </View>
+             
             </View>
             
         );
@@ -92,14 +98,14 @@ const styles = StyleSheet.create({
         backgroundColor:colors.dark_primary_color
     },
     main2:{
-        height:hp(10),
+        height:hp(5),
         width:width,
         zIndex:10,
         position:"absolute",
         justifyContent:"center",
         alignItems:"center",
         paddingHorizontal:scale(5),
-        bottom:scale(-10),
+        bottom:scale(0),
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -109,8 +115,8 @@ const styles = StyleSheet.create({
         shadowRadius: 16.00,
 
         elevation: 24,
-        borderTopLeftRadius:hp(5),
-        borderTopRightRadius:hp(5),
+        borderTopLeftRadius:hp(3),
+        borderTopRightRadius:hp(3),
         backgroundColor:colors.dark_primary_color
     },
     headingtext:{
@@ -129,9 +135,9 @@ const styles = StyleSheet.create({
     },
     paragraph:{
         ...textStyles.paragraph,
-        fontSize:scale(14), 
+        fontSize:scale(12), 
         color:"#fff", 
-        marginTop:scale(2), 
+       includeFontPadding:false,
         marginHorizontal:scale(5), 
         textAlign:"left"
     },
@@ -159,7 +165,7 @@ const styles = StyleSheet.create({
     textStyle: {
         marginTop:scale(10),
         fontFamily:fonts.Medium,
-        fontSize:scale(16),
+        fontSize:scale(14),
         color: colors.secondary_text_color
     },
 })

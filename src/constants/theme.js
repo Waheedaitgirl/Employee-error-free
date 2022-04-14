@@ -1,12 +1,12 @@
 export const fonts = {
-    Bold:"Ubuntu-Bold",
-    BoldItalic:"Ubuntu-BoldItalic",
-    Italic:"Ubuntu-Italic",
-    Medium:"Ubuntu-Medium",
-    MediumItalic:"Ubuntu-MediumItalic",
-    Light:"Ubuntu-Light",
-    LightItalic:"Ubuntu-LightItalic",
-    Regular:"Ubuntu-Regular"
+    Bold:"Poppins-Bold",
+    BoldItalic:"Poppins-BoldItalic",
+    Italic:"Poppins-Italic",
+    Medium:"Poppins-Medium",
+    MediumItalic:"Poppins-MediumItalic",
+    Light:"Poppins-Light",
+    LightItalic:"Poppins-LightItalic",
+    Regular:"Poppins-Regular"
 }
 
 export const colors = {
@@ -21,4 +21,6 @@ export const colors = {
     divide_color:"#BDBDBD",
     error_text:"rgba(255, 0, 0,1)",
     white:"#fff",
+    delete_icon:"#C00",
+    success_icon:"#067000"
 }
