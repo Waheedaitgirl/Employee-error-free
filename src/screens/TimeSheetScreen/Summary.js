@@ -14,18 +14,8 @@ const WeeklySummary = ({logs,editable, time_types}) => {
                 logs.map((item, index) => {
                   
                     return(
-                        <View>
-                            <View style={{
-                               
-                                maxWidth:scale(120), 
-                                marginTop:scale(5),
-                                backgroundColor:colors.divide_color, 
-                                borderWidth:0, 
-                                borderRadius:scale(5),
-                                justifyContent:"center",
-                                alignItems:"center",
-                                paddingVertical:scale(5)
-                                }}>
+                        <View key={`${index}`} >
+                            <View style={styles.textbox}>
                                 <Text style={styles.text}>{time_types[index]}</Text>
                             </View>
                             <FlatList 
@@ -58,8 +48,17 @@ const styles = StyleSheet.create({
     text:{
         ...textStyles.smallheading,
         backgroundColor:"#0000",
-      
-       
+    },
+    textbox:{
+                               
+        maxWidth:scale(120), 
+        marginTop:scale(5),
+        backgroundColor:colors.divide_color, 
+        borderWidth:0, 
+        borderRadius:scale(5),
+        justifyContent:"center",
+        alignItems:"center",
+        paddingVertical:scale(5)
     },
     textinput:{
         backgroundColor:"rgba(0,0,0,.1)",

@@ -324,7 +324,7 @@ import BaseUrl from '../../api/BaseUrl';
                 setWeekDays(wdays)
             }else{
                 let wdays = moment(startDate).format('ddd DD MMM');
-                setWeekDays([{date:wdays,insert_date:wdays.format('YYYY-MM-DD'), hours:null}])
+                setWeekDays([{date:wdays,insert_date:moment(startDate).format('YYYY-MM-DD'), hours:null}])
             }
            
         }

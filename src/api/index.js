@@ -48,7 +48,12 @@ export function jobTimeTypes(account_id,job_id){
     });
 }
 
-
+export function getEditTimeSheetDetails(time_sheet_id,candidate_id,account_id,job_id){
+    return request({
+        url: `timesheet?account_id=${account_id}&job_id=${job_id}&time_sheet_id=${time_sheet_id}&candidate_id=${candidate_id}&type=timesheet_edit_details`,
+        method: 'get'
+    });
+}
 
 export function timeSheetDetailsById(timesheet_id,account_id){
     return request({
@@ -84,6 +89,7 @@ export function getExpensesDetails(account_id,expense_id){
         method: 'get'
     });
 }
+
 export function getExpenseTypeCategoryBillType(account_id,company_id){
     return request({
         url: `expenses?account_id=${account_id}&company_id=${company_id}&type=expenses_type`,

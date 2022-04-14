@@ -15,6 +15,7 @@ const TimeInput = ({item , index ,editable, setHours}) => {
             <TextInput 
                 keyboardType={"numeric"}
                 placeholder={editable?"0.0":"Disable"}
+                placeholderTextColor={"rgba(255,255,255,.5)"}
                 value={item.hours}
                 editable={editable}
                 onChangeText={(data) =>  {

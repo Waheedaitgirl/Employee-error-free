@@ -12,7 +12,7 @@ import Job from '../../assets/images/job.svg'
 import transform from 'css-to-react-native';
 import DeleteModal from '../../components/DeleteModal';
 import { DeleteExpense } from '../../api';
-const ExpansesItem = memo(({item, billtype, company, status,date, job,status_colour_code, price,onPress}) => {
+const ExpansesItem = memo(({item, billtype, company, status,date,List, job,status_colour_code, price,onDelete, onPress}) => {
     let arr = (status_colour_code.split(";"))
     const [isVisible ,setIsVisible] = useState(false)
     const ss = transform([
@@ -23,14 +23,19 @@ const ExpansesItem = memo(({item, billtype, company, status,date, job,status_col
         const DeleteItem = () => {
             setIsVisible(false)
             DeleteExpense(item.expense_id).then((response) => {
-                console.log(response.status);
+                if(response.status == 200){
+                    onDelete()
+                }else{
+                    alert("Error" + response.status);
+                }
+                
             }).catch((err) => {
-                console.log(err.status);
+                alert("Error" + err.status);
             })
         }
     return(
         <TouchableOpacity 
-            onPress={onPress}
+            onPress={List}
             style={styles.mainView}>
             <View   
                 style={styles.btnView}>
@@ -71,15 +76,7 @@ const ExpansesItem = memo(({item, billtype, company, status,date, job,status_col
                         </View>
                         <Text 
                             
-                            style={{
-                                ...styles.textStyle, 
-                                backgroundColor:"#34CE44",
-                                color:"#fff",
-                                textAlign:"center",
-                                paddingHorizontal:scale(10),
-                                includeFontPadding:false,
-                                borderRadius:scale(5)
-                            }}>{price}</Text>
+                            style={styles.pricetxt}>{price}</Text>
                     </View>
             }
             <View   
@@ -94,6 +91,8 @@ const ExpansesItem = memo(({item, billtype, company, status,date, job,status_col
                 <Text style={[styles.textStyle,ss,{
                       textAlign:"center",
                       borderRadius:scale(5),
+                      fontSize:scale(10),
+                      paddingVertical:scale(3),
                       paddingHorizontal:scale(10),
                       includeFontPadding:false,
                     }]}>{status}</Text>
@@ -103,7 +102,7 @@ const ExpansesItem = memo(({item, billtype, company, status,date, job,status_col
                 <View style={styles.buttonView} >
                     { 
                         status !== "Submitted" && 
-                        <TouchableOpacity style={{...styles.actionButton}} >
+                        <TouchableOpacity onPress={onPress}  style={{...styles.actionButton}} >
                             <MaterialCommunityIcons 
                                 name="clock-edit" 
                                 color={colors.dark_primary_color} 
@@ -165,5 +164,19 @@ const styles = StyleSheet.create({
         paddingHorizontal:scale(5), 
         alignItems:"center", 
         justifyContent:"center"
+    },
+    pricetxt:{
+        marginLeft:scale(10), 
+        fontFamily:fonts.Medium,
+        color: colors.text_primary_color,
+        backgroundColor:"#34CE44",
+        color:"#fff",
+        fontSize:scale(10),
+        paddingVertical:scale(3),
+        paddingHorizontal:scale(10),
+        textAlign:"center",
+        paddingHorizontal:scale(10),
+        includeFontPadding:false,
+        borderRadius:scale(5)
     }
 })

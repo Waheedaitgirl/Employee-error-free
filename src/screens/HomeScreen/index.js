@@ -98,14 +98,14 @@ const styles = StyleSheet.create({
         backgroundColor:colors.dark_primary_color
     },
     main2:{
-        height:hp(7),
+        height:hp(5),
         width:width,
         zIndex:10,
         position:"absolute",
         justifyContent:"center",
         alignItems:"center",
         paddingHorizontal:scale(5),
-        bottom:scale(-10),
+        bottom:scale(0),
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -135,9 +135,9 @@ const styles = StyleSheet.create({
     },
     paragraph:{
         ...textStyles.paragraph,
-        fontSize:scale(14), 
+        fontSize:scale(12), 
         color:"#fff", 
-        marginTop:scale(2), 
+       includeFontPadding:false,
         marginHorizontal:scale(5), 
         textAlign:"left"
     },

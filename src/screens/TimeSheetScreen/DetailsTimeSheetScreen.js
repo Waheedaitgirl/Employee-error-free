@@ -115,33 +115,15 @@ import { timeSheetDetailsById } from '../../api';
                     />
                 </View>
                 <Spacer />
-                {
-                    status === 'Draft' ?
-                    <View>
-                        <CustomButton 
-                            onPress={() => navigation.goBack()}
-                            loading={false}
-                            backgroundColor={colors.blue}
-                            text={"Submit Timesheet"}
-                            loadingText={"Processing"}
-                        />
-                        <Spacer />
-                        <CustomButton 
-                            onPress={() => navigation.goBack()}
-                            loading={false}
-                            text={"Discard"}
-                            loadingText={"Processing"}
-                        />
-                    </View>
-                    :
-                    <CustomButton 
-                        onPress={() => navigation.goBack()}
-                        loading={false}
-                        backgroundColor={colors.blue}
-                        text={"Back"}
-                        loadingText={"Processing"}
-                    />
-                }
+               
+                <CustomButton 
+                    onPress={() => navigation.goBack()}
+                    loading={false}
+                    backgroundColor={colors.blue}
+                    text={"Go Back"}
+                    loadingText={"Processing"}
+                />
+                      
             </View>
         );
     };

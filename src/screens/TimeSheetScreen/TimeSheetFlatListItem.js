@@ -9,7 +9,7 @@ import Job from '../../assets/images/job.svg'
 import { AppScreenWidth } from "../../constants/sacling"
 import transform from 'css-to-react-native';
 import DeleteModal from "../../components/DeleteModal"
-const TimeSheetFlatListItem = memo(({name, time, submittedto,status_style, status, hours,onPress}) => {
+const TimeSheetFlatListItem = memo(({name, time, submittedto,status_style, status, hours,onPress, onEdit}) => {
     let arr = (status_style.split(";"))
     const [isVisible , setIsVisible] = useState(false)
     const ss = transform([
@@ -73,7 +73,7 @@ const TimeSheetFlatListItem = memo(({name, time, submittedto,status_style, statu
                 <View style={styles.buttonView} >
                     { 
                         status !== "Submitted" && 
-                        <TouchableOpacity onPress={onPress} style={{...styles.actionButton}} >
+                        <TouchableOpacity onPress={onEdit} style={{...styles.actionButton}} >
                             <MaterialCommunityIcons name="clock-edit" color={colors.dark_primary_color} size={scale(22)} />
                         </TouchableOpacity>
                     }
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
         marginHorizontal:scale(1.5),
         alignSelf:"center",
         elevation:2,
-        height:verticalScale(160),
+      
         backgroundColor:"#fefefe",
         marginVertical:scale(5),
         padding:scale(10),

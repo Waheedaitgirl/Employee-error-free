@@ -50,8 +50,8 @@ const styles = StyleSheet.create({
     },
     text:{
         color:colors.white,
-        fontSize:scale(16),
-        fontFamily:fonts.Bold
+        fontSize:scale(14),
+        fontFamily:fonts.Medium
     }
 })
 

@@ -19,12 +19,12 @@ const AddWeeklySummary = ({
         setHours,
         job_working_days
     }) => {
-     
+   
     return(
         <NativeBaseProvider>
             {
                alldata.map((item, maindex) => {
-             
+           
                 return(
                     <View style={styles.mainview} key={`${maindex}`}>
                     <View  style={styles.Row}>
@@ -35,7 +35,7 @@ const AddWeeklySummary = ({
                             </Text>
                             <Spacer />
                             <Select
-                                selectedValue={time_type[maindex]?.name}
+                                selectedValue={time_type[maindex]?.id}
                                 width={AppScreenWidth/2}
                                 placeholderTextColor={colors.text_primary_color}
                                 fontFamily={fonts.Regular}

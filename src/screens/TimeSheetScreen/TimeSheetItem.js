@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
         borderRadius:scale(10)
     },
     btnView: {
-        marginBottom:scale(12),
+        marginBottom:scale(2),
         flexDirection: 'row',
         alignItems:"center"
     },

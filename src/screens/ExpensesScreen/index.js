@@ -21,6 +21,10 @@ import moment from 'moment';
         const [data, setData] = useState([])
         const [loading, setLoading ] = useState(true)
         useEffect(() => {
+            getExpensesList()
+        },[])
+        getExpensesList = () => {
+            setLoading(true)
             getExpenseslist(user.account_id, user.candidate_id)
             .then((response) => {
                 if(response.status == 200){
@@ -34,7 +38,7 @@ import moment from 'moment';
                 alert("Error")
                 setLoading(false)
             })
-        },[])
+        }
         const renderItem = ({ item }) => (
             <ExpansesItem 
                 item={item}
@@ -45,7 +49,9 @@ import moment from 'moment';
                 job={item.job_title}
                 status_colour_code={item.status_colour_code}
                 price={`$ ${parseFloat(item.total_amount).toFixed(2)}`}
+                onDelete={() => getExpensesList()}
                 onPress={() => {navigation.navigate(MainRoutes.EditExpenseScreen,{item:item})}}
+                List={() => {navigation.navigate(MainRoutes.ExpenseDetailsScreen,{item:item})}}
             />
         ); 
           if(loading){
@@ -111,7 +117,7 @@ import moment from 'moment';
                         paddingHorizontal:scale(20), 
                         paddingVertical:scale(10),
                         position:"absolute",
-                        bottom:0
+                        bottom:scale(25)
                     }}>
                     <AntDesign name={"pluscircle"} size={scale(35)} color={colors.dark_primary_color} />
                </TouchableOpacity>

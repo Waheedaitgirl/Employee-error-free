@@ -17,13 +17,14 @@ import { AppScreenWidth } from '../../constants/sacling';
 import { colors, fonts } from '../../constants/theme';
 import BlockLoading from '../../components/BlockLoading';
 import AlertModal from '../../components/AlertModal';
-import { getJobWorkingDays,uploadFile,addTimeSheet, jobTimeTypes, listCandidateJobs } from '../../api';
+import {getEditTimeSheetDetails, getJobWorkingDays,timeSheetDetailsById,addTimeSheet, jobTimeTypes, listCandidateJobs } from '../../api';
 import BaseUrl from '../../api/BaseUrl';
-    const EditTimeSheetScreen = ({navigation}) => {
+    const EditTimeSheetScreen = ({navigation, route}) => {
+       let item = route.params.item
         const {user} = useSelector(state => state.LoginReducer)
         const [submit , setSubmit] = useState(false)
         const [draft, setDraft] = useState(false)
-        const [startDate, setStartDate] = useState("")
+        const [startDate, setStartDate] = useState(item.log_date)
         const [loading, setLoading ] = useState(true)
         const [filepath, setFilePath] = useState({
             path:null, ext:null, name:null
@@ -39,8 +40,8 @@ import BaseUrl from '../../api/BaseUrl';
             week_days
             time_type
         */
-        const [time_sheet_type , set_time_sheet_type] = useState("Week")
-        const [selected_job,set_selected_job] = useState(null) // user  select job
+        const [time_sheet_type , set_time_sheet_type] = useState(item.time_sheet_view)
+        const [selected_job,set_selected_job] = useState(item.job_id) // user  select job
         const [week_days , setWeekDays] = useState([])
        
         // these both are reset with tab chnages
@@ -50,14 +51,45 @@ import BaseUrl from '../../api/BaseUrl';
         const [error_messaage , set_error_messsage] = useState(null)
         const [visible, setVisible] = useState(false);
         useEffect(() => {
-            listCandidateJobs(user.account_id, user.candidate_id ,"1").then((response) => {
-               //console.log(response.data);
-                setJobs(response.data.data);
-                setLoading(false)
-            }).catch((err) => {
-                console.log(err)
-            })
+           
+            getEditTimeSheetDetails(
+                item.time_sheet_id,
+                user.candidate_id,
+                user.account_id,
+                item.job_id)
+                .then((response) => {
+                  
+                    setJobs(response.data.jobs)
+                    let arr2 = Object.entries(JSON.parse(response.data.working_days[0].working_days_config))
+                    // convert twodmnentional arra to one dimentional array
+                    set_job_working_days(arr2.map(([day, value]) => ({day, value })));
+                    set_job_time_types(response.data.job_time_types);
+                    setTimeType(response.data.timesheet_time_types)
+                    setFilePath({
+                        ...filepath,
+                        path:response.data.timesheet_data.document_file,
+                        name:response.data.timesheet_data.document_title
+                    })
+                    let data = groupBy(response.data.timesheet_logs, 'type')
+                  
+                    let d2 = Object.entries(data)
+                    let temp  = [...alldata]
+                    d2.map((item, index) =>temp.push(item[1]))
+                    setAlldata(temp)
+                    setLoading(false)
+                   
+                }).catch((err) => {
+                    console.log(err);
+                    setLoading(false)
+                })
         },[])
+        function groupBy(arr, property) {
+            return arr.reduce(function(memo, x) {
+              if (!memo[x[property]]) { memo[x[property]] = []; }
+              memo[x[property]].push(x);
+              return memo;
+            }, {});
+        }
      // Pure API Call on job Selection
         const getJobtimetype = () => {
             setAlldata([])
@@ -465,9 +497,10 @@ import BaseUrl from '../../api/BaseUrl';
                         <Spacer />
                         <CustomButton
                             loading={draft}
-                            loadingText={"Saving"}
-                            onPress={() =>ValidateData(true) }
-                            text={"Save as a Draft"}
+                            loadingText={"Deleting"}
+                            onPress={() => alert("Delete") }
+                            text={"Delete"}
+                            backgroundColor={colors.delete_icon}
                             marginTop={scale(10)}
                         />
                     </View>
