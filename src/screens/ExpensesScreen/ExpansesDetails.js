@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react';
-import {Text,ScrollView,View,StyleSheet} from 'react-native';
+import {Text,SafeAreaView,ActivityIndicator, ScrollView,View,StyleSheet} from 'react-native';
 import { commonStyles, textStyles } from '../../styles';
 import CustomHeader from '../../components/CustomHeader';
 import ExpansesItem from './ExpansesCard';
@@ -11,6 +11,8 @@ import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { getExpensesDetails } from '../../api';
 import { widthPercentageToDP } from 'react-native-responsive-screen';
+import CustomStatusBar from '../../components/StatusBar';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 const Item = ({date, expense_type, bill_type , category, amount , filename, approver_comments,expense_comments }) => {
    
     return(
@@ -71,60 +73,115 @@ const Item = ({date, expense_type, bill_type , category, amount , filename, appr
         const [logs, setLogs] = useState([])
         const {user} = useSelector(state => state.LoginReducer)
         const [isModalVisible, setModalVisible] = useState(false);
+        const [error, setError] = useState(false)
+        const [loading, setLoading] = useState(true)
         const toggleModal = () => {
             setModalVisible(!isModalVisible);
         };
         useEffect(() => {
             getExpensesDetails(user.account_id, item.expense_id)
             .then((response) => {
-                setLogs(response.data.data) //, "status");
+                if(response.status === 200){
+                    setLoading(false)
+                    setLogs(response.data.data)
+                }else{
+                    setLoading(false)
+                    setError(true)
+                }
+              
             }).catch((err) => {
+                setLoading(false)
+                setError(true)
                 console.log(err, "Error");
             })
         },[])
+        if(loading){
+            return(
+                <SafeAreaProvider>
+                    <CustomStatusBar />
+                    <View style={commonStyles.container} >
+                        <CustomHeader 
+                            show_backButton={true}
+                            isdrawer={false}
+                            onPress={() => navigation.goBack()}
+                            title={"Details TimeSheet"}
+                        />
+                        <Spacer height={AppScreenWidth} />
+                        <ActivityIndicator size={"large"} color={colors.dark_primary_color} />
+                    </View>
+                </SafeAreaProvider>
+            )
+        }
+        if(error){
+            return(
+                <SafeAreaProvider>
+                    <CustomStatusBar />
+                    <View style={commonStyles.container} >
+                        <CustomHeader 
+                            show_backButton={true}
+                            isdrawer={false}
+                            onPress={() => navigation.goBack()}
+                            title={"Details TimeSheet"}
+                        />
+                        <Spacer height={AppScreenWidth/2} />
+                        <Image 
+                            source={require("../../assets/images/error.gif")}
+                            style={{
+                                width:verticalScale(150), 
+                                height:verticalScale(150),
+                                resizeMode:"contain"
+                            }} 
+                        />
+                    </View>
+                </SafeAreaProvider>
+            )
+        }
         return (
-            <View style={commonStyles.container} >
-                <CustomHeader 
-                    show_backButton={true}
-                    isdrawer={false}
-                    onPress={() => navigation.goBack()}
-                    title={"Expense  Details"}
-                />
-             <ScrollView showsVerticalScrollIndicator={false}>
-                <ExpansesItem 
-                    item={item}
-                    billtype={item.expense_report_title} 
-                    company={item.type} 
-                    status={"Approved"}
-                    date={moment(item.created_date).format('DD-MMM-YYYY')}
-                    job={item.job_title}
-                    status_colour_code={item.status_colour_code}
-                    price={`$ ${parseFloat(item.total_amount).toFixed(2)}`}
-                    onPress={() => {navigation.navigate(MainRoutes.ExpenseDetailsScreen,{item:item})}}
-                />
-                {logs.map((item, index) => {
-                          return(
-                              <View key={`${index}`}>
-                                  <Item
-                                    date={item.expense_date} 
-                                    expense_type={item.expense_type_name} 
-                                    bill_type={item.expense_bill_type_name} 
-                                    category={item.category_name} 
-                                    amount={item.expense_amount} 
-                                    approver_comments={item.approver_comments}
-                                    expense_comments={item.expense_comments}
-                                    filename={item.expense_receipt}
-                                  />
-                              </View>
-                          )
-                      })}
-                <Spacer  />
-               
+            <SafeAreaProvider>
+                <CustomStatusBar />
+                <SafeAreaView style={commonStyles.container} >
+                    <CustomHeader 
+                        show_backButton={true}
+                        isdrawer={false}
+                        onPress={() => navigation.goBack()}
+                        title={"Expense  Details"}
+                    />
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <ExpansesItem 
+                        item={item}
+                        billtype={item.expense_report_title} 
+                        company={item.type} 
+                        status={"Approved"}
+                        date={moment(item.created_date).format('DD-MMM-YYYY')}
+                        job={item.job_title}
+                        status_colour_code={item.status_colour_code}
+                        price={`$ ${parseFloat(item.total_amount).toFixed(2)}`}
+                        onPress={() => {navigation.navigate(MainRoutes.ExpenseDetailsScreen,{item:item})}}
+                    />
+                    {logs.map((item, index) => {
+                            return(
+                                <View key={`${index}`}>
+                                    <Item
+                                        date={item.expense_date} 
+                                        expense_type={item.expense_type_name} 
+                                        bill_type={item.expense_bill_type_name} 
+                                        category={item.category_name} 
+                                        amount={item.expense_amount} 
+                                        approver_comments={item.approver_comments}
+                                        expense_comments={item.expense_comments}
+                                        filename={item.expense_receipt}
+                                    />
+                                </View>
+                            )
+                        })}
+                    <Spacer  />
                 
-                </ScrollView>
-             
+                    
+                    </ScrollView>
+                
 
-            </View>
+                </SafeAreaView>
+            </SafeAreaProvider>
         );
     };
 

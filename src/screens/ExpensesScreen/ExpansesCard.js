@@ -130,7 +130,14 @@ const styles = StyleSheet.create({
     mainView:{
         width:AppScreenWidth, 
         alignSelf:"center",
-        elevation:2,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
         backgroundColor:"#fefefe",
         marginVertical:scale(5),
         padding:scale(10),
@@ -139,7 +146,7 @@ const styles = StyleSheet.create({
     },
     btnView: {
       
-        marginBottom:scale(2),
+        marginBottom:scale(10),
         flexDirection: 'row',
         alignItems:"center"
     },
