@@ -9,9 +9,25 @@ import Job from '../../assets/images/job.svg'
 import { AppScreenWidth } from "../../constants/sacling"
 import transform from 'css-to-react-native';
 import DeleteModal from "../../components/DeleteModal"
-const TimeSheetFlatListItem = memo(({name, time, submittedto,status_style, status, hours,onPress, onEdit}) => {
+import { DeleteTimeSheet } from "../../api"
+const TimeSheetFlatListItem = memo(({name,item, time, submittedto,status_style, status, hours,onPress,onDelete, onEdit}) => {
     let arr = (status_style.split(";"))
     const [isVisible , setIsVisible] = useState(false)
+    
+    const DeleteItem = () => {
+      
+        setIsVisible(false)
+        DeleteTimeSheet(item.time_sheet_id).then((response) => {
+           if(response.status === 200){
+            onDelete()
+           }else{
+            alert("error with stauts code", response.status)
+           }
+        }).catch((err) => {
+            console.log(err);
+            alert("error with stauts code 404")
+        })
+    }
     const ss = transform([
                 [arr[0].split(":")[0].trim(),arr[0].split(":")[1].trim()],
                 [arr[1].split(":")[0].trim(),arr[1].split(":")[1].trim()],
@@ -85,7 +101,7 @@ const TimeSheetFlatListItem = memo(({name, time, submittedto,status_style, statu
         <DeleteModal 
             isVisible={isVisible}
             onCancel={() => setIsVisible(false)}
-            onDelete={() => setIsVisible(false)}
+            onDelete={() => DeleteItem(false)}
         />
         </TouchableOpacity>
     )
@@ -98,8 +114,16 @@ const styles = StyleSheet.create({
         width:AppScreenWidth-scale(3), 
         marginHorizontal:scale(1.5),
         alignSelf:"center",
-        elevation:2,
-      
+       
+        shadowColor:colors.dark_primary_color,
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+
+        elevation: 4,
         backgroundColor:"#fefefe",
         marginVertical:scale(5),
         padding:scale(10),

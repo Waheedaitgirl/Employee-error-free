@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
+  StatusBar,
   Image,
   View,
   StyleSheet,
@@ -67,93 +68,98 @@ const SignInScreen = ({navigation}) => {
     })
   };
   return (
-    <View style={commonStyles.container}>
-        <CustomHeader 
-          title={"Sign In"}
-        />
-      <ScrollView
-        contentContainerStyle={{
-          backgroundColor: '#fff',
-          flexGrow: 1,
-          alignItems: 'center',
-        }}>
-        <Image
-          resizeMode={'cover'}
-          resizeMethod={'resize'}
-          style={{width: width}}
-          source={require('../../assets/images/login.png')}
-        />
-        <CustomTextInput
-          placeholder={'Email Address'}
-          value={email_address}
-          onChangeText={text => setUseremail(text)}
-          errorMessage={UseremailErrorMesage}
-        />
-        <CustomTextInput
-          placeholder={'Password'}
-          value={password}
-          secureTextEntry={true}
-          onChangeText={text => setPassword(text)}
-          errorMessage={passwordErrorMessage}
-        />
-        <TouchableOpacity
-          onPress={() => navigation.navigate(AuthRoutes.ForgotPasswordScreen)}
-          style={{width: AppScreenWidth, alignItems: 'flex-end'}}>
-          <Text style={{...textStyles.title, color: '#FD9215'}}>
-            Forgot Password?
-          </Text>
-        </TouchableOpacity>
-
-        <Spacer />
-        <CustomButton
-          onPress={() => submitdate()}
-          loading={loading}
-          text={'Login'}
-          loadingText={'Processing'}
-        />
-        <Spacer />
-        <DrawLine height={0.6} />
-        <Spacer />
-        <Text style={{...textStyles.Label, textAlign: 'center'}}>OR</Text>
-        <View
-          style={{
-            width: AppScreenWidth,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <TouchableOpacity style={styles.GoogleButton}>
-            <GOOGLE width={scale(15)} height={scale(15)} />
-            <Text
-              style={{
-                ...textStyles.title,
-                backgroundColor: '#0000',
-                marginLeft: scale(5),
-                textAlign: 'center',
+   
+      <View style={commonStyles.container}>
+          <CustomHeader 
+            title={"Sign In"}
+          />
+          <SafeAreaView style={{flex:1, backgroundColor:"#fff"}}>
+          <StatusBar  />
+            <ScrollView
+              contentContainerStyle={{
+                backgroundColor: '#fff',
+                flexGrow: 1,
+                alignItems: 'center',
               }}>
-              Sign In With Google
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{...styles.GoogleButton}}>
-            <MICROSOFT width={scale(15)} height={scale(15)} />
-            <Text
-              style={{
-                ...textStyles.title,
-                marginLeft: scale(5),
-                textAlign: 'center',
-              }}>
-              Sign In With Microsoft
-            </Text>
-          </TouchableOpacity>
-        </View>
+              <Image
+                resizeMode={'cover'}
+                resizeMethod={'resize'}
+                style={{width: width}}
+                source={require('../../assets/images/login.png')}
+              />
+              <CustomTextInput
+                placeholder={'Email Address'}
+                value={email_address}
+                onChangeText={text => setUseremail(text)}
+                errorMessage={UseremailErrorMesage}
+              />
+              <CustomTextInput
+                placeholder={'Password'}
+                value={password}
+                secureTextEntry={true}
+                onChangeText={text => setPassword(text)}
+                errorMessage={passwordErrorMessage}
+              />
+              <TouchableOpacity
+                onPress={() => navigation.navigate(AuthRoutes.ForgotPasswordScreen)}
+                style={{width: AppScreenWidth, alignItems: 'flex-end'}}>
+                <Text style={{...textStyles.title, color: '#FD9215'}}>
+                  Forgot Password?
+                </Text>
+              </TouchableOpacity>
 
-        <View
-          style={{width: width, paddingBottom: 10, backgroundColor: '#fff'}}>
-          <Text style={textStyles.disabletext}>
-            Copyright @{new Date().getFullYear()} RecruitBPM All Rights Reserved
-          </Text>
-        </View>
-      </ScrollView>
-    </View>
+              <Spacer />
+              <CustomButton
+                onPress={() => submitdate()}
+                loading={loading}
+                text={'Login'}
+                loadingText={'Processing'}
+              />
+              <Spacer />
+              <DrawLine height={0.6} />
+              <Spacer />
+              <Text style={{...textStyles.Label, textAlign: 'center'}}>OR</Text>
+              <View
+                style={{
+                  width: AppScreenWidth,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <TouchableOpacity style={styles.GoogleButton}>
+                  <GOOGLE width={scale(15)} height={scale(15)} />
+                  <Text
+                    style={{
+                      ...textStyles.title,
+                      backgroundColor: '#0000',
+                      marginLeft: scale(5),
+                      textAlign: 'center',
+                    }}>
+                    Sign In With Google
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{...styles.GoogleButton}}>
+                  <MICROSOFT width={scale(15)} height={scale(15)} />
+                  <Text
+                    style={{
+                      ...textStyles.title,
+                      marginLeft: scale(5),
+                      textAlign: 'center',
+                    }}>
+                    Sign In With Microsoft
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View
+                style={{width: width, position:"absolute", bottom:0, paddingBottom: 10, backgroundColor: '#fff'}}>
+                <Text style={textStyles.disabletext}>
+                  Copyright @{new Date().getFullYear()} RecruitBPM All Rights Reserved
+                </Text>
+              </View>
+            </ScrollView>
+        </SafeAreaView>
+      </View>
+   
   );
 };
 

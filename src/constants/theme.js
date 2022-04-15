@@ -1,3 +1,15 @@
+import React from 'react'
+import {Platform} from 'react-native'
+// export const fonts = {
+//     Bold:Platform.OS==="android"?"Poppins-Bold":"Poppins-Bold",
+//     BoldItalic:Platform.OS==="android"?"Poppins-BoldItalic":"PoppinsBoldItalic",
+//     Italic:Platform.OS==="android"?"Poppins-Italic":"Poppins Italic",
+//     Medium:Platform.OS==="android"?"Poppins-Medium":"Poppins Medium",
+//     MediumItalic:Platform.OS==="android"?"Poppins-MediumItalic":"Poppins MediumItalic",
+//     Light:Platform.OS==="android"?"Poppins-Light":"Poppins Light",
+//     LightItalic:Platform.OS==="android"?"Poppins-LightItalic":"Poppins LightItalic",
+//     Regular:Platform.OS==="android"?"Poppins-Regular":"Poppins Regular"
+// }
 export const fonts = {
     Bold:"Poppins-Bold",
     BoldItalic:"Poppins-BoldItalic",

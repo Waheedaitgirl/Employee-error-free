@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Text,View,StyleSheet,TouchableOpacity} from 'react-native';
+import {SafeAreaView,StatusBar, Text,View,StyleSheet,TouchableOpacity} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import LEAVE from '../../assets/images/Leave.svg'
 import Entypo from 'react-native-vector-icons/Entypo'
 import { scale, verticalScale } from 'react-native-size-matters';
 import { commonStyles,textStyles } from '../../styles';
@@ -16,70 +15,73 @@ import { useSelector } from 'react-redux';
         const {user} = useSelector(state => state.LoginReducer)
       
         return (
-            <View style={commonStyles.container} >
-                <CustomHeader 
-                    show_backButton={true}
-                    isdrawer={true}
-                    onPress={() => navigation.openDrawer()}
-                    title={"DashBoard"}
-                />
-                <View style={{width:AppScreenWidth,marginVertical:scale(5) ,alignItems:"flex-start", alignSelf:"center"}} >
-                    <Text style={styles.headingtext} >Welcome !</Text>
-                    <Text style={styles.nameText} >{user.preferred_name}</Text>
-                    <Text style={styles.paragraph} >Streamline your company’s business efficiently managing candidates, jobs and placements</Text>
+            <SafeAreaView style={{flex:1, backgroundColor:colors.dark_primary_color}} >
+                <StatusBar barStyle={"light-content"} />
+                <View style={commonStyles.container} >
+                    <CustomHeader 
+                        show_backButton={true}
+                        isdrawer={true}
+                        onPress={() => navigation.openDrawer()}
+                        title={"DashBoard"}
+                    />
+                    <View style={{width:AppScreenWidth,marginVertical:scale(5) ,alignItems:"flex-start", alignSelf:"center"}} >
+                        <Text style={styles.headingtext} >Welcome !</Text>
+                        <Text style={styles.nameText} >{user.preferred_name}</Text>
+                        <Text style={styles.paragraph} >Streamline your company’s business efficiently managing candidates, jobs and placements</Text>
+                    </View>
+                    <View style={styles.main} />
+                    <View style={styles.row} >
+                        <TouchableOpacity 
+                            onPress={() => navigation.navigate(MainRoutes.TimeSheetListScreen)} 
+                            style={styles.box} >
+                            <AntDesign 
+                                name="clockcircle" 
+                                color={colors.dark_primary_color} 
+                                size={scale(50)} 
+                            />
+                            <Text style={styles.textStyle}>My Time</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity 
+                            onPress={() => navigation.navigate(MainRoutes.MyExpensesScreen) } 
+                            style={styles.box} >
+                            <Entypo 
+                                name="credit" 
+                                color={colors.dark_primary_color} 
+                                size={scale(50)} 
+                            />
+                            <Text style={{...styles.textStyle}}>Expenses</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.row} >
+                        <TouchableOpacity 
+                            onPress={() => navigation.navigate(MainRoutes.LeavesScreen) } 
+                            style={styles.box} >
+                            <Entypo 
+                                name="calendar" 
+                                color={colors.dark_primary_color} 
+                                size={scale(50)} 
+                            />
+                            <Text style={styles.textStyle}>Leaves</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity 
+                        onPress={() => navigation.navigate(MainRoutes.MyTasksScreen) } 
+                            style={styles.box} >
+                            <FontAwesome 
+                                name="tasks" 
+                                color={colors.dark_primary_color} 
+                                size={scale(50)} 
+                            />
+                            <Text style={styles.textStyle}>Tasks</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.main2} >
+                        <Text style={styles.paragraph}>
+                            Copyright @{new Date().getFullYear()} RecruitBPM All Rights Reserved
+                        </Text>
+                    </View>
+                
                 </View>
-                <View style={styles.main} />
-                <View style={styles.row} >
-                    <TouchableOpacity 
-                        onPress={() => navigation.navigate(MainRoutes.TimeSheetListScreen)} 
-                        style={styles.box} >
-                        <AntDesign 
-                            name="clockcircle" 
-                            color={colors.dark_primary_color} 
-                            size={scale(50)} 
-                        />
-                        <Text style={styles.textStyle}>My Time</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        onPress={() => navigation.navigate(MainRoutes.MyExpensesScreen) } 
-                        style={styles.box} >
-                        <Entypo 
-                            name="credit" 
-                            color={colors.dark_primary_color} 
-                            size={scale(50)} 
-                        />
-                         <Text style={{...styles.textStyle}}>Expenses</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.row} >
-                    <TouchableOpacity 
-                        onPress={() => navigation.navigate(MainRoutes.LeavesScreen) } 
-                        style={styles.box} >
-                        <Entypo 
-                            name="calendar" 
-                            color={colors.dark_primary_color} 
-                            size={scale(50)} 
-                        />
-                        <Text style={styles.textStyle}>Leaves</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                     onPress={() => navigation.navigate(MainRoutes.MyTasksScreen) } 
-                        style={styles.box} >
-                        <FontAwesome 
-                            name="tasks" 
-                            color={colors.dark_primary_color} 
-                            size={scale(50)} 
-                        />
-                        <Text style={styles.textStyle}>Tasks</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.main2} >
-                    <Text style={styles.paragraph}>
-                        Copyright @{new Date().getFullYear()} RecruitBPM All Rights Reserved
-                    </Text>
-                </View>
-             
-            </View>
+            </SafeAreaView>
             
         );
     };
@@ -106,15 +108,7 @@ const styles = StyleSheet.create({
         alignItems:"center",
         paddingHorizontal:scale(5),
         bottom:scale(0),
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 12,
-        },
-        shadowOpacity: 0.58,
-        shadowRadius: 16.00,
-
-        elevation: 24,
+     
         borderTopLeftRadius:hp(3),
         borderTopRightRadius:hp(3),
         backgroundColor:colors.dark_primary_color

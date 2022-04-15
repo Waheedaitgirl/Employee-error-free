@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView,View,StyleSheet,Platform, Text, TouchableOpacity} from 'react-native';
+import {ScrollView,View,StyleSheet,Platform,SafeAreaView, Text,Image, TouchableOpacity} from 'react-native';
+import CustomStatusBar from '../../components/StatusBar';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import AntDesign from 'react-native-vector-icons/FontAwesome'
@@ -8,7 +10,7 @@ import {NativeBaseProvider, Select } from "native-base";
 import CustomButton from '../../components/Button';
 import CalenderInput from '../../components/CalenderInput';
 import CustomHeader from '../../components/CustomHeader';
-import { scale} from 'react-native-size-matters';
+import { scale, verticalScale} from 'react-native-size-matters';
 import UpLoadComponent from "../../components/Uploadcomponent"
 import WeeklySummary from './AddSummary';
 import Spacer from '../../components/Spacer';
@@ -17,13 +19,14 @@ import { AppScreenWidth } from '../../constants/sacling';
 import { colors, fonts } from '../../constants/theme';
 import BlockLoading from '../../components/BlockLoading';
 import AlertModal from '../../components/AlertModal';
-import { getJobWorkingDays,uploadFile,addTimeSheet, jobTimeTypes, listCandidateJobs } from '../../api';
+import { getJobWorkingDays,addTimeSheet, jobTimeTypes, listCandidateJobs } from '../../api';
 import BaseUrl from '../../api/BaseUrl';
     const AddTimeSheetScreen = ({navigation}) => {
         const {user} = useSelector(state => state.LoginReducer)
         const [submit , setSubmit] = useState(false)
         const [draft, setDraft] = useState(false)
         const [startDate, setStartDate] = useState("")
+        const [api_error, setApiError]=useState(false)
         const [loading, setLoading ] = useState(true)
         const [filepath, setFilePath] = useState({
             path:null, ext:null, name:null
@@ -49,20 +52,34 @@ import BaseUrl from '../../api/BaseUrl';
         const [date_error_message , setDateErrorMessage] = useState(null)
         const [error_messaage , set_error_messsage] = useState(null)
         const [visible, setVisible] = useState(false);
+
         useEffect(() => {
             listCandidateJobs(user.account_id, user.candidate_id ,"1").then((response) => {
-               //console.log(response.data);
+              //if()
+              if(response.status === 200){
+                if(response.data.data.length === 1){
+                    set_selected_job(response.data.data[0].job_id);
+                    getJobtimetype(response.data.data[0].job_id)
+               }
                 setJobs(response.data.data);
                 setLoading(false)
+              }else{
+                setApiError(true)
+                setLoading(false)
+              }
+              
             }).catch((err) => {
                 console.log(err)
+                setApiError(true)
+                setLoading(false)
             })
         },[])
+
      // Pure API Call on job Selection
-        const getJobtimetype = () => {
+        const getJobtimetype = (itemValue) => {
             setAlldata([])
             setLoading(true)
-            getJobWorkingDays(user.account_id, selected_job).then((response) => {
+            getJobWorkingDays(user.account_id, itemValue).then((response) => {
                 if(response.status === 200){
                     // convert object to two dimentional arrays ,
                     let arr2 = Object.entries(JSON.parse(response.data.data[0].working_days_config))
@@ -328,162 +345,191 @@ import BaseUrl from '../../api/BaseUrl';
             }
            
         }
-
+        if(api_error){
+            return(
+                <SafeAreaProvider>
+                    <CustomStatusBar />
+                    <View style={commonStyles.container} >
+                        <CustomHeader 
+                            show_backButton={true}
+                            isdrawer={false}
+                            onPress={() => navigation.goBack()}
+                            title={"Details TimeSheet"}
+                        />
+                        <Spacer height={AppScreenWidth/2} />
+                        <Image 
+                            source={require("../../assets/images/error.gif")}
+                            style={{
+                                width:verticalScale(150), 
+                                height:verticalScale(150),
+                                resizeMode:"contain"
+                            }} 
+                        />
+                    </View>
+                </SafeAreaProvider>
+            )
+        }
         return (
-            <NativeBaseProvider>
-                <View style={commonStyles.container} >
-                    <CustomHeader 
-                        show_backButton={true}
-                        isdrawer={false}
-                        onPress={() =>  navigation.goBack()}
-                        title={"Add TimeSheet"}
-                    />
-                    <View style={styles.Row} >
-                        <View>
+            <SafeAreaProvider>
+                <CustomStatusBar />
+                <NativeBaseProvider>
+                    <SafeAreaView style={commonStyles.container} >
+                        <CustomHeader 
+                            show_backButton={true}
+                            isdrawer={false}
+                            onPress={() =>  navigation.goBack()}
+                            title={"Add TimeSheet"}
+                        />
+                        <View style={styles.Row} >
+                            <View>
+                                <Text
+                                    style={styles.label}>
+                                    Select Job
+                                </Text>
+                                <Spacer height={scale(3)} />
+                                <Select
+                                    selectedValue={selected_job}
+                                    width={AppScreenWidth/2-scale(5)}
+                                    placeholderTextColor={colors.text_primary_color}
+                                    fontFamily={fonts.Regular}
+                                    maxHeight={"10"}
+                                    accessibilityLabel="Please select type"
+                                    placeholder="Please select  type"
+                                    _item={selectStyles._item}
+                                    _selectedItem={selectStyles._selectedItem}
+                                    onValueChange={(itemValue) => {
+                                        set_selected_job(itemValue)
+                                        getJobtimetype(itemValue)
+                                        }}>
+                                    {
+                                        jobs.map((item, index) => {
+                                            return(
+                                                <Select.Item key={`${item.job_id}`} label={item.job_title} value={item.job_id} />
+                                            )
+                                        })
+                                    }
+                                </Select>
+                            </View>
+                            <View>
+                                <Text
+                                    style={styles.label}>
+                                    Select Date
+                                </Text>
+                            
+                                <CalenderInput 
+                                    placeholder={"Start Date"}
+                                    value={startDate}
+                                    errorMessage={""}
+                                    w={AppScreenWidth/2-scale(5)}
+                                    show_label={false}
+                                    hght={scale(40)}
+                                    onChangeText={(data) => getNumberofdays(data) }
+                                />
+                            </View>
+                            
+                        </View>
+                        <Spacer />
+                        <View> 
                             <Text
                                 style={styles.label}>
-                                Select Job
+                                Select TimeSheet Type
                             </Text>
                             <Spacer height={scale(3)} />
-                            <Select
-                                selectedValue={selected_job}
-                                width={AppScreenWidth/2-scale(5)}
-                                placeholderTextColor={colors.text_primary_color}
-                                fontFamily={fonts.Regular}
-                                maxHeight={"10"}
-                                accessibilityLabel="Please select type"
-                                placeholder="Please select  type"
-                                _item={selectStyles._item}
-                                _selectedItem={selectStyles._selectedItem}
-                                onValueChange={(itemValue) => {
-                                    set_selected_job(itemValue)
-                                    getJobtimetype()
-                                    }}>
-                                {
-                                    jobs.map((item, index) => {
-                                        return(
-                                            <Select.Item key={`${item.job_id}`} label={item.job_title} value={item.job_id} />
-                                        )
-                                    })
-                                }
-                            </Select>
-                        </View>
-                        <View>
-                            <Text
-                                style={styles.label}>
-                                Select Date
-                            </Text>
-                           
-                            <CalenderInput 
-                                placeholder={"Start Date"}
-                                value={startDate}
-                                errorMessage={""}
-                                w={AppScreenWidth/2-scale(5)}
-                                show_label={false}
-                                hght={scale(40)}
-                                onChangeText={(data) => getNumberofdays(data) }
-                            />
+                            <View style={{...styles.tabview,}} >
+                                <TouchableOpacity 
+                                    onPress={() => changeTab("Day")}
+                                    style={{
+                                        ...styles.tabitem,
+                                        backgroundColor:time_sheet_type === "Day"?colors.dark_primary_color:"#fff",
+                                        borderRightWidth:1}} >
+                                        <Text  style={{...styles.label,color:time_sheet_type === "Day"?"#fff":"#000"}}>Day</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity 
+                                    onPress={() => changeTab("Week")}
+                                    style={{
+                                        ...styles.tabitem,
+                                        backgroundColor:time_sheet_type === "Week"?colors.dark_primary_color:"#fff",
+                                        }} >
+                                    <Text  style={{...styles.label,color:time_sheet_type === "Week"?"#fff":"#000"}}>Week</Text>
+                                </TouchableOpacity>
+                            </View>
+                            {
+                                date_error_message !== null &&
+                                <Text
+                                    style={{...textStyles.errorText, marginTop:scale(3)}}>
+                                    {date_error_message}
+                                </Text>
+                            }
                         </View>
                         
-                    </View>
-                    <Spacer />
-                    <View> 
-                        <Text
-                            style={styles.label}>
-                            Select TimeSheet Type
-                        </Text>
-                        <Spacer height={scale(3)} />
-                        <View style={{...styles.tabview,}} >
+                        <ScrollView 
+                            showsVerticalScrollIndicator={false} 
+                            contentContainerStyle={{paddingBottom:scale(100)}} >
+                        
+                            <Spacer />
+                                <WeeklySummary 
+                                    editable={true}
+                                    job_time_types={job_time_types}
+                                    alldata={alldata}
+                                    setHours={(i, text ,index) => FunsetHours(i, text,index)}                
+                                    
+                                    time_type={time_type}
+                                    job_working_days={job_working_days}
+                                    deleteItem={(i) => deleteItem(i)}
+                                    localTimeType={(val,i) => localTimeType(val,i)}
+                                />  
+                            <Spacer />  
                             <TouchableOpacity 
-                                onPress={() => changeTab("Day")}
-                                style={{
-                                    ...styles.tabitem,
-                                    backgroundColor:time_sheet_type === "Day"?colors.dark_primary_color:"#fff",
-                                    borderRightWidth:1}} >
-                                    <Text  style={{...styles.label,color:time_sheet_type === "Day"?"#fff":"#000"}}>Day</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity 
-                                onPress={() => changeTab("Week")}
-                                style={{
-                                    ...styles.tabitem,
-                                    backgroundColor:time_sheet_type === "Week"?colors.dark_primary_color:"#fff",
-                                    }} >
-                                <Text  style={{...styles.label,color:time_sheet_type === "Week"?"#fff":"#000"}}>Week</Text>
-                            </TouchableOpacity>
-                        </View>
-                        {
-                            date_error_message !== null &&
-                            <Text
-                                style={{...textStyles.errorText, marginTop:scale(3)}}>
-                                {date_error_message}
-                            </Text>
-                        }
-                    </View>
-                    
-                    <ScrollView 
-                        showsVerticalScrollIndicator={false} 
-                        contentContainerStyle={{paddingBottom:scale(100)}} >
-                      
-                         <Spacer />
-                            <WeeklySummary 
-                                editable={true}
-                                job_time_types={job_time_types}
-                                alldata={alldata}
-                                setHours={(i, text ,index) => FunsetHours(i, text,index)}                
+                                onPress={() => addButton()}
+                                style={styles.button} >
+                                    <AntDesign name={"plus"} size={scale(16)} color={"#fff"} />
                                 
-                                time_type={time_type}
-                                job_working_days={job_working_days}
-                                deleteItem={(i) => deleteItem(i)}
-                                localTimeType={(val,i) => localTimeType(val,i)}
-                            />  
-                          <Spacer />  
-                        <TouchableOpacity 
-                            onPress={() => addButton()}
-                            style={styles.button} >
-                                  <AntDesign name={"plus"} size={scale(16)} color={"#fff"} />
-                              
-                        </TouchableOpacity>
-                       
-                        <Spacer />
-                        <DrawLine />
-                        <UpLoadComponent
-                            filepath={filepath}
-                            setFilePath={(file) => setFilePath(file)}
-                        />
-                        <Spacer />
-                        <DrawLine />
-                        <Spacer />
-                    <View style={styles.bottomButtons}> 
-                        <CustomButton
-                            loading={submit}
-                            loadingText={"Submitting"}
-                            onPress={() => ValidateData(false)}
-                            backgroundColor={"#0073B4"}
-                            text={"Submit"}
-                            marginTop={scale(10)}
-                        />
-                        <Spacer />
-                        <CustomButton
-                            loading={draft}
-                            loadingText={"Saving"}
-                            onPress={() =>ValidateData(true) }
-                            text={"Save as a Draft"}
-                            marginTop={scale(10)}
-                        />
-                    </View>
-                    </ScrollView>
-                
-                </View>
-                {
-                loading && <BlockLoading/>}
-                { visible && <AlertModal 
-                    is_error={true}
-                    visible={visible}
-                    setVisible={() => setVisible(false)}
-                    error_messaage={error_messaage}
-                    title={"Form Submission Error"} />
-                }
-            </NativeBaseProvider>
+                            </TouchableOpacity>
+                        
+                            <Spacer />
+                            <DrawLine />
+                            <UpLoadComponent
+                                filepath={filepath}
+                                setFilePath={(file) => setFilePath(file)}
+                            />
+                          
+                        <View style={styles.bottomButtons}> 
+                            <CustomButton
+                                loading={submit}
+                                loadingText={"Submitting"}
+                                onPress={() => ValidateData(false)}
+                                backgroundColor={"#0073B4"}
+                                text={"Submit"}
+                                marginTop={scale(10)}
+                            />
+                            <Spacer />
+                            <CustomButton
+                                loading={draft}
+                                loadingText={"Saving"}
+                                onPress={() =>ValidateData(true) }
+                                text={"Save as a Draft"}
+                                marginTop={scale(10)}
+                            />
+                        </View>
+                        </ScrollView>
+                    
+                    </SafeAreaView>
+                    {
+                        loading && 
+                        <BlockLoading/>
+                    }
+                    { 
+                        visible && 
+                            <AlertModal 
+                                is_error={true}
+                                visible={visible}
+                                setVisible={() => setVisible(false)}
+                                error_messaage={error_messaage}
+                                title={"Form Submission Error"} 
+                            />
+                    }
+                </NativeBaseProvider>
+            </SafeAreaProvider>
         );
     };
 

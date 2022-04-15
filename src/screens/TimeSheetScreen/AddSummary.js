@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View,Text,FlatList,TouchableOpacity, StyleSheet } from "react-native";
+import { View,Text,FlatList,TouchableOpacity,ScrollView, StyleSheet } from "react-native";
 import { scale } from "react-native-size-matters";
 import { AppScreenWidth } from "../../constants/sacling";
 import { colors, fonts } from "../../constants/theme";
@@ -34,26 +34,27 @@ const AddWeeklySummary = ({
                                 Time Type
                             </Text>
                             <Spacer />
-                            <Select
-                                selectedValue={time_type[maindex]?.id}
-                                width={AppScreenWidth/2}
-                                placeholderTextColor={colors.text_primary_color}
-                                fontFamily={fonts.Regular}
-                                maxHeight={"10"}
-                                accessibilityLabel="Please select type"
-                                placeholder="Please select  type"
-                                _item={selectStyles._item}
-                                _selectedItem={selectStyles._selectedItem}
-                                onValueChange={(itemValue) => {localTimeType(itemValue, maindex)}}>
-                                {
-                                    job_time_types.map((item, index) => {
-                                        return(
-                                            <Select.Item key={`${item.job_id}`} label={item.name} value={item.id} />
-                                        )
-                                    })
-                                }
-                            </Select>
-                           
+                            <ScrollView overScrollMode={"always"} nestedScrollEnabled={true} horizontal={true} >
+                                <Select
+                                    selectedValue={time_type[maindex]?.id}
+                                    width={AppScreenWidth/2}
+                                    placeholderTextColor={colors.text_primary_color}
+                                    fontFamily={fonts.Regular}
+                                    maxHeight={"10"}
+                                    accessibilityLabel="Please select type"
+                                    placeholder="Please select  type"
+                                    _item={selectStyles._item}
+                                    _selectedItem={selectStyles._selectedItem}
+                                    onValueChange={(itemValue) => {localTimeType(itemValue, maindex)}}>
+                                    {
+                                        job_time_types.map((item, index) => {
+                                            return(
+                                                <Select.Item key={`${item.job_id}`} label={item.name} value={item.id} />
+                                            )
+                                        })
+                                    }
+                                </Select>
+                            </ScrollView>
                         </View>
                         
                         <TouchableOpacity 
