@@ -97,6 +97,13 @@ export function getExpenseTypeCategoryBillType(account_id,company_id){
     });
 }
 
+export function  getEditExpensesDetails (account_id, expense_id, candidate_id){
+    return request({
+        url: `expenses?account_id=${account_id}&expense_id=${expense_id}&candidate_id=${candidate_id}&type=edit_expenses_details`,
+        method: 'get'
+    });
+}
+
 export async function uploadFile(data){
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer 4545980ce66bd555d903f7dc739f91e631606eb1");

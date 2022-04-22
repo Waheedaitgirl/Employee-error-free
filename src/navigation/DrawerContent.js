@@ -10,8 +10,12 @@ import {MainRoutes} from '../constants/routes'
 import { scale } from "react-native-size-matters";
 const DrawerContentt = ({ navigation, props }) => {
     return (
-        <SafeAreaView style={{flex:1, backgroundColor:"#fff"}}>
-            <DrawerContentScrollView style={{flex:1,}} contentContainerStyle={{alignItems:"flex-start",justifyContent:"flex-start"}} > 
+        <SafeAreaView style={{flex:1, backgroundColor:colors.dark_primary_color}}>
+            <DrawerContentScrollView 
+                    style={{flex:1, backgroundColor:"#fff"}} 
+                        contentContainerStyle={{alignItems:"flex-start",
+                        paddingTop:0, marginStart:0, 
+                        justifyContent:"flex-start"}} > 
                         <View style={styles.drawercontent}>  
                             <Image 
                                 source={require("../assets/images/dummy.png")} 
@@ -24,7 +28,6 @@ const DrawerContentt = ({ navigation, props }) => {
                             />
                             <View style={{justifyContent:"flex-start"}}>
                                 <Text style={styles.textStyleHeader}>Aftab Ameen</Text>
-                                <Text ellipsizeMode={"middle"} style={styles.textStyleHeader}>engr.aftabufaq@gmail.com</Text>
                             </View> 
                             <TouchableOpacity
                                 onPress={() => navigation.navigate(MainRoutes.EditProfileScreen) }
@@ -121,6 +124,8 @@ const styles = StyleSheet.create({
     },
     drawercontent:{
         padding:scale(10), 
+        flex:1,
+       width:"100%",
         alignSelf:"flex-start",
         flexDirection: 'row',
         marginBottom:scale(20),

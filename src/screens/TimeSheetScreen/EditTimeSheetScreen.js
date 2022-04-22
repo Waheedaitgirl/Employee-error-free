@@ -17,7 +17,7 @@ import { AppScreenWidth } from '../../constants/sacling';
 import { colors, fonts } from '../../constants/theme';
 import BlockLoading from '../../components/BlockLoading';
 import AlertModal from '../../components/AlertModal';
-import {getEditTimeSheetDetails, getJobWorkingDays,timeSheetDetailsById,addTimeSheet, jobTimeTypes, listCandidateJobs } from '../../api';
+import {getEditTimeSheetDetails, getJobWorkingDays,addTimeSheet, jobTimeTypes } from '../../api';
 import BaseUrl from '../../api/BaseUrl';
     const EditTimeSheetScreen = ({navigation, route}) => {
        let item = route.params.item
@@ -256,7 +256,7 @@ import BaseUrl from '../../api/BaseUrl';
                             module_status_id:is_draft?"902196":"902197",
                             time_sheet_view:time_sheet_type,
                             placement_id:s_job.placement_id,
-                            comments:"some test comments",
+                            comments:"",
                             is_attachment:filepath.path !== null ?"1":"0",
                             time_sheet_id:data2.insert_doc_id,
                             title:filepath.name,

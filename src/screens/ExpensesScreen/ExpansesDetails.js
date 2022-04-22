@@ -60,8 +60,10 @@ const Item = ({date, expense_type, bill_type , category, amount , filename, appr
         }
         {expense_comments !== null && expense_comments !== "" &&
         <View style={styles.row}>
-            <Text style={styles.buleText} >Expense Comment:</Text>
-            <Text style={styles.title} >{expense_comments}</Text>
+            <View>
+                <Text style={styles.buleText} >Expense Comment:</Text>
+                <Text style={styles.title} >{expense_comments}</Text>
+            </View>
         </View>
         }
       
@@ -75,15 +77,14 @@ const Item = ({date, expense_type, bill_type , category, amount , filename, appr
         const [isModalVisible, setModalVisible] = useState(false);
         const [error, setError] = useState(false)
         const [loading, setLoading] = useState(true)
-        const toggleModal = () => {
-            setModalVisible(!isModalVisible);
-        };
+        
         useEffect(() => {
             getExpensesDetails(user.account_id, item.expense_id)
             .then((response) => {
                 if(response.status === 200){
+                    console.log(response.data.logs);
                     setLoading(false)
-                    setLogs(response.data.data)
+                    setLogs(response.data.logs)
                 }else{
                     setLoading(false)
                     setError(true)
@@ -199,7 +200,16 @@ const styles = StyleSheet.create({
         backgroundColor:"#fff",
         borderRadius:scale(10),
         width:AppScreenWidth, 
-        padding:scale(10)
+        padding:scale(10),
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.30,
+        shadowRadius: 4.65,
+
+        elevation: 8,
     },
     buleText:{
         ...textStyles.smallheading,
@@ -220,6 +230,7 @@ const styles = StyleSheet.create({
     title:{
         ...textStyles.title,
         paddingLeft:5,
+        marginBottom:scale(3)
     }
 })
 

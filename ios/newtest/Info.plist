@@ -24,7 +24,16 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	
+	 <key>NSCameraUsageDescription</key>
+	<string>Employee BPM want to access your camera to upload a picture.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Employee BPM want to access your photo to upload a picture.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Employee BPM want to access your photo to upload a picture.</string>
+	
 	<key>NSAppTransportSecurity</key>
+	
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>

@@ -64,6 +64,9 @@ import BaseUrl from '../../api/BaseUrl';
         useEffect(() => {
             listCandidateJobs(user.account_id, user.candidate_id, "2").then((response) => {
                 setJobs(response.data.data);
+                if(response.data.data.length === 1){
+                    set_selected_job(response.data.data[0].job_id)
+                }
                 setLoading(false)
             }).catch((err) => {
                 console.log(err)
@@ -141,8 +144,8 @@ import BaseUrl from '../../api/BaseUrl';
                let s_job = jobs.find(x => x.job_id = selected_job)
                let formdata  = new FormData()
                formdata.append("expense_report_title",expenses_report_title)
-               formdata.append("job_id",s_job.placement_id)
-               formdata.append("placement_id",expenses_report_title)
+               formdata.append("job_id",selected_job)
+               formdata.append("placement_id",s_job.placement_id)
                formdata.append("module_status_id",is_draft?"902196":"902197")
                formdata.append("type","employee")
                formdata.append("candidate_id",user.candidate_id)
@@ -279,6 +282,7 @@ import BaseUrl from '../../api/BaseUrl';
                                     </Text>
                                     <Spacer height={scale(3)} />
                                     <Select
+                                    isDisabled={jobs.length === 1 ? true :false}
                                         selectedValue={selected_job}
                                         width={AppScreenWidth}
                                         placeholderTextColor={colors.text_primary_color}

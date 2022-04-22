@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react';
-import {View,Text,StyleSheet,TouchableOpacity, ScrollView,Platform} from 'react-native';
+import {View,Text,StyleSheet,TouchableOpacity,SafeAreaView, ScrollView,Platform} from 'react-native';
 import {NativeBaseProvider, Select } from "native-base";
 import { useSelector } from 'react-redux';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -13,15 +13,17 @@ import Spacer from '../../components/Spacer';
 import CalenderInput from '../../components/CalenderInput';
 import CustomButton from '../../components/Button';
 import UpLoadComponent from "../../components/Uploadcomponent"
-import {addExpense, getExpenseTypeCategoryBillType, listCandidateJobs } from '../../api';
+import {getEditExpensesDetails, getExpenseTypeCategoryBillType, listCandidateJobs } from '../../api';
 import BlockLoading from '../../components/BlockLoading';
 import Entypo from 'react-native-vector-icons/Entypo'
 import moment from 'moment';
 import ErrorModal from '../../components/ErrorModal';
 import SuccessModal from '../../components/SuccessModal';
 import BaseUrl from '../../api/BaseUrl';
-
-    const EditExpenseScreen = ({navigation}) => {
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import CustomStatusBar from '../../components/StatusBar';
+    const EditExpenseScreen = ({navigation, route}) => {
+        let item =route.params.item
         const {user} = useSelector(state => state.LoginReducer)
      
         const [submit , setSubmit] = useState(false)
@@ -60,13 +62,23 @@ import BaseUrl from '../../api/BaseUrl';
         ])
 
         useEffect(() => {
-            listCandidateJobs(user.account_id, user.candidate_id, "2").then((response) => {
-                setJobs(response.data.data);
+          
+            //account_id, expense_id, job_id, candidate_id
+            getEditExpensesDetails(user.account_id,item.expense_id,user.candidate_id).then((response) => {
+                if(response.status === 200){
+                    setJobs(response.data.jobs)
+                    setBillType(response.data.expense_bill_types)
+                    setCategoryType(response.data.categories)
+                    setExpenseType(response.data.expenses_type)
+                    setExpenseList(response.data.logs)
+                    setExpensesReportTitle(response.data.logs[0].expense_report_title)
+                    if(response.data.jobs.length === 1){
+                        set_selected_job(response.data.jobs[0].job_id)
+                    }
+                }
                 setLoading(false)
             }).catch((err) => {
-                console.log(err)
-                alert("Some Error")
-                setLoading(false)
+                console.log(err);
             })
         },[])
 
@@ -256,343 +268,346 @@ import BaseUrl from '../../api/BaseUrl';
         },[expense_list])
         
         return (
-            <NativeBaseProvider>
-                <View style={commonStyles.container} >
-                    <CustomHeader 
-                        show_backButton={true}
-                        isdrawer={false}
-                        onPress={() => navigation.goBack()}
-                        title={"Add Expense"}
-                    />
-                    <ScrollView 
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{paddingBottom:verticalScale(115)}} >
-                     
-                            <View style={{marginTop:scale(10)}}>
-                                <Text
-                                    style={{...styles.label, marginLeft:scale(5)}}>
-                                    Select Job
-                                </Text>
-                                <Spacer height={scale(3)} />
-                                <Select
-                                    selectedValue={selected_job}
-                                    width={AppScreenWidth}
-                                    placeholderTextColor={colors.text_primary_color}
-                                   
-                                    maxHeight={"10"}
-                                    alignSelf={"center"}
-                                    fontFamily={fonts.Medium}
-                                    fontSize={scale(13)}
-                                    placeholder="Please select  type"
-                                    _item={selectStyles._item}
-                                    _selectedItem={selectStyles._selectedItem}
-                                    onValueChange={(itemValue) => {
-                                        fun_set_selected_job(itemValue)
-                                    }}>
-                                    {
-                                        jobs.map((item, index) => {
-                                            return(
-                                                <Select.Item key={`${item.job_id}`} label={item.job_title} value={item.job_id} />
-                                            )
-                                        })
-                                    }
-                                </Select>
-                                {selected_job_error && <Text style={{...textStyles.errorText, marginLeft:scale(5)}}>Please select job</Text>}
-                                <Spacer height={scale(3)} />
-                                <CustomTextInput
-                                    placeholder={'Expenses Report Title'}
-                                    value={expenses_report_title}
-                                    borderWidth={1}
-                                    lableColor={colors.dark_primary_color}
-                                    borderRadius={scale(5)}
-                                    onChangeText={text => setExpensesReportTitle(text)}
-                                    errorMessage={""}
-                                />
-                                {expenses_report_title_error && <Text style={{...textStyles.errorText, marginLeft:scale(5)}}>Please enter title</Text> }
-                            </View>
-                            
-                            <Spacer/>
-                            {
-                                expense_list.map((item, index) => {
-                                    return(
-                                        <View key={`${index}`} style={styles.cardView} >
-                                        <View style={styles.Row} >
-                                           
+            <SafeAreaProvider>
+                <CustomStatusBar />
+                <NativeBaseProvider>
+                    <SafeAreaView style={commonStyles.container} >
+                        <CustomHeader 
+                            show_backButton={true}
+                            isdrawer={false}
+                            onPress={() => navigation.goBack()}
+                            title={"Edit Expense"}
+                        />
+                        <ScrollView 
+                            showsVerticalScrollIndicator={false}
+                            contentContainerStyle={{paddingBottom:verticalScale(115)}} >
+                        
+                                <View style={{marginTop:scale(10)}}>
+                                    <Text
+                                        style={{...styles.label, marginLeft:scale(5)}}>
+                                        Select Job
+                                    </Text>
+                                    <Spacer height={scale(3)} />
+                                    <Select
+                                        selectedValue={selected_job}
+                                        width={AppScreenWidth}
+                                        placeholderTextColor={colors.text_primary_color}
+                                    
+                                        maxHeight={Platform.OS === "android"?"10":"20"}
+                                        alignSelf={"center"}
+                                        fontFamily={fonts.Medium}
+                                        fontSize={scale(13)}
+                                        placeholder="Please select  type"
+                                        _item={selectStyles._item}
+                                        _selectedItem={selectStyles._selectedItem}
+                                        onValueChange={(itemValue) => {
+                                            fun_set_selected_job(itemValue)
+                                        }}>
+                                        {
+                                            jobs.map((item, index) => {
+                                                return(
+                                                    <Select.Item key={`${item.job_id}`} label={item.job_title} value={item.job_id} />
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                    {selected_job_error && <Text style={{...textStyles.errorText, marginLeft:scale(5)}}>Please select job</Text>}
+                                    <Spacer height={scale(3)} />
+                                    <CustomTextInput
+                                        placeholder={'Expenses Report Title'}
+                                        value={expenses_report_title}
+                                        borderWidth={1}
+                                        lableColor={colors.dark_primary_color}
+                                        borderRadius={scale(5)}
+                                        onChangeText={text => setExpensesReportTitle(text)}
+                                        errorMessage={""}
+                                    />
+                                    {expenses_report_title_error && <Text style={{...textStyles.errorText, marginLeft:scale(5)}}>Please enter title</Text> }
+                                </View>
+                                
+                                <Spacer/>
+                                {
+                                    expense_list.map((item, index) => {
+                                        return(
+                                            <View key={`${index}`} style={styles.cardView} >
+                                            <View style={styles.Row} >
+                                            
+                                                <View>
+                                                    <Text
+                                                        style={styles.label}>
+                                                        Select Date
+                                                    </Text>
+                                            
+                                                    <CalenderInput 
+                                                        placeholder={"Expense Date"}
+                                                        value={item.date}
+                                                        errorMessage={""}
+                                                        w={AppScreenWidth/2-scale(5)}
+                                                        show_label={false}
+                                                        hght={scale(40)}
+                                                        onChangeText={(data) => {
+                                                            let temp = [...expense_list]
+                                                            temp[index].date = data
+                                                            setExpenseList(temp)  
+                                                        }}
+                                                    />
+                                                    {
+                                                        item.date_error  &&
+                                                        <Text
+                                                            style={textStyles.errorText}>
+                                                                Please select date
+                                                        </Text>
+                                                    }
+                                                </View>
+            
+                                                <View>
+                                                    <Text style={styles.label}>Expense type</Text>
+                                                    <Spacer  height={scale(5)}  />
+                                                    <Select
+                                                        selectedValue={item.expense_type}
+                                                        width={AppScreenWidth/2-scale(10)}
+                                                        bg={"#fff"}
+                                                        placeholderTextColor={colors.text_primary_color}
+                                                    
+                                                        fontFamily={fonts.Medium}
+                                                        fontSize={scale(13)}
+                                                        maxHeight={"10"}
+                                                        accessibilityLabel="Select type"
+                                                        placeholder="Select type"
+                                                        _item={selectStyles._item}
+                                                        _selectedItem={selectStyles._selectedItem}
+                                                        onValueChange={(itemValue) => {
+                                                            let temp = [...expense_list]
+                                                            temp[index].expense_type = itemValue
+                                                            setExpenseList(temp)  
+                                                        }}>
+                                                        {
+                                                            expensetype.map((item, index) => {
+                                                                return(
+                                                                    <Select.Item key={`${index}`} label={item.name} value={item.id} />
+                                                                )
+                                                            })
+                                                        }
+                                                    </Select>
+                                                    {
+                                                        item.expense_type_error &&
+                                                        <Text
+                                                            style={textStyles.errorText}>
+                                                                Please select expense type
+                                                        </Text>
+                                                    }
+                                                </View>
+                                            </View>
+                                    
+                                            <View style={styles.Row} >
+                                                <View>
+                                                    <Text
+                                                        style={styles.label}>
+                                                        Expense Bill type
+                                                    </Text>
+                                                    <Spacer  height={scale(5)}  />
+                                                    <Select
+                                                        selectedValue={item.expense_bill_type}
+                                                        width={AppScreenWidth/2-scale(10)}
+                                                        placeholderTextColor={colors.text_primary_color}
+                                                        fontFamily={fonts.Medium}
+                                                        fontSize={scale(13)}
+                                                        maxHeight={"10"}
+                                                        placeholder="Select type"
+                                                        _item={selectStyles._item}
+                                                        _selectedItem={selectStyles._selectedItem}
+                                                        bg={"#fff"}
+                                                        onValueChange={(itemValue) => { 
+                                                            let temp = [...expense_list]
+                                                            temp[index].expense_bill_type = itemValue
+                                                            setExpenseList(temp)  
+                                                                
+                                                        }}>
+                                                        {
+                                                            bill_type.map((item, index) => {
+                                                                return(
+                                                                    <Select.Item key={`${index}`} label={item.name} value={item.id} />
+                                                                )
+                                                            })
+                                                        }
+                                                    </Select>
+                                                    {
+                                                        item.expense_bill_type_error &&
+                                                        <Text
+                                                            style={textStyles.errorText}>
+                                                                Please select expense bill
+                                                        </Text>
+                                                    }
+                                                </View>
+                                                <View>
+                                                    <Text
+                                                        style={styles.label}>
+                                                        Category type
+                                                    </Text>
+                                                    <Spacer  height={scale(5)}  />
+                                                    <Select
+                                                        selectedValue={item.expense_category}
+                                                        width={AppScreenWidth/2-scale(10)}
+                                                        placeholderTextColor={colors.text_primary_color}
+                                                        fontFamily={fonts.Medium}
+                                                        fontSize={scale(13)}
+                                                        maxHeight={"10"}
+                                                        bg={"#fff"}
+                                                    
+                                                        placeholder="Select category"
+                                                        _item={selectStyles._item}
+                                                        _selectedItem={selectStyles._selectedItem}
+                                                    
+                                                        onValueChange={(itemValue) => {                                                       
+                                                                let temp = [...expense_list]
+                                                                temp[index].expense_category = itemValue
+                                                                setExpenseList(temp)
+                                                            
+                                                            }}>
+                                                        {
+                                                            caregory.map((item, index) => {
+                                                                return(
+                                                                    <Select.Item key={`${index}`} label={item.name} value={item.id} />
+                                                                )
+                                                            })
+                                                        }
+                                                    </Select>
+                                                    {
+                                                        item.expense_category_error &&
+                                                        <Text
+                                                            style={textStyles.errorText}>
+                                                                Please select category
+                                                        </Text>
+                                                    }
+                                                </View>
+                                            </View>
+
+
                                             <View>
-                                                <Text
-                                                    style={styles.label}>
-                                                    Select Date
-                                                </Text>
-                                        
-                                                <CalenderInput 
-                                                    placeholder={"Expense Date"}
-                                                    value={item.date}
-                                                    errorMessage={""}
-                                                    w={AppScreenWidth/2-scale(5)}
-                                                    show_label={false}
-                                                    hght={scale(40)}
-                                                    onChangeText={(data) => {
+                                                <CustomTextInput
+                                                    placeholder={'Amount'}
+                                                    value={item.amount}
+                                                    borderWidth={1}
+                                                    lableColor={colors.dark_primary_color}
+                                                    borderRadius={scale(5)}
+                                                    onChangeText={text => {
                                                         let temp = [...expense_list]
-                                                        temp[index].date = data
-                                                        setExpenseList(temp)  
+                                                        temp[index].amount = text
+                                                        setExpenseList(temp)
                                                     }}
+                                                    errorMessage={""}
                                                 />
                                                 {
-                                                    item.date_error  &&
+                                                    item.amount_error && 
                                                     <Text
                                                         style={textStyles.errorText}>
-                                                            Please select date
-                                                    </Text>
+                                                            Please select Amount
+                                                    </Text> 
                                                 }
                                             </View>
-        
+
                                             <View>
-                                                <Text style={styles.label}>Expense type</Text>
-                                                <Spacer  height={scale(5)}  />
-                                                <Select
-                                                    selectedValue={item.expense_type}
-                                                    width={AppScreenWidth/2-scale(10)}
-                                                    bg={"#fff"}
-                                                    placeholderTextColor={colors.text_primary_color}
-                                                   
-                                                    fontFamily={fonts.Medium}
-                                                    fontSize={scale(13)}
-                                                    maxHeight={"10"}
-                                                    accessibilityLabel="Select type"
-                                                    placeholder="Select type"
-                                                    _item={selectStyles._item}
-                                                    _selectedItem={selectStyles._selectedItem}
-                                                    onValueChange={(itemValue) => {
+                                                <CustomTextInput
+                                                    placeholder={'Comments'}
+                                                    value={item.comments}
+                                                    borderWidth={1}
+                                                    lableColor={colors.dark_primary_color}
+                                                    borderRadius={scale(5)}
+                                                    onChangeText={text => {
                                                         let temp = [...expense_list]
-                                                        temp[index].expense_type = itemValue
-                                                        setExpenseList(temp)  
-                                                    }}>
-                                                    {
-                                                        expensetype.map((item, index) => {
-                                                            return(
-                                                                <Select.Item key={`${index}`} label={item.name} value={item.id} />
-                                                            )
-                                                        })
-                                                    }
-                                                </Select>
-                                                {
-                                                    item.expense_type_error &&
-                                                    <Text
-                                                        style={textStyles.errorText}>
-                                                            Please select expense type
-                                                    </Text>
-                                                }
+                                                        temp[index].comments = text
+                                                        setExpenseList(temp)
+                                                    }}
+                                                    errorMessage={""}
+                                                />
                                             </View>
-                                        </View>
-                                   
-                                        <View style={styles.Row} >
-                                            <View>
-                                                <Text
-                                                    style={styles.label}>
-                                                    Expense Bill type
-                                                </Text>
-                                                <Spacer  height={scale(5)}  />
-                                                <Select
-                                                    selectedValue={item.expense_bill_type}
-                                                    width={AppScreenWidth/2-scale(10)}
-                                                    placeholderTextColor={colors.text_primary_color}
-                                                    fontFamily={fonts.Medium}
-                                                    fontSize={scale(13)}
-                                                    maxHeight={"10"}
-                                                    placeholder="Select type"
-                                                    _item={selectStyles._item}
-                                                    _selectedItem={selectStyles._selectedItem}
-                                                    bg={"#fff"}
-                                                    onValueChange={(itemValue) => { 
+                                            <View style={styles.Row} >
+                                                <UpLoadComponent 
+                                                    filepath={item.filepath}
+                                                    setFilePath={(file) => {
                                                         let temp = [...expense_list]
-                                                        temp[index].expense_bill_type = itemValue
-                                                        setExpenseList(temp)  
-                                                            
-                                                    }}>
-                                                    {
-                                                        bill_type.map((item, index) => {
-                                                            return(
-                                                                <Select.Item key={`${index}`} label={item.name} value={item.id} />
-                                                            )
-                                                        })
-                                                    }
-                                                </Select>
-                                                {
-                                                    item.expense_bill_type_error &&
-                                                    <Text
-                                                        style={textStyles.errorText}>
-                                                            Please select expense bill
-                                                    </Text>
-                                                }
-                                            </View>
-                                            <View>
-                                                <Text
-                                                    style={styles.label}>
-                                                    Category type
-                                                </Text>
-                                                <Spacer  height={scale(5)}  />
-                                                <Select
-                                                    selectedValue={item.expense_category}
-                                                    width={AppScreenWidth/2-scale(10)}
-                                                    placeholderTextColor={colors.text_primary_color}
-                                                    fontFamily={fonts.Medium}
-                                                    fontSize={scale(13)}
-                                                    maxHeight={"10"}
-                                                    bg={"#fff"}
-                                                   
-                                                    placeholder="Select category"
-                                                    _item={selectStyles._item}
-                                                    _selectedItem={selectStyles._selectedItem}
+                                                        temp[index].filepath = file
+                                                        setExpenseList(temp)
+                                                    }}
+                                                    wdt={AppScreenWidth/1.2} 
+                                                />
+                                                <TouchableOpacity 
                                                 
-                                                    onValueChange={(itemValue) => {                                                       
-                                                            let temp = [...expense_list]
-                                                            temp[index].expense_category = itemValue
-                                                            setExpenseList(temp)
-                                                        
-                                                        }}>
-                                                    {
-                                                        caregory.map((item, index) => {
-                                                            return(
-                                                                <Select.Item key={`${index}`} label={item.name} value={item.id} />
-                                                            )
-                                                        })
-                                                    }
-                                                </Select>
-                                                {
-                                                    item.expense_category_error &&
-                                                    <Text
-                                                        style={textStyles.errorText}>
-                                                            Please select category
-                                                    </Text>
-                                                }
+                                                    onPress={() =>deleteCard(index)}           
+                                                    style={styles.deletebutton}>
+                                                    <Entypo 
+                                                        name={'cross'} 
+                                                        color={"#fff"} 
+                                                        size={scale(40)} />
+                                                </TouchableOpacity>
                                             </View>
-                                        </View>
-
-
-                                        <View>
-                                            <CustomTextInput
-                                                placeholder={'Amount'}
-                                                value={item.amount}
-                                                borderWidth={1}
-                                                lableColor={colors.dark_primary_color}
-                                                borderRadius={scale(5)}
-                                                onChangeText={text => {
-                                                    let temp = [...expense_list]
-                                                    temp[index].amount = text
-                                                    setExpenseList(temp)
-                                                }}
-                                                errorMessage={""}
-                                            />
                                             {
-                                                item.amount_error && 
-                                                <Text
-                                                    style={textStyles.errorText}>
-                                                        Please select Amount
-                                                </Text> 
+                                            item.filepath_error && 
+                                            <Text
+                                                style={textStyles.errorText}>
+                                                    Please select attachment
+                                            </Text> 
                                             }
+                                        
                                         </View>
-
-                                        <View>
-                                            <CustomTextInput
-                                                placeholder={'Comments'}
-                                                value={item.comments}
-                                                borderWidth={1}
-                                                lableColor={colors.dark_primary_color}
-                                                borderRadius={scale(5)}
-                                                onChangeText={text => {
-                                                    let temp = [...expense_list]
-                                                    temp[index].comments = text
-                                                    setExpenseList(temp)
-                                                }}
-                                                errorMessage={""}
-                                            />
-                                        </View>
-                                        <View style={styles.Row} >
-                                            <UpLoadComponent 
-                                                filepath={item.filepath}
-                                                setFilePath={(file) => {
-                                                    let temp = [...expense_list]
-                                                    temp[index].filepath = file
-                                                    setExpenseList(temp)
-                                                }}
-                                                wdt={AppScreenWidth/1.2} 
-                                            />
-                                            <TouchableOpacity 
-                                              
-                                                onPress={() =>deleteCard(index)}           
-                                                style={styles.deletebutton}>
-                                                <Entypo 
-                                                    name={'cross'} 
-                                                    color={"#fff"} 
-                                                    size={scale(40)} />
-                                            </TouchableOpacity>
-                                        </View>
-                                        {
-                                        item.filepath_error && 
-                                        <Text
-                                            style={textStyles.errorText}>
-                                                Please select attachment
-                                        </Text> 
-                                        }
-                                       
-                                    </View>
-                                )})
-                            }
-                        
-                            <Spacer/>
-                        
-                            <TouchableOpacity 
-                                onPress={() => addNewCard()}
-                                style={styles.button} >
-                                    <FontAwesome name={"plus"} size={scale(16)} color={"#fff"} />
-                                  
-                            </TouchableOpacity>
+                                    )})
+                                }
                             
-                            <Spacer/>
-                      
-                    </ScrollView>
-                    <View style={styles.bottomView} >
-                        <CustomButton
-                            loading={submit}
-                            loadingText={"Submitting"}
-                            onPress={() => Submit(false)}
-                            backgroundColor={"#0073B4"}
-                            text={"Submit"}
-                            marginTop={scale(10)}
-                        />
-                        <Spacer />
-                        <CustomButton
-                            loading={draft}
-                            loadingText={"Saving"}
-                            onPress={() =>Submit(true) }
-                            text={"Save as a Draft"}
-                            marginTop={scale(10)}
-                        />
-                    </View>
+                                <Spacer/>
+                            
+                                <TouchableOpacity 
+                                    onPress={() => addNewCard()}
+                                    style={styles.button} >
+                                        <FontAwesome name={"plus"} size={scale(16)} color={"#fff"} />
+                                    
+                                </TouchableOpacity>
+                                
+                                <Spacer/>
+                        
+                        </ScrollView>
+                        <View style={styles.bottomView} >
+                            <CustomButton
+                                loading={submit}
+                                loadingText={"Submitting"}
+                                onPress={() => Submit(false)}
+                                backgroundColor={"#0073B4"}
+                                text={"Submit"}
+                                marginTop={scale(10)}
+                            />
+                            <Spacer />
+                            <CustomButton
+                                loading={draft}
+                                loadingText={"Saving"}
+                                onPress={() =>Submit(true) }
+                                text={"Save as a Draft"}
+                                marginTop={scale(10)}
+                            />
+                        </View>
+                        {
+                            loading && 
+                            <BlockLoading/>
+                        }
+                    </SafeAreaView>
                     {
-                        loading && 
-                        <BlockLoading/>
+                        All_Done
+                        ?
+                        submissionError ? 
+                                <ErrorModal 
+                                    isVisible={All_Done}
+                                    title='Some Error in Adding Expense'
+                                    onClose={() =>  setAllDone(false)}
+                                /> 
+                            : 
+                                <SuccessModal 
+                                    isVisible={All_Done}
+                                    title='Expense Added Successfully'
+                                    onClose={() =>  setAllDone(false)}
+                                /> 
+                        :
+                        null
                     }
-                </View>
-                {
-                    All_Done
-                    ?
-                    submissionError ? 
-                            <ErrorModal 
-                                isVisible={All_Done}
-                                title='Some Error in Adding Expense'
-                                onClose={() =>  setAllDone(false)}
-                            /> 
-                        : 
-                            <SuccessModal 
-                                isVisible={All_Done}
-                                title='Expense Added Successfully'
-                                onClose={() =>  setAllDone(false)}
-                            /> 
-                    :
-                    null
-                }
-            </NativeBaseProvider>
+                </NativeBaseProvider>
+            </SafeAreaProvider>
         );
     };
 

@@ -9,7 +9,6 @@ import CustomHeader from '../../components/CustomHeader';
 import { MainRoutes } from '../../constants/routes';
 import { colors, fonts } from '../../constants/theme';
 import { AppScreenWidth, hp, width } from '../../constants/sacling';
-import ErrorModal from '../../components/ErrorModal';
 import { useSelector } from 'react-redux';
     const HomeScreen = ({navigation}) => {
         const {user} = useSelector(state => state.LoginReducer)

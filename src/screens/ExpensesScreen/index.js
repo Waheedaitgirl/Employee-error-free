@@ -163,7 +163,7 @@ import moment from 'moment';
                             paddingHorizontal:scale(20), 
                             paddingVertical:scale(10),
                             position:"absolute",
-                            bottom:scale(25)
+                            bottom:scale(55)
                         }}>
                         <AntDesign name={"pluscircle"} size={scale(35)} color={colors.dark_primary_color} />
                 </TouchableOpacity>
