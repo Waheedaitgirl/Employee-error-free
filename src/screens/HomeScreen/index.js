@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {SafeAreaView,StatusBar, Text,View,StyleSheet,TouchableOpacity} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -10,8 +10,25 @@ import { MainRoutes } from '../../constants/routes';
 import { colors, fonts } from '../../constants/theme';
 import { AppScreenWidth, hp, width } from '../../constants/sacling';
 import { useSelector } from 'react-redux';
+import {useDispatch} from 'react-redux';
+import { GetStatus } from "../../store/actions/StatusActions";
+import { getStatusList } from '../../api';
     const HomeScreen = ({navigation}) => {
+        const dispatch = useDispatch();
+        const  getstatus = (data) => dispatch(GetStatus(data))
         const {user} = useSelector(state => state.LoginReducer)
+        useEffect(() => {
+            getStatusList(user.account_id).then((response) => {
+                if(response.status === 200){
+                   
+                    getstatus(response.data.data)
+                }else{
+
+                }
+            }).catch((err) => {
+                console.log(err);
+            })
+        },[])
       
         return (
             <SafeAreaView style={{flex:1, backgroundColor:colors.dark_primary_color}} >

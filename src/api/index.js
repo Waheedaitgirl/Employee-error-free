@@ -9,6 +9,12 @@ export function candidateLogin(data){
     });
 }
 
+export function getStatusList(id){
+    return request({
+        url: `timesheet?account_id=${id}&type=status_list`,
+        method: 'get',
+    });
+}
 export function addTimeSheet(data){
     return request({
         url: `timesheet`,

@@ -19,6 +19,8 @@ import BlockLoading from '../../components/BlockLoading';
 import AlertModal from '../../components/AlertModal';
 import {getEditTimeSheetDetails, getJobWorkingDays,addTimeSheet, jobTimeTypes } from '../../api';
 import BaseUrl from '../../api/BaseUrl';
+import CustomStatusBar from '../../components/StatusBar';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
     const EditTimeSheetScreen = ({navigation, route}) => {
        let item = route.params.item
         const {user} = useSelector(state => state.LoginReducer)
@@ -356,167 +358,170 @@ import BaseUrl from '../../api/BaseUrl';
                 setWeekDays(wdays)
             }else{
                 let wdays = moment(startDate).format('ddd DD MMM');
-                setWeekDays([{date:wdays,insert_date:wdays.format('YYYY-MM-DD'), hours:null}])
+                setWeekDays([{date:wdays,insert_date:moment(startDate).format('YYYY-MM-DD'), hours:null}])
             }
            
         }
 
         return (
-            <NativeBaseProvider>
-                <View style={commonStyles.container} >
-                    <CustomHeader 
-                        show_backButton={true}
-                        isdrawer={false}
-                        onPress={() =>  navigation.goBack()}
-                        title={"Edit TimeSheet"}
-                    />
-                    <View style={styles.Row} >
-                        <View>
+            <SafeAreaProvider>
+                <CustomStatusBar />
+                <NativeBaseProvider>
+                    <View style={commonStyles.container} >
+                        <CustomHeader 
+                            show_backButton={true}
+                            isdrawer={false}
+                            onPress={() =>  navigation.goBack()}
+                            title={"Edit TimeSheet"}
+                        />
+                        <View style={styles.Row} >
+                            <View>
+                                <Text
+                                    style={styles.label}>
+                                    Select Job
+                                </Text>
+                                <Spacer height={scale(3)} />
+                                <Select
+                                    selectedValue={selected_job}
+                                    width={AppScreenWidth/2-scale(5)}
+                                    placeholderTextColor={colors.text_primary_color}
+                                    fontFamily={fonts.Regular}
+                                    maxHeight={"10"}
+                                    accessibilityLabel="Please select type"
+                                    placeholder="Please select  type"
+                                    _item={selectStyles._item}
+                                    _selectedItem={selectStyles._selectedItem}
+                                    onValueChange={(itemValue) => {
+                                        set_selected_job(itemValue)
+                                        getJobtimetype()
+                                        }}>
+                                    {
+                                        jobs.map((item, index) => {
+                                            return(
+                                                <Select.Item key={`${item.job_id}`} label={item.job_title} value={item.job_id} />
+                                            )
+                                        })
+                                    }
+                                </Select>
+                            </View>
+                            <View>
+                                <Text
+                                    style={styles.label}>
+                                    Select Date
+                                </Text>
+                            
+                                <CalenderInput 
+                                    placeholder={"Start Date"}
+                                    value={startDate}
+                                    errorMessage={""}
+                                    w={AppScreenWidth/2-scale(5)}
+                                    show_label={false}
+                                    hght={scale(40)}
+                                    onChangeText={(data) => getNumberofdays(data) }
+                                />
+                            </View>
+                            
+                        </View>
+                        <Spacer />
+                        <View> 
                             <Text
                                 style={styles.label}>
-                                Select Job
+                                Select TimeSheet Type
                             </Text>
                             <Spacer height={scale(3)} />
-                            <Select
-                                selectedValue={selected_job}
-                                width={AppScreenWidth/2-scale(5)}
-                                placeholderTextColor={colors.text_primary_color}
-                                fontFamily={fonts.Regular}
-                                maxHeight={"10"}
-                                accessibilityLabel="Please select type"
-                                placeholder="Please select  type"
-                                _item={selectStyles._item}
-                                _selectedItem={selectStyles._selectedItem}
-                                onValueChange={(itemValue) => {
-                                    set_selected_job(itemValue)
-                                    getJobtimetype()
-                                    }}>
-                                {
-                                    jobs.map((item, index) => {
-                                        return(
-                                            <Select.Item key={`${item.job_id}`} label={item.job_title} value={item.job_id} />
-                                        )
-                                    })
-                                }
-                            </Select>
-                        </View>
-                        <View>
-                            <Text
-                                style={styles.label}>
-                                Select Date
-                            </Text>
-                           
-                            <CalenderInput 
-                                placeholder={"Start Date"}
-                                value={startDate}
-                                errorMessage={""}
-                                w={AppScreenWidth/2-scale(5)}
-                                show_label={false}
-                                hght={scale(40)}
-                                onChangeText={(data) => getNumberofdays(data) }
-                            />
+                            <View style={{...styles.tabview,}} >
+                                <TouchableOpacity 
+                                    onPress={() => changeTab("Day")}
+                                    style={{
+                                        ...styles.tabitem,
+                                        backgroundColor:time_sheet_type === "Day"?colors.dark_primary_color:"#fff",
+                                        borderRightWidth:1}} >
+                                        <Text  style={{...styles.label,color:time_sheet_type === "Day"?"#fff":"#000"}}>Day</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity 
+                                    onPress={() => changeTab("Week")}
+                                    style={{
+                                        ...styles.tabitem,
+                                        backgroundColor:time_sheet_type === "Week"?colors.dark_primary_color:"#fff",
+                                        }} >
+                                    <Text  style={{...styles.label,color:time_sheet_type === "Week"?"#fff":"#000"}}>Week</Text>
+                                </TouchableOpacity>
+                            </View>
+                            {
+                                date_error_message !== null &&
+                                <Text
+                                    style={{...textStyles.errorText, marginTop:scale(3)}}>
+                                    {date_error_message}
+                                </Text>
+                            }
                         </View>
                         
-                    </View>
-                    <Spacer />
-                    <View> 
-                        <Text
-                            style={styles.label}>
-                            Select TimeSheet Type
-                        </Text>
-                        <Spacer height={scale(3)} />
-                        <View style={{...styles.tabview,}} >
+                        <ScrollView 
+                            showsVerticalScrollIndicator={false} 
+                            contentContainerStyle={{paddingBottom:scale(100)}} >
+                        
+                            <Spacer />
+                                <WeeklySummary 
+                                    editable={true}
+                                    job_time_types={job_time_types}
+                                    alldata={alldata}
+                                    setHours={(i, text ,index) => FunsetHours(i, text,index)}                
+                                    
+                                    time_type={time_type}
+                                    job_working_days={job_working_days}
+                                    deleteItem={(i) => deleteItem(i)}
+                                    localTimeType={(val,i) => localTimeType(val,i)}
+                                />  
+                            <Spacer />  
                             <TouchableOpacity 
-                                onPress={() => changeTab("Day")}
-                                style={{
-                                    ...styles.tabitem,
-                                    backgroundColor:time_sheet_type === "Day"?colors.dark_primary_color:"#fff",
-                                    borderRightWidth:1}} >
-                                    <Text  style={{...styles.label,color:time_sheet_type === "Day"?"#fff":"#000"}}>Day</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity 
-                                onPress={() => changeTab("Week")}
-                                style={{
-                                    ...styles.tabitem,
-                                    backgroundColor:time_sheet_type === "Week"?colors.dark_primary_color:"#fff",
-                                    }} >
-                                <Text  style={{...styles.label,color:time_sheet_type === "Week"?"#fff":"#000"}}>Week</Text>
-                            </TouchableOpacity>
-                        </View>
-                        {
-                            date_error_message !== null &&
-                            <Text
-                                style={{...textStyles.errorText, marginTop:scale(3)}}>
-                                {date_error_message}
-                            </Text>
-                        }
-                    </View>
-                    
-                    <ScrollView 
-                        showsVerticalScrollIndicator={false} 
-                        contentContainerStyle={{paddingBottom:scale(100)}} >
-                      
-                         <Spacer />
-                            <WeeklySummary 
-                                editable={true}
-                                job_time_types={job_time_types}
-                                alldata={alldata}
-                                setHours={(i, text ,index) => FunsetHours(i, text,index)}                
+                                onPress={() => addButton()}
+                                style={styles.button} >
+                                    <AntDesign name={"plus"} size={scale(16)} color={"#fff"} />
                                 
-                                time_type={time_type}
-                                job_working_days={job_working_days}
-                                deleteItem={(i) => deleteItem(i)}
-                                localTimeType={(val,i) => localTimeType(val,i)}
-                            />  
-                          <Spacer />  
-                        <TouchableOpacity 
-                            onPress={() => addButton()}
-                            style={styles.button} >
-                                  <AntDesign name={"plus"} size={scale(16)} color={"#fff"} />
-                              
-                        </TouchableOpacity>
-                       
-                        <Spacer />
-                        <DrawLine />
-                        <UpLoadComponent
-                            filepath={filepath}
-                            setFilePath={(file) => setFilePath(file)}
-                        />
-                        <Spacer />
-                        <DrawLine />
-                        <Spacer />
-                    <View style={styles.bottomButtons}> 
-                        <CustomButton
-                            loading={submit}
-                            loadingText={"Submitting"}
-                            onPress={() => ValidateData(false)}
-                            backgroundColor={"#0073B4"}
-                            text={"Submit"}
-                            marginTop={scale(10)}
-                        />
-                        <Spacer />
-                        <CustomButton
-                            loading={draft}
-                            loadingText={"Deleting"}
-                            onPress={() => alert("Delete") }
-                            text={"Delete"}
-                            backgroundColor={colors.delete_icon}
-                            marginTop={scale(10)}
-                        />
+                            </TouchableOpacity>
+                        
+                            <Spacer />
+                            <DrawLine />
+                            <UpLoadComponent
+                                filepath={filepath}
+                                setFilePath={(file) => setFilePath(file)}
+                            />
+                            <Spacer />
+                            <DrawLine />
+                            <Spacer />
+                        <View style={styles.bottomButtons}> 
+                            <CustomButton
+                                loading={submit}
+                                loadingText={"Submitting"}
+                                onPress={() => ValidateData(false)}
+                                backgroundColor={"#0073B4"}
+                                text={"Submit"}
+                                marginTop={scale(10)}
+                            />
+                            <Spacer />
+                            <CustomButton
+                                loading={draft}
+                                loadingText={"Deleting"}
+                                onPress={() => alert("Delete") }
+                                text={"Delete"}
+                                backgroundColor={colors.delete_icon}
+                                marginTop={scale(10)}
+                            />
+                        </View>
+                        </ScrollView>
+                    
                     </View>
-                    </ScrollView>
-                
-                </View>
-                {
-                loading && <BlockLoading/>}
-                { visible && <AlertModal 
-                    is_error={true}
-                    visible={visible}
-                    setVisible={() => setVisible(false)}
-                    error_messaage={error_messaage}
-                    title={"Form Submission Error"} />
-                }
-            </NativeBaseProvider>
+                    {
+                    loading && <BlockLoading/>}
+                    { visible && <AlertModal 
+                        is_error={true}
+                        visible={visible}
+                        setVisible={() => setVisible(false)}
+                        error_messaage={error_messaage}
+                        title={"Form Submission Error"} />
+                    }
+                </NativeBaseProvider>
+            </SafeAreaProvider>
         );
     };
 

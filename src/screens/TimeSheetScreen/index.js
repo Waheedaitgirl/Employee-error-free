@@ -14,6 +14,7 @@ import { listTimeSheetByCandidateId } from '../../api';
 import Spacer from '../../components/Spacer';
 import CustomStatusBar from '../../components/StatusBar';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import { useIsFocused } from '@react-navigation/native';
     const TimeSheetListScreen = ({navigation}) => {
         const {user} = useSelector(state => state.LoginReducer)
         const [data, setData] = useState([])
@@ -22,9 +23,11 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
         const [loading, setLoading ] = useState(true)
         const [error, setError] = useState(false)
         const [error_message , setErrorMessage] = useState("")
+        const isFocused = useIsFocused();
+
         useEffect(() => {
             getList()
-        },[])
+        },[isFocused])
 
         const getList = () => {
             setLoading(true)

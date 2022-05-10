@@ -49,11 +49,12 @@ const SignInScreen = ({navigation}) => {
     setUseremailErrorMessaage('');
     let data ={
       email_address:email_address,
-      userpassword:password
+      userpassword:password,
+      type:"candidate"
     }
     candidateLogin(data).then((response) => {
       setLoading(false);
-        if(response.status == 200){
+        if(response.status === 200 || response.status === 201 ){
           if(response.data.status){
             userLogin(response.data)
           }else{

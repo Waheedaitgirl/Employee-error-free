@@ -20,9 +20,11 @@ import { colors, fonts } from '../../constants/theme';
 import BlockLoading from '../../components/BlockLoading';
 import AlertModal from '../../components/AlertModal';
 import { getJobWorkingDays,addTimeSheet, jobTimeTypes, listCandidateJobs } from '../../api';
+const MODULE_ID = '52'
 import BaseUrl from '../../api/BaseUrl';
     const AddTimeSheetScreen = ({navigation}) => {
         const {user} = useSelector(state => state.LoginReducer)
+        const {status} = useSelector(state => state.StatusReducer)
         const [submit , setSubmit] = useState(false)
         const [draft, setDraft] = useState(false)
         const [startDate, setStartDate] = useState("")
@@ -53,6 +55,10 @@ import BaseUrl from '../../api/BaseUrl';
         const [error_messaage , set_error_messsage] = useState(null)
         const [visible, setVisible] = useState(false);
 
+
+        useEffect(() => {
+            console.log(status ,"Status");
+        },[])
         useEffect(() => {
             listCandidateJobs(user.account_id, user.candidate_id ,"1").then((response) => {
               //if()
