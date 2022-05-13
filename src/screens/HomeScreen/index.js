@@ -20,7 +20,7 @@ import { getStatusList } from '../../api';
         useEffect(() => {
             getStatusList(user.account_id).then((response) => {
                 if(response.status === 200){
-                   
+                    //console.log(response.data.data);
                     getstatus(response.data.data)
                 }else{
 

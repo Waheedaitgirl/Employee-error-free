@@ -21,11 +21,10 @@ const TimeInput = ({item , index ,editable, setHours}) => {
                 onChangeText={(data) =>  {
                     if(data < 0 || data > 24){
                         isError(true)
-                        setHours(index, data)
                     }else{
                         isError(false)
-                        setHours(index, data)
                     }  
+                    setHours(index, data)
                 }}
                 style={{...styles.textinput, backgroundColor:editable?"rgba(0,0,0,1)":"rgba(0,0,0,1)"}}
             />

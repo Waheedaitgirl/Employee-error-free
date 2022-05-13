@@ -22,10 +22,12 @@ import SuccessModal from '../../components/SuccessModal';
 import BaseUrl from '../../api/BaseUrl';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import CustomStatusBar from '../../components/StatusBar';
+const MODULE_ID = '54'
     const EditExpenseScreen = ({navigation, route}) => {
         let item =route.params.item
         const {user} = useSelector(state => state.LoginReducer)
-     
+        const {status} = useSelector(state => state.StatusReducer)
+        const [expense_status , setExpenseStatus] = useState(status.filter(obj => obj.module_id === MODULE_ID )) 
         const [submit , setSubmit] = useState(false)
         const [draft, setDraft] = useState(false)
         const [selected_job,set_selected_job] = useState(null)
@@ -153,7 +155,11 @@ import CustomStatusBar from '../../components/StatusBar';
                formdata.append("expense_report_title",expenses_report_title)
                formdata.append("job_id",s_job.placement_id)
                formdata.append("placement_id",expenses_report_title)
-               formdata.append("module_status_id",is_draft?"902196":"902197")
+               formdata.append("module_status_id",is_draft
+               ?
+               expense_status.filter(obj => obj.module_status_name === 'Draft').map(o => o.module_status_id)[0]
+               :
+               expense_status.filter(obj => obj.module_status_name === 'Submitted').map(o => o.module_status_id)[0])
                formdata.append("type","employee")
                formdata.append("candidate_id",user.candidate_id)
                formdata.append("approver_id","0")
@@ -328,6 +334,7 @@ import CustomStatusBar from '../../components/StatusBar';
                                 <Spacer/>
                                 {
                                     expense_list.map((item, index) => {
+                                        console.log(caregory, "caregory");
                                         return(
                                             <View key={`${index}`} style={styles.cardView} >
                                             <View style={styles.Row} >
@@ -464,6 +471,7 @@ import CustomStatusBar from '../../components/StatusBar';
                                                                 setExpenseList(temp)
                                                             
                                                             }}>
+                                                        
                                                         {
                                                             caregory.map((item, index) => {
                                                                 return(
@@ -523,7 +531,7 @@ import CustomStatusBar from '../../components/StatusBar';
                                             </View>
                                             <View style={styles.Row} >
                                                 <UpLoadComponent 
-                                                    filepath={item.filepath}
+                                                    filepath={item.expense_receipt}
                                                     setFilePath={(file) => {
                                                         let temp = [...expense_list]
                                                         temp[index].filepath = file

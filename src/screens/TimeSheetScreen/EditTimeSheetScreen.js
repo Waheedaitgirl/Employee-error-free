@@ -17,15 +17,21 @@ import { AppScreenWidth } from '../../constants/sacling';
 import { colors, fonts } from '../../constants/theme';
 import BlockLoading from '../../components/BlockLoading';
 import AlertModal from '../../components/AlertModal';
-import {getEditTimeSheetDetails, getJobWorkingDays,addTimeSheet, jobTimeTypes } from '../../api';
+import {getEditTimeSheetDetails, getJobWorkingDays,EditTimeSheet, jobTimeTypes } from '../../api';
 import BaseUrl from '../../api/BaseUrl';
 import CustomStatusBar from '../../components/StatusBar';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import CustomTextInput from '../../components/TextInput';
+const MODULE_ID = '52'
     const EditTimeSheetScreen = ({navigation, route}) => {
        let item = route.params.item
+      
         const {user} = useSelector(state => state.LoginReducer)
+        const {status} = useSelector(state => state.StatusReducer)
+        const [timesheet_status , setTimeSheetStatus] = useState(status.filter(obj => obj.module_id === MODULE_ID )) 
         const [submit , setSubmit] = useState(false)
         const [draft, setDraft] = useState(false)
+        const [comments, setComments] = useState("")
         const [startDate, setStartDate] = useState(item.log_date)
         const [loading, setLoading ] = useState(true)
         const [filepath, setFilePath] = useState({
@@ -53,20 +59,26 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
         const [error_messaage , set_error_messsage] = useState(null)
         const [visible, setVisible] = useState(false);
         useEffect(() => {
-           
+            console.log( item.time_sheet_id,
+                user.candidate_id,
+                user.account_id,
+                item.job_id);
+            getnumberofworkingdays(item.log_date)
             getEditTimeSheetDetails(
                 item.time_sheet_id,
                 user.candidate_id,
                 user.account_id,
-                item.job_id)
+                item.job_id
+                )
                 .then((response) => {
-                  
+                
                     setJobs(response.data.jobs)
                     let arr2 = Object.entries(JSON.parse(response.data.working_days[0].working_days_config))
-                    // convert twodmnentional arra to one dimentional array
+                    // convert two dmnentional arra to one dimentional array
                     set_job_working_days(arr2.map(([day, value]) => ({day, value })));
                     set_job_time_types(response.data.job_time_types);
                     setTimeType(response.data.timesheet_time_types)
+                    console.log(response.data.timesheet_time_types, "Typesssss");
                     setFilePath({
                         ...filepath,
                         path:response.data.timesheet_data.document_file,
@@ -76,7 +88,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
                   
                     let d2 = Object.entries(data)
                     let temp  = [...alldata]
-                    d2.map((item, index) =>temp.push(item[1]))
+                    d2.map((item, index) => temp.push(item[1]))
                     setAlldata(temp)
                     setLoading(false)
                    
@@ -85,6 +97,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
                     setLoading(false)
                 })
         },[])
+
         function groupBy(arr, property) {
             return arr.reduce(function(memo, x) {
               if (!memo[x[property]]) { memo[x[property]] = []; }
@@ -92,6 +105,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
               return memo;
             }, {});
         }
+
      // Pure API Call on job Selection
         const getJobtimetype = () => {
             setAlldata([])
@@ -132,16 +146,28 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
               dates.push({date:d.format('ddd DD MMM'),insert_date:d.format('YYYY-MM-DD'), hours:null});
               d.add(1, 'day');
             }
-         
             return dates;
         }
-
         const localTimeType = (val,index) => {
-                let temp  = [...time_type] ;
-                temp[index].name = val
-                setTimeType(temp)
-        }
+            let temp  = [...time_type] ;
+            temp[index].name = val
+            setTimeType(temp)
+    }
+        
 
+        const getnumberofworkingdays = async (date) => {
+         
+            if(time_sheet_type === "Week"){
+                const weekNumber = moment(date).format("w");
+                let weekdays =  await getISOWeekDates(weekNumber)
+                setWeekDays(weekdays)
+            }else{
+                let weekdays = moment(date).format('ddd DD MMM');
+                setWeekDays([{date:weekdays,insert_date:weekdays.format('YYYY-MM-DD'), hours:null}])
+            }
+           
+          
+        }
         // call this function when user change StartDate 
         const getNumberofdays = async (date) => {
             setTimeType([{name:null, error:false}])
@@ -153,26 +179,20 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
                 setAlldata([[...weekdays]])
             }else{
                 let weekdays = moment(date).format('ddd DD MMM');
-               
                 setWeekDays([{date:weekdays,insert_date:weekdays.format('YYYY-MM-DD'), hours:null}])
                 setAlldata([[...weekdays]])
-            }
-           
-          
+            }   
         }
 
         const FunsetHours = (i,text, index) => {
-            let temparray = alldata
-          //  console.log(temparray[index][i].hours,text, "temparray[index][i].hours");
+            let temparray = [...alldata]
              temparray[index][i].hours = text
              setAlldata(temparray)
             
         }
        
        
-      
         const ValidateData = (is_draft) => {
-            console.log(selected_job ,"selected_job");
             let error = false
             if(selected_job == null){
                 setVisible(true)
@@ -210,11 +230,12 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
             if(!error){
                 setLoading(true)
                 alldata.forEach((item, i) => {
+                   
                     item.forEach((itm , index) => {
                         if(itm.hours > 0 && itm.hours !== null){
                             logs.push({
-                                log_type:time_type[i].name,
-                                log_date:itm.insert_date,
+                                log_type:itm.type,
+                                log_date:itm.date,
                                 log_hours: moment(itm.hours.toString(),"LT").format("hh:mm:ss")
                             })
                         }
@@ -255,10 +276,15 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
                             job_id:selected_job,
                             candidate_id:user.candidate_id,
                             account_id:user.account_id,
-                            module_status_id:is_draft?"902196":"902197",
+                            module_status_id:is_draft
+                                ?
+                                timesheet_status.filter(obj => obj.module_status_name === 'Draft').map(o => o.module_status_id)[0]
+                                :
+                                timesheet_status.filter(obj => obj.module_status_name === 'Submitted').map(o => o.module_status_id)[0],
+                            time_sheet_view:time_sheet_type,
                             time_sheet_view:time_sheet_type,
                             placement_id:s_job.placement_id,
-                            comments:"",
+                            comments:comments,
                             is_attachment:filepath.path !== null ?"1":"0",
                             time_sheet_id:data2.insert_doc_id,
                             title:filepath.name,
@@ -266,8 +292,13 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
                             logs:logs
                         } 
                        
-                        addTimeSheet(data).then((data) => {
-                            alert("TimeSheet Added Successfully")
+                        EditTimeSheet(item.time_sheet_id, data).then((response) => {
+                            if(response.status === 200){
+                                alert("TimeSheet Added Successfully")
+                            }else{
+                                alert("Some Error in Adding Time Sheet")
+                            }
+                            
                             setLoading(false)
                          }).catch((err) => {
                              alert("Some Error in Adding Time Sheet")
@@ -285,41 +316,50 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
                         job_id:selected_job,
                         candidate_id:user.candidate_id,
                         account_id:user.account_id,
-                        module_status_id:is_draft?"902196":"902197",
+                        module_status_id:is_draft
+                        ?
+                        timesheet_status.filter(obj => obj.module_status_name === 'Draft').map(o => o.module_status_id)[0]
+                        :
+                        timesheet_status.filter(obj => obj.module_status_name === 'Submitted').map(o => o.module_status_id)[0],
+                    
                         time_sheet_view:time_sheet_type,
                         placement_id:s_job.placement_id,
-                        comments:"some test comments",
+                        comments:comments,
                         is_attachment:"0",
                         logs:logs
                     } 
-                   
-                    addTimeSheet(data).then((data) => {
-                       alert("TimeSheet Added Successfully")
-                       setLoading(false)
-                    }).catch((err) => {
-                        alert("Some Error in Adding Time Sheet")
+                  
+                    EditTimeSheet(item.time_sheet_id, data).then((response) => {
+                        if(response.status === 200){
+                            alert("TimeSheet Added Successfully")
+                        }else{
+                            alert("Some Error in Adding Time Sheet")
+                        }
+                        
                         setLoading(false)
-                    })
+                     }).catch((err) => {
+                         alert("Some Error in Adding Time Sheet")
+                         setLoading(false)
+                     })
                 }
             }
         }
 
         const addButton = () => {
-           
             if(startDate == ""){
                 setDateErrorMessage("Please select date first")
                 return;
             }
             setDateErrorMessage(null)
             if(time_sheet_type === "Week"){
-                let t_type = [...time_type]
+                let t_type = [time_type]
                 t_type.push({name:null, error:false})
                 setTimeType(t_type)
                 let temp  = [...alldata]
                 temp.push(week_days)
                 setAlldata(temp)
             }else{
-                let t_type = [...time_type]
+                let t_type = time_type
                 t_type.push({name:null, error:false})
                 setTimeType(t_type)
                 let temp  = alldata
@@ -362,6 +402,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
             }
            
         }
+       // return null
 
         return (
             <SafeAreaProvider>
@@ -388,7 +429,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
                                     fontFamily={fonts.Regular}
                                     maxHeight={"10"}
                                     accessibilityLabel="Please select type"
-                                    placeholder="Please select  type"
+                                    placeholder="Please select type"
                                     _item={selectStyles._item}
                                     _selectedItem={selectStyles._selectedItem}
                                     onValueChange={(itemValue) => {
@@ -480,6 +521,19 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
                                 
                             </TouchableOpacity>
                         
+                            <View>
+                                <CustomTextInput
+                                    placeholder={'Comments'}
+                                    value={comments}
+                                    borderWidth={1}
+                                    lableColor={colors.dark_primary_color}
+                                    borderRadius={scale(5)}
+                                    onChangeText={text => {
+                                        setComments(text)
+                                    }}
+                                    errorMessage={""}
+                                />
+                            </View>
                             <Spacer />
                             <DrawLine />
                             <UpLoadComponent
@@ -501,10 +555,10 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
                             <Spacer />
                             <CustomButton
                                 loading={draft}
-                                loadingText={"Deleting"}
-                                onPress={() => alert("Delete") }
-                                text={"Delete"}
-                                backgroundColor={colors.delete_icon}
+                                loadingText={"Saving"}
+                                onPress={() => ValidateData(true)}
+                                text={"Draft"}
+                                //backgroundColor={colors.delete_icon}
                                 marginTop={scale(10)}
                             />
                         </View>

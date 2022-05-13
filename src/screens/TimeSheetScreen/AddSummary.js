@@ -49,7 +49,7 @@ const AddWeeklySummary = ({
                                     {
                                         job_time_types.map((item, index) => {
                                             return(
-                                                <Select.Item key={`${item.job_id}`} label={item.name} value={item.id} />
+                                                <Select.Item key={`${item.id}`} label={item.name} value={item.id} />
                                             )
                                         })
                                     }
@@ -111,9 +111,6 @@ const AddWeeklySummary = ({
                                         local_edit = job_working_days.some(item => item['day'] === 'seventh-day')
                                     }
                                 }
-                               
-                                
-                               
                                 return(
                                     <TimeInput 
                                         item={item} 

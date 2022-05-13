@@ -22,6 +22,13 @@ export function addTimeSheet(data){
         data
     });
 }
+export function EditTimeSheet(id, data){
+    return request({
+        url: `timesheet/${id}`,
+        method: 'put',
+        data
+    });
+}
 
 export function addExpense(data){
     return request({

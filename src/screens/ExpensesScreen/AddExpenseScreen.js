@@ -22,10 +22,11 @@ import moment from 'moment';
 import ErrorModal from '../../components/ErrorModal';
 import SuccessModal from '../../components/SuccessModal';
 import BaseUrl from '../../api/BaseUrl';
-
+const MODULE_ID = '54'
     const AddExpenseScreen = ({navigation}) => {
         const {user} = useSelector(state => state.LoginReducer)
-     
+        const {status} = useSelector(state => state.StatusReducer)
+        const [expense_status , setExpenseStatus] = useState(status.filter(obj => obj.module_id === MODULE_ID )) 
         const [submit , setSubmit] = useState(false)
         const [draft, setDraft] = useState(false)
         const [selected_job,set_selected_job] = useState(null)
@@ -66,6 +67,7 @@ import BaseUrl from '../../api/BaseUrl';
                 setJobs(response.data.data);
                 if(response.data.data.length === 1){
                     set_selected_job(response.data.data[0].job_id)
+                    fun_set_selected_job(response.data.data, response.data.data[0].job_id)
                 }
                 setLoading(false)
             }).catch((err) => {
@@ -146,7 +148,13 @@ import BaseUrl from '../../api/BaseUrl';
                formdata.append("expense_report_title",expenses_report_title)
                formdata.append("job_id",selected_job)
                formdata.append("placement_id",s_job.placement_id)
-               formdata.append("module_status_id",is_draft?"902196":"902197")
+               
+               formdata.append("module_status_id",is_draft
+               ?
+               expense_status.filter(obj => obj.module_status_name === 'Draft').map(o => o.module_status_id)[0]
+               :
+               expense_status.filter(obj => obj.module_status_name === 'Submitted').map(o => o.module_status_id)[0]
+               )
                formdata.append("type","employee")
                formdata.append("candidate_id",user.candidate_id)
                formdata.append("approver_id","0")
@@ -202,10 +210,10 @@ import BaseUrl from '../../api/BaseUrl';
             }
         }
 
-        const fun_set_selected_job = (itemValue) => {
+        const fun_set_selected_job = (l_jobs, itemValue) => {
             setLoading(true)
             set_selected_job(itemValue)
-            let result = jobs.find(obj =>obj.job_id === itemValue)
+            let result = l_jobs.find(obj =>obj.job_id === itemValue)
            
             getExpenseTypeCategoryBillType(user.account_id, result.company_id)
             .then((response) => {
@@ -282,7 +290,7 @@ import BaseUrl from '../../api/BaseUrl';
                                     </Text>
                                     <Spacer height={scale(3)} />
                                     <Select
-                                    isDisabled={jobs.length === 1 ? true :false}
+                                        isDisabled={jobs.length === 1 ? true :false}
                                         selectedValue={selected_job}
                                         width={AppScreenWidth}
                                         placeholderTextColor={colors.text_primary_color}
@@ -291,11 +299,12 @@ import BaseUrl from '../../api/BaseUrl';
                                         alignSelf={"center"}
                                         fontFamily={fonts.Medium}
                                         fontSize={scale(13)}
-                                        placeholder="Please select  type"
+                                        placeholder="Please select type"
                                         _item={selectStyles._item}
                                         _selectedItem={selectStyles._selectedItem}
                                         onValueChange={(itemValue) => {
-                                            fun_set_selected_job(itemValue)
+                                            console.log(itemValue);
+                                            fun_set_selected_job(jobs,itemValue)
                                         }}>
                                         {
                                             jobs.map((item, index) => {

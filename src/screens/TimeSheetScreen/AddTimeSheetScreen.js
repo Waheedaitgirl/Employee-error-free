@@ -20,6 +20,7 @@ import { colors, fonts } from '../../constants/theme';
 import BlockLoading from '../../components/BlockLoading';
 import AlertModal from '../../components/AlertModal';
 import { getJobWorkingDays,addTimeSheet, jobTimeTypes, listCandidateJobs } from '../../api';
+import CustomTextInput from '../../components/TextInput';
 const MODULE_ID = '52'
 import BaseUrl from '../../api/BaseUrl';
     const AddTimeSheetScreen = ({navigation}) => {
@@ -30,9 +31,11 @@ import BaseUrl from '../../api/BaseUrl';
         const [startDate, setStartDate] = useState("")
         const [api_error, setApiError]=useState(false)
         const [loading, setLoading ] = useState(true)
+        const [comments, setComments] = useState("")
         const [filepath, setFilePath] = useState({
             path:null, ext:null, name:null
         })
+        const [timesheet_status , setTimeSheetStatus] = useState(status.filter(obj => obj.module_id === MODULE_ID )) 
          // Data from API
         const [job_working_days , set_job_working_days] = useState([])  // get this from API
         const [job_time_types, set_job_time_types] = useState([])  // get this from database
@@ -56,9 +59,7 @@ import BaseUrl from '../../api/BaseUrl';
         const [visible, setVisible] = useState(false);
 
 
-        useEffect(() => {
-            console.log(status ,"Status");
-        },[])
+       
         useEffect(() => {
             listCandidateJobs(user.account_id, user.candidate_id ,"1").then((response) => {
               //if()
@@ -100,7 +101,7 @@ import BaseUrl from '../../api/BaseUrl';
                 setLoading(false)
             })
 
-            jobTimeTypes(user.account_id, selected_job).then((response) => {
+            jobTimeTypes(user.account_id, itemValue).then((response) => {
                 if(response.status === 200){
                     set_job_time_types(response.data.data);
                 }else{
@@ -133,6 +134,7 @@ import BaseUrl from '../../api/BaseUrl';
 
         // call this function when user change StartDate 
         const getNumberofdays = async (date) => {
+            setDateErrorMessage(null)
             setTimeType([{name:null, error:false}])
             setStartDate(date)
             if(time_sheet_type === "Week"){
@@ -151,17 +153,16 @@ import BaseUrl from '../../api/BaseUrl';
         }
 
         const FunsetHours = (i,text, index) => {
-            let temparray = alldata
-          //  console.log(temparray[index][i].hours,text, "temparray[index][i].hours");
-             temparray[index][i].hours = text
-             setAlldata(temparray)
+          
+            let temparray = [...alldata]
+            temparray[index][i].hours = text
+            setAlldata(temparray)
             
         }
        
        
       
         const ValidateData = (is_draft) => {
-            console.log(selected_job ,"selected_job");
             let error = false
             if(selected_job == null){
                 setVisible(true)
@@ -244,10 +245,14 @@ import BaseUrl from '../../api/BaseUrl';
                             job_id:selected_job,
                             candidate_id:user.candidate_id,
                             account_id:user.account_id,
-                            module_status_id:is_draft?"303927":"903060",
+                            module_status_id:is_draft
+                                ?
+                                timesheet_status.filter(obj => obj.module_status_name === 'Draft').map(o => o.module_status_id)[0]
+                                :
+                                timesheet_status.filter(obj => obj.module_status_name === 'Submitted').map(o => o.module_status_id)[0],
                             time_sheet_view:time_sheet_type,
                             placement_id:s_job.placement_id,
-                            comments:"",
+                            comments:comments,
                             is_attachment:filepath.path !== null ?"1":"0",
                             time_sheet_id:data2.insert_doc_id,
                             title:filepath.name,
@@ -277,11 +282,10 @@ import BaseUrl from '../../api/BaseUrl';
                         module_status_id:is_draft?"902196":"902197",
                         time_sheet_view:time_sheet_type,
                         placement_id:s_job.placement_id,
-                        comments:"some test comments",
+                        comments:comments,
                         is_attachment:"0",
                         logs:logs
                     } 
-                    console.log(data, "Data");
                     addTimeSheet(data).then((data) => {
                        alert("TimeSheet Added Successfully")
                        setLoading(false)
@@ -494,6 +498,20 @@ import BaseUrl from '../../api/BaseUrl';
                         
                             <Spacer />
                             <DrawLine />
+                            <View>
+                                <CustomTextInput
+                                    placeholder={'Comments'}
+                                    value={comments}
+                                    borderWidth={1}
+                                    lableColor={colors.dark_primary_color}
+                                    borderRadius={scale(5)}
+                                    onChangeText={text => {
+                                        setComments(text)
+                                    }}
+                                    errorMessage={""}
+                                />
+                            </View>
+                                            
                             <UpLoadComponent
                                 filepath={filepath}
                                 setFilePath={(file) => setFilePath(file)}
