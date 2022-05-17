@@ -13,7 +13,7 @@ import Spacer from '../../components/Spacer';
 import CalenderInput from '../../components/CalenderInput';
 import CustomButton from '../../components/Button';
 import UpLoadComponent from "../../components/Uploadcomponent"
-import {getEditExpensesDetails, getExpenseTypeCategoryBillType, listCandidateJobs } from '../../api';
+import {getEditExpensesDetails, getExpenseTypeCategoryBillType, EditExpense } from '../../api';
 import BlockLoading from '../../components/BlockLoading';
 import Entypo from 'react-native-vector-icons/Entypo'
 import moment from 'moment';
@@ -24,7 +24,8 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import CustomStatusBar from '../../components/StatusBar';
 const MODULE_ID = '54'
     const EditExpenseScreen = ({navigation, route}) => {
-        let item =route.params.item
+        let item = route.params.item
+      
         const {user} = useSelector(state => state.LoginReducer)
         const {status} = useSelector(state => state.StatusReducer)
         const [expense_status , setExpenseStatus] = useState(status.filter(obj => obj.module_id === MODULE_ID )) 
@@ -64,9 +65,9 @@ const MODULE_ID = '54'
         ])
 
         useEffect(() => {
-          
+         
             //account_id, expense_id, job_id, candidate_id
-            getEditExpensesDetails(user.account_id,item.expense_id,user.candidate_id).then((response) => {
+            getEditExpensesDetails(user.account_id,"423",user.candidate_id).then((response) => {
                 if(response.status === 200){
                     setJobs(response.data.jobs)
                     setBillType(response.data.expense_bill_types)
@@ -185,17 +186,17 @@ const MODULE_ID = '54'
                     })
                })
                var requestOptions = {
-                method: 'POST',
+                method: 'PUT',
                 headers:{
                     "Authorization":"Bearer 4545980ce66bd555d903f7dc739f91e631606eb1",
                     'Content-Type': 'multipart/form-data; ',
                 },
                 body: formdata,
               };
-              fetch(`${BaseUrl}expenses`, requestOptions)
+              fetch(`${BaseUrl}expenses/${item.expense_id}`, requestOptions)
               .then((data) => data.json()) 
               .then((response) => {
-                   
+               
                   if(response.status){
                     setsubmissionError(false)
                   }else{
@@ -296,6 +297,7 @@ const MODULE_ID = '54'
                                     <Spacer height={scale(3)} />
                                     <Select
                                         selectedValue={selected_job}
+                                        isDisabled={jobs.length === 1 ? true :false}
                                         width={AppScreenWidth}
                                         placeholderTextColor={colors.text_primary_color}
                                     
@@ -334,7 +336,7 @@ const MODULE_ID = '54'
                                 <Spacer/>
                                 {
                                     expense_list.map((item, index) => {
-                                        console.log(caregory, "caregory");
+                                      
                                         return(
                                             <View key={`${index}`} style={styles.cardView} >
                                             <View style={styles.Row} >
@@ -531,8 +533,9 @@ const MODULE_ID = '54'
                                             </View>
                                             <View style={styles.Row} >
                                                 <UpLoadComponent 
-                                                    filepath={item.expense_receipt}
+                                                    filepath={item.filepath}
                                                     setFilePath={(file) => {
+                                                        console.log(file, "fileee");
                                                         let temp = [...expense_list]
                                                         temp[index].filepath = file
                                                         setExpenseList(temp)
@@ -602,13 +605,13 @@ const MODULE_ID = '54'
                         submissionError ? 
                                 <ErrorModal 
                                     isVisible={All_Done}
-                                    title='Some Error in Adding Expense'
+                                    title='Some Error in Updating Expense'
                                     onClose={() =>  setAllDone(false)}
                                 /> 
                             : 
                                 <SuccessModal 
                                     isVisible={All_Done}
-                                    title='Expense Added Successfully'
+                                    title='Expense Updated Successfully'
                                     onClose={() =>  setAllDone(false)}
                                 /> 
                         :

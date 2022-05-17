@@ -29,7 +29,13 @@ export function EditTimeSheet(id, data){
         data
     });
 }
-
+export function EditExpense(id, data){
+    return request({
+        url: `expenses/${id}`,
+        method: 'put',
+        data
+    });
+}
 export function addExpense(data){
     return request({
         url: `expenses`,

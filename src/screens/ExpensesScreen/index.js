@@ -15,7 +15,7 @@ import { getExpenseslist } from '../../api';
 import CustomStatusBar from '../../components/StatusBar';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import moment from 'moment';
-
+import { useIsFocused } from '@react-navigation/native';
     const AllExpenseScreen = ({navigation}) => {
         const {user} = useSelector(state => state.LoginReducer)
         const [endDate, setEndDate] = useState("")
@@ -23,10 +23,12 @@ import moment from 'moment';
         const [data, setData] = useState([])
         const [loading, setLoading ] = useState(true)
         const [error, setError] = useState(false)
+        const isFocused = useIsFocused();
+
         const [error_message , setErrorMessage] = useState("")
         useEffect(() => {
             getExpensesList()
-        },[])
+        },[isFocused])
 
         getExpensesList = () => {
             setLoading(true)

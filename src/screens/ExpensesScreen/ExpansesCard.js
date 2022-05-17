@@ -98,7 +98,7 @@ const ExpansesItem = memo(({item, billtype, company, status,date,List, job,statu
                     }]}>{status}</Text>
             </View>
             {
-            status !== "Approved" &&
+            status !== "Approved" && status !== "Rejected"  && 
                 <View style={styles.buttonView} >
                     { 
                         status !== "Submitted" && 

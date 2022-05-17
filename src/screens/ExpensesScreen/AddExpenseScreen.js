@@ -15,7 +15,7 @@ import Spacer from '../../components/Spacer';
 import CalenderInput from '../../components/CalenderInput';
 import CustomButton from '../../components/Button';
 import UpLoadComponent from "../../components/Uploadcomponent"
-import {addExpense, getExpenseTypeCategoryBillType, listCandidateJobs } from '../../api';
+import {getExpenseTypeCategoryBillType, listCandidateJobs } from '../../api';
 import BlockLoading from '../../components/BlockLoading';
 import Entypo from 'react-native-vector-icons/Entypo'
 import moment from 'moment';
