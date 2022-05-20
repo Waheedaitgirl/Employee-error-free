@@ -29,9 +29,11 @@ const SignInScreen = ({navigation}) => {
   const [password, setPassword] = useState('123456');
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error_message , setErrorMessage] =  useState(null);
   const dispatch = useDispatch();
   const  userLogin = (data) => dispatch(Login(data))
   const submitdate = () => {
+    setErrorMessage(null)
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (!reg.test(email_address)) {
       setUseremailErrorMessaage('Please enter valid email');
@@ -56,14 +58,14 @@ const SignInScreen = ({navigation}) => {
           if(response.data.status){
             userLogin(response.data)
           }else{
-            alert("Invalid crenditlas")
+            setErrorMessage("Please check username and password")
           }
         }else{
-          alert("error")
+          setErrorMessage("Please check username and password")
         }
     }).catch((err) => {
       setLoading(false);
-      console.log(err);
+      setErrorMessage("Please check username and password")
     })
   };
   return (
@@ -96,13 +98,17 @@ const SignInScreen = ({navigation}) => {
           onChangeText={text => setPassword(text)}
           errorMessage={passwordErrorMessage}
         />
-        <TouchableOpacity
+        <View style={{flexDirection:"row",flex:1, width:AppScreenWidth, justifyContent:"space-between"}}>
+          <Text style={textStyles.errorText} >{error_message}</Text>
+          <TouchableOpacity
           onPress={() => navigation.navigate(AuthRoutes.ForgotPasswordScreen)}
-          style={{width: AppScreenWidth, alignItems: 'flex-end'}}>
+          style={{alignSelf:"flex-end",alignItems: 'flex-end'}}>
           <Text style={{...textStyles.title, color: '#FD9215'}}>
             Forgot Password?
           </Text>
         </TouchableOpacity>
+        </View>
+      
 
         <Spacer />
         <CustomButton

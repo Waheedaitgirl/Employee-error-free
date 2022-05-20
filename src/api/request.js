@@ -1,6 +1,6 @@
 import axios from 'axios';
 const service = axios.create({
-  baseURL:'https://6351-203-82-55-110.ngrok.io/',
+  baseURL:'https://24ab-203-82-55-110.ngrok.io/',
   timeout: 50000, // request timeout
 });
 
