@@ -1,5 +1,6 @@
 import { createStore, combineReducers,applyMiddleware} from 'redux';
 import LoginReducer from './reducers/LoginReducer';
+import StatusReducer from './reducers/StatusReducer'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistStore, persistReducer } from 'redux-persist';
 import thunk from 'redux-thunk';
@@ -10,6 +11,7 @@ import thunk from 'redux-thunk';
     };
     
     const rootReducer = combineReducers({
+        StatusReducer:StatusReducer,
         LoginReducer:persistReducer(persistConfig, LoginReducer),
     });
 

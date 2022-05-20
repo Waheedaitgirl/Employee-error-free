@@ -1,6 +1,7 @@
 import axios from 'axios';
+import BaseUrl from './BaseUrl';
 const service = axios.create({
-  baseURL:'https://24ab-203-82-55-110.ngrok.io/',
+  baseURL: `${BaseUrl}`,
   timeout: 50000, // request timeout
 });
 
@@ -8,10 +9,9 @@ const service = axios.create({
 service.interceptors.request.use(
   async config => {
     config.headers['Authorization'] = '';
-  //  const {token} = useSelector(state => state.LoginReducer)
-  //   console.log(token);
     if (true) {
       config.headers['Authorization'] =  'Bearer 4545980ce66bd555d903f7dc739f91e631606eb1';
+     
     }
     return config;
   },
@@ -26,8 +26,8 @@ service.interceptors.response.use(
     const res = response;
 
     // if the custom code is not 200, it is judged as an error.
-    if (res.status != '200') {
-      return Promise.reject(new Error(res.data || 'Error'));
+    if (res.status !== 200) {
+      return Promise.reject(new Error(res || 'Error'));
     } else {
       return res;
     }

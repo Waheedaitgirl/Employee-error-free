@@ -41,8 +41,8 @@ const CustomHeader = ({isdrawer, show_backButton,title,onPress}) => {
 
         <Text
             style={{
-                fontFamily:fonts.Bold,
-                fontSize: scale(18),
+                fontFamily:fonts.Medium,
+                fontSize: scale(15),
                 color: colors.white,
             }}>
           {title}

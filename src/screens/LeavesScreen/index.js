@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import {ScrollView,TouchableOpacity, Text,View,StyleSheet} from 'react-native';
 import CustomButton from '../../components/Button';
 import {NativeBaseProvider, Select, Icon } from "native-base";
-import AntDesign from 'react-native-vector-icons/AntDesign'
 import { scale, verticalScale } from 'react-native-size-matters';
 import { commonStyles,textStyles } from '../../styles';
-import CalenderInput from '../../components/CalenderInput';
 import CustomHeader from '../../components/CustomHeader';
 import CustomTextInput from '../../components/TextInput';
 import PickerInput from '../../components/PickerInput';
