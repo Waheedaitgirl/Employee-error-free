@@ -154,10 +154,10 @@ const MODULE_ID = '54'
                let s_job = jobs.find(x => x.job_id = selected_job)
                let formdata  = new FormData()
                formdata.append("expense_report_title",expenses_report_title)
-               formdata.append("job_id",s_job.placement_id)
-               formdata.append("is_update",true)
+               formdata.append("job_id",selected_job)
+               formdata.append("is_update","yes")
                formdata.append("expense_id",item.expense_id)
-               formdata.append("placement_id",expenses_report_title)
+               formdata.append("placement_id",s_job.placement_id)
                formdata.append("module_status_id",is_draft
                ?
                expense_status.filter(obj => obj.module_status_name === 'Draft').map(o => o.module_status_id)[0]
@@ -198,18 +198,16 @@ const MODULE_ID = '54'
               fetch(`${BaseUrl}expenses`, requestOptions)
               .then((data) => data.json()) 
               .then((response) => {
-               
+                console.log(response, "Response");
                   if(response.status){
                     setsubmissionError(false)
                   }else{
-                   
                     setsubmissionError(true)
                   }
                   setAllDone(true)
                   setLoading(false)
               }).catch((err) => {
                   console.log(err);
-                
                   setLoading(false)
                   setsubmissionError(true)
                   setAllDone(true)
