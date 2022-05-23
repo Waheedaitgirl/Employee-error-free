@@ -25,7 +25,7 @@ import CustomStatusBar from '../../components/StatusBar';
 const MODULE_ID = '54'
     const EditExpenseScreen = ({navigation, route}) => {
         let item = route.params.item
-      
+    
         const {user} = useSelector(state => state.LoginReducer)
         const {status} = useSelector(state => state.StatusReducer)
         const [expense_status , setExpenseStatus] = useState(status.filter(obj => obj.module_id === MODULE_ID )) 
@@ -67,7 +67,7 @@ const MODULE_ID = '54'
         useEffect(() => {
          
             //account_id, expense_id, job_id, candidate_id
-            getEditExpensesDetails(user.account_id,"423",user.candidate_id).then((response) => {
+            getEditExpensesDetails(user.account_id,item.expense_id,user.candidate_id).then((response) => {
                 if(response.status === 200){
                     setJobs(response.data.jobs)
                     setBillType(response.data.expense_bill_types)
@@ -155,6 +155,8 @@ const MODULE_ID = '54'
                let formdata  = new FormData()
                formdata.append("expense_report_title",expenses_report_title)
                formdata.append("job_id",s_job.placement_id)
+               formdata.append("is_update",true)
+               formdata.append("expense_id",item.expense_id)
                formdata.append("placement_id",expenses_report_title)
                formdata.append("module_status_id",is_draft
                ?
@@ -186,14 +188,14 @@ const MODULE_ID = '54'
                     })
                })
                var requestOptions = {
-                method: 'PUT',
+                method: 'POST',
                 headers:{
                     "Authorization":"Bearer 4545980ce66bd555d903f7dc739f91e631606eb1",
                     'Content-Type': 'multipart/form-data; ',
                 },
                 body: formdata,
               };
-              fetch(`${BaseUrl}expenses/${item.expense_id}`, requestOptions)
+              fetch(`${BaseUrl}expenses`, requestOptions)
               .then((data) => data.json()) 
               .then((response) => {
                

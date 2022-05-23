@@ -9,15 +9,10 @@ import Animated, {
 import DatePicker from 'react-native-date-picker'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { textStyles } from "../styles/textStyles";
+import moment from 'moment'
 const CalenderInput = ({value,w=width-scale(20),show_label = true, hght=verticalScale(50), placeholder,errorMessage,labelColor=colors.text_primary_color,onChangeText}) => {
     const [open, setOpen] = useState(false)
     const [date, setDate] = useState(new Date())
-    const getCurrentDate = (v)=>{
-        var date = new Date(v).getDate();
-        var month = new Date(v).getMonth() + 1;
-        var year = new Date(v).getFullYear();
-        return date + '-' + month + '-' + year;//format: dd-mm-yyyy;
-  }
     return (
         <View style={{...styles.mainView,width:w,height:hght}} >
             { 
@@ -48,7 +43,7 @@ const CalenderInput = ({value,w=width-scale(20),show_label = true, hght=vertical
                     :  
                         <Text
                             style={textStyles.smallheading}>
-                            {getCurrentDate(value)}
+                            {moment(value).format("DD-MM-YYYY")}
                         </Text> 
                 } 
                        
@@ -80,7 +75,7 @@ const CalenderInput = ({value,w=width-scale(20),show_label = true, hght=vertical
             }
             <DatePicker
                 modal
-                androidVariant={"nativeAndroid"}
+               // androidVariant={"nativeAndroid"}
                 open={open}
                 date={date}
                 mode={"date"}

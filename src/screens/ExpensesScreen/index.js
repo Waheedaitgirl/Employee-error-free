@@ -21,6 +21,7 @@ import { useIsFocused } from '@react-navigation/native';
         const [endDate, setEndDate] = useState("")
         const [startDate, setStartDate] = useState("")
         const [data, setData] = useState([])
+        const [filterdata, setFilterData] = useState([])
         const [loading, setLoading ] = useState(true)
         const [error, setError] = useState(false)
         const isFocused = useIsFocused();
@@ -36,6 +37,7 @@ import { useIsFocused } from '@react-navigation/native';
             .then((response) => {
                 if(response.status == 200){
                     setData(response.data.data);
+                    setFilterData(response.data.data)
                     setLoading(false)
                 }else{
                     console.log("Some Error",response.status);
@@ -44,8 +46,6 @@ import { useIsFocused } from '@react-navigation/native';
                     setErrorMessage('Some Error Ocured with status code'+ response.status)
                 }
             }).catch((error) => {
-                console.log(error ,"error");
-              
                 setLoading(false)
                 setError(true)
                 setLoading(false)
@@ -68,8 +68,45 @@ import { useIsFocused } from '@react-navigation/native';
                 List={() => {navigation.navigate(MainRoutes.ExpenseDetailsScreen,{item:item})}}
             />
         ); 
-          if(loading){
 
+        const filterbydate = (date , is_start) => {
+            if(is_start){
+                setStartDate(date)
+            }else{
+                setEndDate(date)
+            }
+            if(startDate !== "" || endDate !== ""){
+                let date_filter = data.filter(function(item){
+                        if(moment(item.created_date).isBetween(moment(startDate), moment(endDate))){
+                            return item
+                        }
+                    })
+                setFilterData(date_filter)
+            }           
+        }
+
+
+        const FilterbyStatus = (status) => {
+            if(status === "Draft"){
+                let draft_data = data.filter(function(item){
+                    return item.module_status_name === status;
+                 })
+                 setFilterData(draft_data)
+            }else{
+                setFilterData(data)
+            }
+        }
+
+        const FilterByTitle = (title) => {
+            let se = title.toLowerCase()
+            const regex = new RegExp(`${se}`);
+            let draft_data = data.filter(function(item){ 
+                return item.job_title.toLowerCase().match(regex) || item.expense_report_title.toLowerCase().match(regex) ||  item.module_status_name.toLowerCase().match(regex)
+             })
+             setFilterData(draft_data)
+        }
+
+          if(loading){
             return(  
                 <SafeAreaProvider>
                 <CustomStatusBar />
@@ -77,7 +114,7 @@ import { useIsFocused } from '@react-navigation/native';
                     <CustomHeader 
                         show_backButton={true}
                         isdrawer={true}
-                        SearchPress={() => alert("Search Press")}
+                        SearchPress={(text) => FilterByTitle(text)}
                         NotificationPress={() => alert("NotificationPress")}
                         FilterPress={(data) => alert(data)}
                         onPress={() => navigation.openDrawer()}
@@ -96,9 +133,9 @@ import { useIsFocused } from '@react-navigation/native';
                     <CustomHeader 
                             show_backButton={true}
                             isdrawer={true}
-                            SearchPress={() => alert("Search Press")}
+                            SearchPress={(text) => FilterByTitle(text)}
                             NotificationPress={() => alert("NotificationPress")}
-                            FilterPress={(data) => alert(data)}
+                            FilterPress={(status) => FilterbyStatus(status)}
                             onPress={() => navigation.openDrawer()}
                             title={"All Expenses"}
                         />
@@ -108,7 +145,7 @@ import { useIsFocused } from '@react-navigation/native';
                             value={startDate}
                             errorMessage={""}
                             w={AppScreenWidth/2-scale(5)}
-                            onChangeText={(data) => setStartDate(data) }
+                            onChangeText={(date) => filterbydate(date , true) }
                         />
                     
                         <CalenderInput 
@@ -116,12 +153,12 @@ import { useIsFocused } from '@react-navigation/native';
                             value={endDate}
                             errorMessage={""}
                             w={AppScreenWidth/2-scale(5)}
-                            onChangeText={(data) => setEndDate(data) }
+                            onChangeText={(date) => filterbydate(date , false) }
                         />
                     </View>
                 <FlatList 
                         showsVerticalScrollIndicator={false}
-                        data={data}
+                        data={filterdata}
                         renderItem={renderItem}
                         maxToRenderPerBatch={20}
                         updateCellsBatchingPeriod={80}

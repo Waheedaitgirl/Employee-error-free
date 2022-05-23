@@ -1,36 +1,41 @@
-import React, { useState } from 'react';
-import {SafeAreaView,StatusBar, Text,View,StyleSheet,TouchableOpacity} from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import AntDesign from 'react-native-vector-icons/AntDesign'
-import Entypo from 'react-native-vector-icons/Entypo'
+import React, { useEffect, useState } from 'react';
+import {SafeAreaView,StatusBar,ScrollView, Text,View,StyleSheet,TouchableOpacity} from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 import { commonStyles,textStyles } from '../../styles';
 import CustomHeader from '../../components/CustomHeader';
-import { MainRoutes } from '../../constants/routes';
+
 import { colors, fonts } from '../../constants/theme';
 import { AppScreenWidth, hp, width } from '../../constants/sacling';
 import { useSelector } from 'react-redux';
-    const HomeScreen = ({navigation}) => {
-        const {user} = useSelector(state => state.LoginReducer)
+import { useWindowDimensions } from 'react-native';
+import RenderHtml, { HTMLContentModel, defaultHTMLElementModels } from 'react-native-render-html';
+import {encode, decodeEntity,decode} from 'html-entities';
+import { source, source2, html } from './html';
+const HomeScreen = ({navigation}) => {
       
+    
+        const {user} = useSelector(state => state.LoginReducer)
+        const { width } = useWindowDimensions();
+        useEffect(() => {
+            console.log(decode(source) ,"Soources");
+        })
         return (
-            <SafeAreaView style={{flex:1, backgroundColor:colors.dark_primary_color}} >
+            <SafeAreaView style={{flex:1, backgroundColor:"#fff"}} >
                 <StatusBar barStyle={"light-content"} />
-                <View style={commonStyles.container} >
+                <ScrollView style={{flex:1,}} >
                     <CustomHeader 
                         show_backButton={true}
                         isdrawer={true}
                         onPress={() => navigation.openDrawer()}
-                        title={"My Tasks"}
+                        title={"Jobs"}
                     />
-                  
-                    <View style={styles.main2} >
-                        <Text style={styles.paragraph}>
-                            Copyright @{new Date().getFullYear()} RecruitBPM All Rights Reserved
-                        </Text>
-                    </View>
+                   <RenderHtml
+                    contentWidth={width}
+                    source={{html:decode(source)}}
+               
+                    />
                 
-                </View>
+                </ScrollView>
             </SafeAreaView>
             
         );

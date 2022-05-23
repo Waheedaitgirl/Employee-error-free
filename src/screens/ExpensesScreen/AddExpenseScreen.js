@@ -147,6 +147,7 @@ const MODULE_ID = '54'
                let formdata  = new FormData()
                formdata.append("expense_report_title",expenses_report_title)
                formdata.append("job_id",selected_job)
+               formdata.append("is_update",false)
                formdata.append("placement_id",s_job.placement_id)
                
                formdata.append("module_status_id",is_draft

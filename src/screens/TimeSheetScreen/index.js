@@ -15,9 +15,11 @@ import Spacer from '../../components/Spacer';
 import CustomStatusBar from '../../components/StatusBar';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import { useIsFocused } from '@react-navigation/native';
+import moment from 'moment';
     const TimeSheetListScreen = ({navigation}) => {
         const {user} = useSelector(state => state.LoginReducer)
         const [data, setData] = useState([])
+        const [filterdata, setFilterData] = useState([])
         const [endDate, setEndDate] = useState("")
         const [startDate, setStartDate] = useState("")
         const [loading, setLoading ] = useState(true)
@@ -28,22 +30,25 @@ import { useIsFocused } from '@react-navigation/native';
         useEffect(() => {
             getList()
         },[isFocused])
+        useEffect(() => {
 
+        },[filterdata, filterdata.length])
         const getList = () => {
             setLoading(true)
             listTimeSheetByCandidateId(user.account_id, user.candidate_id)
             .then((response) => {
                 if(response.status == 200){
                     setData(response.data.data);
+                    setFilterData(response.data.data);
                     setLoading(false)
                 }else{
-                    console.log("Some Error",response.status);
+                  
                     setError(true)
                     setLoading(false)
                     setErrorMessage('Some Error Ocured with status code'+ response.status)
                 }
             }).catch((error) => {
-                console.log(error ,"error");
+              
                 setError(true)
                 setLoading(false)
                 setErrorMessage('Some Error Ocured with status code 200')
@@ -63,6 +68,45 @@ import { useIsFocused } from '@react-navigation/native';
                 onDelete={() => getList()}
             />
           ); 
+
+          const filterbydate = (date , is_start) => {
+            if(is_start){
+                setStartDate(date)
+            }else{
+                setEndDate(date)
+            }
+            if(startDate !== "" || endDate !== ""){
+                let date_filter = data.filter(function(item){
+                   
+                        if(moment(item.log_date).isBetween(moment(startDate), moment(endDate))){
+                            return item
+                        }
+                    })
+              
+                setFilterData(date_filter)
+            }           
+        }
+
+
+        const FilterbyStatus = (status) => {
+            if(status === "Draft"){
+                let draft_data = data.filter(function(item){
+                    return item.module_status_name === status;
+                 })
+                 setFilterData(draft_data)
+            }else{
+                setFilterData(data)
+            }
+        }
+
+        const FilterByTitle = (title) => {
+                let se = title.toLowerCase()
+                const regex = new RegExp(`${se}`);
+                let draft_data = data.filter(function(item){ 
+                    return item.job_title.toLowerCase().match(regex) || item.approver_name.toLowerCase().match(regex) ||  item.comments.toLowerCase().match(regex)
+                 })
+                 setFilterData(draft_data)
+        }
         if(loading){
             return( 
                 <SafeAreaProvider>
@@ -71,9 +115,9 @@ import { useIsFocused } from '@react-navigation/native';
                         <CustomHeader 
                             show_backButton={true}
                             isdrawer={true}
-                            SearchPress={() => alert("Search Press")}
+                            SearchPress={(text) => FilterByTitle(text)}
                             NotificationPress={() => alert("NotificationPress")}
-                            FilterPress={(data) => alert(data)}
+                            FilterPress={(status) => FilterbyStatus(status)}
                             onPress={() => navigation.openDrawer()}
                             title={"Time Sheet"}
                         />
@@ -83,6 +127,7 @@ import { useIsFocused } from '@react-navigation/native';
                 </SafeAreaProvider>
             )
         }
+      
         return (
 
             <SafeAreaProvider style={{flex:1}}>
@@ -91,9 +136,9 @@ import { useIsFocused } from '@react-navigation/native';
                     <CustomHeader 
                         show_backButton={true}
                         isdrawer={true}
-                        SearchPress={() => alert("Search Press")}
+                        SearchPress={(text) => FilterByTitle(text)}
                         NotificationPress={() => alert("NotificationPress")}
-                        FilterPress={(data) => alert(data)}
+                        FilterPress={(status) => FilterbyStatus(status)}
                         onPress={() => navigation.openDrawer()}
                         title={"Time Sheet"}
                     />
@@ -103,7 +148,7 @@ import { useIsFocused } from '@react-navigation/native';
                             value={startDate}
                             errorMessage={""}
                             w={AppScreenWidth/2-scale(5)}
-                            onChangeText={(data) => setStartDate(data) }
+                            onChangeText={(data) => filterbydate(data,true) }
                         />
                     
                         <CalenderInput 
@@ -111,50 +156,49 @@ import { useIsFocused } from '@react-navigation/native';
                             value={endDate}
                             errorMessage={""}
                             w={AppScreenWidth/2-scale(5)}
-                            onChangeText={(data) => setEndDate(data) }
+                            onChangeText={(data) => filterbydate(data,false) }
                         />
                     </View>
                     <FlatList 
                         showsVerticalScrollIndicator={false}
-                        data={data}
+                        data={filterdata}
                         bounces={false}
                         renderItem={renderItem}
                         maxToRenderPerBatch={20}
                         updateCellsBatchingPeriod={80}
                         initialNumToRender={20}
                         ListEmptyComponent={() => {
-
                             return(
                                 <View style={{alignSelf:"center",marginTop:verticalScale(150), flex:1, justifyContent:"center", alignItems:"center"}} >
                                     {
                                         error
-                                    ?
-                                    <Image 
-                                        source={require("../../assets/images/error.gif")}
-                                        style={{
-                                            width:verticalScale(150), 
-                                            height:verticalScale(150),
-                                            resizeMode:"contain"
-                                        }} 
-                                    />
-                                    :
-                                    <Image 
-                                        source={require("../../assets/images/norecord.gif")}
-                                        style={{
-                                            width:verticalScale(150), 
-                                            height:verticalScale(150),
-                                            resizeMode:"contain"
-                                        }} 
-                                    />
-                        }
+                                        ?
+                                            <Image 
+                                                source={require("../../assets/images/error.gif")}
+                                                style={{
+                                                    width:verticalScale(150), 
+                                                    height:verticalScale(150),
+                                                    resizeMode:"contain"
+                                                }} 
+                                            />
+                                        :
+                                            <Image 
+                                                source={require("../../assets/images/norecord.gif")}
+                                                style={{
+                                                    width:verticalScale(150), 
+                                                    height:verticalScale(150),
+                                                    resizeMode:"contain"
+                                                }} 
+                                            />
+                                    }
                                 </View>
                             )
                         }}
                         windowSize={35}
-                        getItemLayout={(data, index) => {
+                        getItemLayout={(filterdata, index) => {
                             return {
                             length: verticalScale(100),
-                            offset: verticalScale(100) * data.length,
+                            offset: verticalScale(100) * filterdata.length,
                             index,
                             }
                         }}

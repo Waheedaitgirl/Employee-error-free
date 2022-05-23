@@ -48,7 +48,8 @@ const SignInScreen = ({navigation}) => {
     setUseremailErrorMessaage('');
     let data ={
       email_address:email_address,
-      userpassword:password
+      userpassword:password,
+      type:"candidate"
     }
     candidateLogin(data).then((response) => {
       setLoading(false);
