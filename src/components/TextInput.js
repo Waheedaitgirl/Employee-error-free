@@ -13,6 +13,7 @@ const CustomTextInput = ({
             borderRadius=0,
             placeholder,
             errorMessage,
+            editable=true,
             lableColor=colors.text_primary_color,
             borderWidth=0, 
             secureTextEntry = false, 
@@ -46,6 +47,7 @@ const CustomTextInput = ({
                 placeholder={placeholder}
                 placeholderTextColor={colors.divide_color}
                 value={value}
+                editable={editable}
                 onChangeText={(text) => onChangeText(text)}
                 style={{
                     backgroundColor:"#fff", 

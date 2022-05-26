@@ -1,188 +1,168 @@
-import React, { useState } from 'react';
-import {ScrollView,TouchableOpacity, Text,View,StyleSheet} from 'react-native';
-import CustomButton from '../../components/Button';
-import {NativeBaseProvider, Select, Icon } from "native-base";
+import React,{useEffect, useState} from 'react';
+import { FlatList,SafeAreaView,Image,StyleSheet, View,ActivityIndicator,TouchableOpacity} from 'react-native';
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import CalenderInput from '../../components/CalenderInput';
+import { commonStyles } from '../../styles';
+import CustomHeader from '../../components/SearchHeader';
 import { scale, verticalScale } from 'react-native-size-matters';
-import { commonStyles,textStyles } from '../../styles';
-import CustomHeader from '../../components/CustomHeader';
-import CustomTextInput from '../../components/TextInput';
-import PickerInput from '../../components/PickerInput';
-import { colors, fonts } from '../../constants/theme';
-import { AppScreenWidth, width } from '../../constants/sacling';
+import { colors } from '../../constants/theme';
+import { MainRoutes } from '../../constants/routes';
+import { AppScreenWidth } from '../../constants/sacling';
+import { useSelector } from 'react-redux';
 import Spacer from '../../components/Spacer';
-import selectStyles from '../../styles/selectStyles';
+import CustomStatusBar from '../../components/StatusBar';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import { useIsFocused } from '@react-navigation/native';
+import { getLeavesList } from '../../api';
 import LeaveCard from './LeaveCard'
-import { Calendar, } from 'react-native-calendars'
-import moment from 'moment';
-const _format = 'YYYY-MM-DD'
-const _today = moment().format(_format)
-const _maxDate = moment().add(100, 'days').format(_format)
-    const LeaveScreen = ({navigation}) => {
+    const HomeScreen = ({navigation}) => {
+        const {user} = useSelector(state => state.LoginReducer)
+        const [data, setData] = useState([])
+        const [filterdata, setFilterData] = useState([])
+        const [loading, setLoading] = useState(true)
         const [endDate, setEndDate] = useState("")
         const [startDate, setStartDate] = useState("")
-        const [type , setType] = useState([
-            {id:1, name:"Skiness", value:"food"},
-            {id:2, name:"Emergency", value:"lunch"},
-            {id:2, name:"Leave 3", value:"dinner"},
-            {id:2, name:"Leave 4", value:"breakfast"},
-            {id:2, name:"Leave 5", value:"transport"},
-        ])
-        let item = {
-            "time":"Week starting 07-03-2022",
-            "name":"Afftab Amenen",
-            "submittedto":"John",
-            "status":"Submitted",
-            "hours":"40:00:00 Hours"
-    
+        const isFocused = useIsFocused();
+        useEffect(() => {
+           gelocallist()
+        },[isFocused])
+
+        const gelocallist = () => {
+            getLeavesList(user.account_id, user.candidate_id).then((response) => {
+                if(response.status === 200){
+                    setData(response.data.data);
+                    setFilterData(response.data.data);
+                  
+                }
+                setLoading(false)
+            }).catch((err) => {
+                setLoading(false)
+                console.log(err);
+            })
         }
-        const [_markedDates, setMarkedDates] = useState({_today})
-        const [selectedDates, setSelectdates] = useState([])
-        const onDaySelect = (day) => {
-            let temp = [...selectedDates]
-            const _selectedDay = moment(day.dateString).format(_format);
-            
-            let selected = true;
-            if (_markedDates[_selectedDay]) {
-                delete temp[_selectedDay]
-                selected = !_markedDates[_selectedDay].selected;
-            }else{
-                temp.push(_selectedDay)
-                setSelectdates(temp)
-            }
-            const updatedMarkedDates = {..._markedDates, ...{ [_selectedDay]: { selected} } }
-            
         
-            setMarkedDates(updatedMarkedDates);
+
+        const FilterByTitle = (title) => {
+            let se = title.toLowerCase()
+            const regex = new RegExp(`${se}`);
+            let draft_data = data.filter(function(item){ 
+                return item.job_title.toLowerCase().match(regex) || item.expense_report_title.toLowerCase().match(regex) ||  item.module_status_name.toLowerCase().match(regex)
+             })
+             setFilterData(draft_data)
         }
-        const [leaveNote, setLeaveNotes] = useState("")
-        const [leavenoteErrorMessage , setLeaveNoteErrorMessage] = useState("")
-        const [selected_type,setselectedType] = useState(false)
-        const [attachment , setAttachment]= useState("")
-        const [attachmenterror , setAttachmentError]= useState("")
-        return (
-            <NativeBaseProvider>
-                <View style={commonStyles.container} >
+
+        const renderItem = ({ item }) => (
+            <LeaveCard 
+               item={item}
+            />
+        ); 
+
+        if(loading){
+            return(  
+                <SafeAreaProvider>
+                <CustomStatusBar />
+                <SafeAreaView style={commonStyles.container} >
                     <CustomHeader 
                         show_backButton={true}
-                        isdrawer={true}onPress={() => navigation.openDrawer()}
-                        title={"Leave Application"}
+                        isdrawer={true}
+                        SearchPress={(text) => FilterByTitle(text)}
+                        NotificationPress={() => alert("NotificationPress")}
+                        FilterPress={(data) => alert(data)}
+                        onPress={() => navigation.openDrawer()}
+                        title={"Leaves List"}
                     />
-                    <ScrollView 
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{paddingBottom:verticalScale(100)}}>
-                    <LeaveCard 
-                        time={item.time} 
-                        name={item.name}
-                        submittedto={item.submittedto}
-                        status={item.status}
-                        hours={item.hours}
+                    <Spacer height={verticalScale(100)} />
+                    <ActivityIndicator size={"large"} color={colors.dark_primary_color} />
+                </SafeAreaView>
+                </SafeAreaProvider>
+            )
+            }
+        return (
+            <SafeAreaView style={{flex:1, backgroundColor:colors.dark_primary_color}} >
+                 <CustomStatusBar />
+                <View style={commonStyles.container} >
+                     <CustomHeader 
+                        show_backButton={true}
+                        isdrawer={true}
+                        SearchPress={(text) => FilterByTitle(text)}
+                        NotificationPress={() => alert("NotificationPress")}
+                        FilterPress={(data) => alert(data)}
+                        onPress={() => navigation.openDrawer()}
+                        title={"Leaves List"}
                     />
-                    <Calendar
-                        style={{width:AppScreenWidth,borderRadius:scale(10) }}
-                       
-                      
-                        minDate={_today}
-                        maxDate={_maxDate}
-                        onDayPress={onDaySelect}
-                        markedDates={_markedDates}
-                    />
-                   
-                    <Spacer />
-                    <View>
-                        <Text
-                            style={{...textStyles.smallheading , color:colors.dark_primary_color}}>
-                            Leave Type
-                        </Text>
-                        <Spacer  height={scale(5)}  />
-                        <Select
-                            selectedValue={selected_type}
-                            opacity={1}
-                            bg={"#fff"}
-                            width={AppScreenWidth}
-                            placeholderTextColor={colors.text_primary_color}
-                            fontFamily={fonts.Regular}
-                            maxHeight={"10"}
-                            variant={"underlined"}
-                            accessibilityLabel="Please select type"
-                            placeholder="Please select  type"
-                            _item={selectStyles._item}
-                            _selectedItem={selectStyles._selectedItem}
-                            onValueChange={(itemValue) => setselectedType(itemValue)}>
-                            {
-                                type.map((item, index) => {
-                                    return(
-                                        <Select.Item key={`${index}`} label={item.name} value={item.name} />
-                                    )
-                                })
-                            }
-                        </Select>
-                    </View>
-                    <CustomTextInput
-                        placeholder={'Leave Note'}
-                        value={leaveNote}
-                        onChangeText={text => setLeaveNotes(text)}
-                        errorMessage={leavenoteErrorMessage}
-                    />
-                     <PickerInput
-                        placeholder={'Attachment'}
-                        value={attachment}
-                        onChangeText={text => setAttachment(text)}
-                        errorMessage={attachmenterror}
-                    />
-                    <View style={styles.row}>
-                        <Text style={textStyles.smallheading}>Note: </Text>
-                        <Text style={{...styles.buleText,width:AppScreenWidth-scale(40)}} >These employees will be notified through email when your leave request is approved</Text>
-                    </View>
+                    <View style={{flexDirection:"row",width:AppScreenWidth, justifyContent:"space-between"}} >
+                        <CalenderInput 
+                            placeholder={"Start Date"}
+                            value={startDate}
+                            errorMessage={""}
+                            w={AppScreenWidth/2-scale(5)}
+                            onChangeText={(date) => filterbydate(date , true) }
+                        />
                     
-                    </ScrollView>
-                    <View 
-                        style={styles.BottomView}>
-                        <CustomButton 
-                            onPress={() => navigation.goBack()}
-                            loading={false}
-                            text={"Submit Application"}
-                            loadingText={"Processing"}
+                        <CalenderInput 
+                            placeholder={"End Date"}
+                            value={endDate}
+                            errorMessage={""}
+                            w={AppScreenWidth/2-scale(5)}
+                            onChangeText={(date) => filterbydate(date , false) }
                         />
                     </View>
+                <FlatList 
+                        showsVerticalScrollIndicator={false}
+                        data={filterdata}
+                        renderItem={renderItem}
+                        maxToRenderPerBatch={20}
+                        updateCellsBatchingPeriod={80}
+                        initialNumToRender={20}
+                        windowSize={35}
+                        bounces={false}
+                        keyExtractor={(item, index) => index.toString()}
+                        ListEmptyComponent={() => {
+
+                            return(
+                                <View style={{alignSelf:"center",marginTop:verticalScale(150), flex:1, justifyContent:"center", alignItems:"center"}} >
+                                    {
+                                        error
+                                    ?
+                                    <Image 
+                                        source={require("../../assets/images/error.gif")}
+                                        style={{
+                                            width:verticalScale(150), 
+                                            height:verticalScale(150),
+                                            resizeMode:"contain"
+                                        }} 
+                                    />
+                                    :
+                                    <Image 
+                                        source={require("../../assets/images/norecord.gif")}
+                                        style={{
+                                            width:verticalScale(150), 
+                                            height:verticalScale(150),
+                                            resizeMode:"contain"
+                                        }} 
+                                    />
+                        }
+                                </View>
+                            )
+                        }}
+                    />
+                    <TouchableOpacity 
+                        onPress={() => navigation.navigate(MainRoutes.AddLeaveScreen)}
+                        style={{
+                            alignSelf:"flex-end", 
+                            paddingHorizontal:scale(20), 
+                            paddingVertical:scale(10),
+                            position:"absolute",
+                            bottom:scale(55)
+                        }}>
+                        <AntDesign name={"pluscircle"} size={scale(35)} color={colors.dark_primary_color} />
+                </TouchableOpacity>
                 </View>
-            </NativeBaseProvider>
+            </SafeAreaView>
             
         );
     };
 
 
-export default LeaveScreen;
+export default HomeScreen;
 
-const styles = StyleSheet.create({
-    dateView:{
-        flexDirection:"row",
-        width:AppScreenWidth, 
-        justifyContent:"space-between"
-    },
-    BottomView:{
-        alignSelf:"center", 
-        paddingHorizontal:scale(20), 
-        paddingVertical:scale(10),
-        position:"absolute",
-        backgroundColor:"#fff",
-        bottom:0
-    },
-    row:{
-        flexDirection:"row",
-        marginTop:scale(2),
-       
-        width:AppScreenWidth,
-    },
-    buleText:{
-        ...textStyles.smallheading,
-         color:colors.default_primary_color
-    },
-    calenderButton:{
-        width:scale(30),
-        backgroundColor:"rgba(0,0,0,.1)",
-        height:scale(30),
-        borderRadius:scale(5),
-        justifyContent:"center",
-        alignItems:"center"
-    }
-})

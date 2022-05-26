@@ -18,7 +18,13 @@ import EditExpenseScreen from '../screens/ExpensesScreen/EditExpenseScreen';
 
 import MyTasksScreen from '../screens/MyTasksScreen';
 import MyTimeScreen from '../screens/MyTimeScreen';
+
+// Leaves Managemmentt
 import LeavesScreen from '../screens/LeavesScreen';
+import AddLeaveScreen from '../screens/LeavesScreen/AddLeaveScreen';
+import EditLeaveScreen from '../screens/LeavesScreen/EditLeaveScreen';
+
+
 import CalendarScreen from '../screens/CalendarScreen';
 import DrawerContent from './DrawerContent';
 const Stack = createNativeStackNavigator();
@@ -126,6 +132,20 @@ const MainStack = () => {
             <Stack.Screen 
                 name="LeavesScreen" 
                 component={LeavesScreen} 
+                options={{
+                    headerShown:false
+                }}
+            />
+            <Stack.Screen 
+                name="AddLeaveScreen" 
+                component={AddLeaveScreen} 
+                options={{
+                    headerShown:false
+                }}
+            />
+            <Stack.Screen 
+                name="EditLeaveScreen" 
+                component={EditLeaveScreen} 
                 options={{
                     headerShown:false
                 }}

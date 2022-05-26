@@ -106,26 +106,26 @@ import { useIsFocused } from '@react-navigation/native';
              setFilterData(draft_data)
         }
 
-          if(loading){
-            return(  
-                <SafeAreaProvider>
-                <CustomStatusBar />
-                <SafeAreaView style={commonStyles.container} >
-                    <CustomHeader 
-                        show_backButton={true}
-                        isdrawer={true}
-                        SearchPress={(text) => FilterByTitle(text)}
-                        NotificationPress={() => alert("NotificationPress")}
-                        FilterPress={(data) => alert(data)}
-                        onPress={() => navigation.openDrawer()}
-                        title={"All Expenses"}
-                    />
-                    <Spacer height={verticalScale(100)} />
-                    <ActivityIndicator size={"large"} color={colors.dark_primary_color} />
-                </SafeAreaView>
-                </SafeAreaProvider>
-            )
-          }
+        if(loading){
+        return(  
+            <SafeAreaProvider>
+            <CustomStatusBar />
+            <SafeAreaView style={commonStyles.container} >
+                <CustomHeader 
+                    show_backButton={true}
+                    isdrawer={true}
+                    SearchPress={(text) => FilterByTitle(text)}
+                    NotificationPress={() => alert("NotificationPress")}
+                    FilterPress={(data) => alert(data)}
+                    onPress={() => navigation.openDrawer()}
+                    title={"All Expenses"}
+                />
+                <Spacer height={verticalScale(100)} />
+                <ActivityIndicator size={"large"} color={colors.dark_primary_color} />
+            </SafeAreaView>
+            </SafeAreaProvider>
+        )
+        }
         return (
             <SafeAreaProvider>
                 <CustomStatusBar />

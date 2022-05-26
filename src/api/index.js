@@ -123,6 +123,19 @@ export function  getEditExpensesDetails (account_id, expense_id, candidate_id){
     });
 }
 
+export function getLeavesList(account_id , candidate_id){
+    return request({
+        url: `leaves?account_id=${account_id}&candidate_id=${candidate_id}&type=list_candidate_leaves`,
+        method: 'get'
+    });
+}
+
+export function getpolicylist(account_id){
+    return request({
+        url:`leaves?account_id=${account_id}&type=list_policy`,
+        method:"get"
+    })
+}
 export async function uploadFile(data){
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer 4545980ce66bd555d903f7dc739f91e631606eb1");

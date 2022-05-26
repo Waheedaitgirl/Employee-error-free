@@ -3,50 +3,61 @@ import { View,Text, StyleSheet, TouchableOpacity } from "react-native"
 import { scale } from "react-native-size-matters"
 import { colors, fonts } from "../../constants/theme"
 import { AppScreenWidth } from "../../constants/sacling"
-import Job from '../../assets/images/job.svg'
-import Person from '../../assets/images/person.svg'
-import MPerson from '../../assets/images/mperson.svg'
-
-import Hiring from '../../assets/images/Hiring.svg'
-const LeaveCard = memo(({name, time, submittedto, status, hours}) => {
-    return(
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Entypo from 'react-native-vector-icons/Entypo'
+import moment from "moment"
+const LeaveCard = memo(({item}) => {
+      return(
         <TouchableOpacity 
             style={styles.mainView}>
             <View   
                 style={styles.btnView}>
                 <View style={{width:scale(20), height:scale(20)}} >
-                    <MPerson width={scale(20)} height={scale(20)} />
+                    <MaterialIcons  size={scale(20)} name={"policy"} color={colors.dark_primary_color} />
                 </View>
-                <Text style={styles.textStyle}>{time}</Text>
+                <Text style={styles.textStyle}>{item.policy_name}</Text>
             </View>
             <View   
                 style={styles.btnView}>
                 <View style={{width:scale(20), height:scale(20)}} >
-                    <Job width={scale(20)} height={scale(20)} />
+                    <Entypo size={scale(20)} name={"calendar"} color={colors.dark_primary_color} />
                 </View>
-                <Text style={styles.textStyle}>{name}</Text>
+                <Text style={styles.textStyle}>{moment(item.requested_date).format("YYYY-MM-DD HH:mm A")}</Text>
             </View>
             <View   
                 style={styles.btnView}>
                 <View style={{width:scale(20), height:scale(20)}} >
-                    <Hiring width={scale(20)} height={scale(20)} />
+                <Entypo size={scale(20)} name={"time-slot"} color={colors.dark_primary_color} />
                 </View>
-                <Text style={styles.textStyle}>{submittedto}</Text>
+                <Text style={styles.textStyle}>{item.requested_hours} Hours</Text>
             </View>
             <View   
                 style={styles.btnView}>
                 <View style={{width:scale(20), height:scale(20)}} >
-                    <Person width={scale(20)} height={scale(20)} />
+                    <Entypo size={scale(20)} name={"calendar"} color={colors.dark_primary_color} />
                 </View>
-                <Text style={styles.textStyle}>{status}</Text>
+                <Text style={styles.textStyle}>{item.start_date} - {item.end_date}</Text>
             </View>
             <View   
                 style={styles.btnView}>
                 <View style={{width:scale(20), height:scale(20)}} >
-                    <Person width={scale(20)} height={scale(20)} />
+                <MaterialCommunityIcons 
+                        name="lightning-bolt" 
+                        color={colors.dark_primary_color} 
+                        size={scale(18)} 
+                    />
                 </View>
-                <Text style={styles.textStyle}>{hours}</Text>
+                <Text 
+                    style={{
+                        ...styles.textStyle, 
+                        color:item.status === "0" ? "#000" : item.status === 1 ? "#ffff" : item.status === 2 ? "#fff":"#fff", 
+                        backgroundColor:item.status === "0" ? "#0002" : item.status === 1 ? "green" : item.status === 2 ? colors.delete_icon:colors.delete_icon, 
+                        paddingHorizontal:scale(10), 
+                        paddingVertical:scale(2), 
+                        borderRadius:scale(5) }}>{item.status === "0" ? "Pending" : item.status === 1 ? "Approved" : item.status === 2 ? "Declined":"Declined"}</Text>
             </View>
+            
         </TouchableOpacity>
     )
 })

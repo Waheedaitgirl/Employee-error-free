@@ -20,5 +20,7 @@ export const MainRoutes = {
     ExpenseDetailsScreen:"ExpenseDetailsScreen",
     TimeSheetListScreen:"TimeSheetListScreen",
     EditTimeSheetScreen:"EditTimeSheetScreen",
-    EditExpenseScreen:"EditExpenseScreen"
+    EditExpenseScreen:"EditExpenseScreen",
+    AddLeaveScreen:"AddLeaveScreen",
+    EditLeaveScreen:"EditLeaveScreen"
 }

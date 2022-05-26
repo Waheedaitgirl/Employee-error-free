@@ -7,8 +7,8 @@ import { colors } from "../constants/theme";
 import { fonts } from "../constants/theme";
 const selectStyles = {
     _item:{
-        pt: Platform.OS === "android"?0:2,
-        pb:Platform.OS === "android"?0:2,
+        pt: Platform.OS === "android"?2:2,
+        pb:Platform.OS === "android"?2:2,
         borderBottomWidth:1,
         justifyContent:"center",
         borderRadius:5,
