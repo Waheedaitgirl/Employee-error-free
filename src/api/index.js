@@ -44,6 +44,16 @@ export function addExpense(data){
     });
 }
 
+
+export function addLeaveRequest(data){
+    return request({
+        url: `leaves`,
+        method: 'post',
+        data
+    });
+}
+
+
 /// get requests
 export function getCandidateDetailsById(id){
     return request({
@@ -129,6 +139,15 @@ export function getLeavesList(account_id , candidate_id){
         method: 'get'
     });
 }
+
+export function getleavesBalance(account_id , candidate_id, policy_id){
+    return request({
+        url: `leaves?account_id=${account_id}&policy_id=${policy_id}&candidate_id=${candidate_id}&type=leave_balance`,
+        method: 'get'
+    });
+}
+
+
 
 export function getpolicylist(account_id){
     return request({

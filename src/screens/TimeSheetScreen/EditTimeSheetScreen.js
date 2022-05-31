@@ -59,10 +59,7 @@ const MODULE_ID = '52'
         const [error_messaage , set_error_messsage] = useState(null)
         const [visible, setVisible] = useState(false);
         useEffect(() => {
-            console.log( item.time_sheet_id,
-                user.candidate_id,
-                user.account_id,
-                item.job_id);
+           
             getnumberofworkingdays(item.log_date)
             getEditTimeSheetDetails(
                 item.time_sheet_id,
@@ -78,7 +75,7 @@ const MODULE_ID = '52'
                     set_job_working_days(arr2.map(([day, value]) => ({day, value })));
                     set_job_time_types(response.data.job_time_types);
                     setTimeType(response.data.timesheet_time_types)
-                    console.log(response.data.timesheet_time_types, "Typesssss");
+                  
                     setFilePath({
                         ...filepath,
                         path:response.data.timesheet_data.document_file,

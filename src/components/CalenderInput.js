@@ -13,6 +13,8 @@ import moment from 'moment'
 const CalenderInput = ({value,w=width-scale(20),show_label = true, hght=verticalScale(50), placeholder,errorMessage,labelColor=colors.text_primary_color,onChangeText}) => {
     const [open, setOpen] = useState(false)
     const [date, setDate] = useState(new Date())
+    
+   
     return (
         <View style={{...styles.mainView,width:w,height:hght}} >
             { 
@@ -78,6 +80,8 @@ const CalenderInput = ({value,w=width-scale(20),show_label = true, hght=vertical
                // androidVariant={"nativeAndroid"}
                 open={open}
                 date={date}
+            
+                //date={moment().format("YYYY-MM-DD")}
                 mode={"date"}
                 onConfirm={(date) => {
                 setOpen(false)

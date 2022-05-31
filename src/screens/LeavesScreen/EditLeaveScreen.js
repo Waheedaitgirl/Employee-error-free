@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {ScrollView,TouchableOpacity, Text,View,StyleSheet} from 'react-native';
+import {ScrollView, Text,View,StyleSheet} from 'react-native';
 import CustomButton from '../../components/Button';
 import {NativeBaseProvider, Select, Icon } from "native-base";
 import { scale, verticalScale } from 'react-native-size-matters';
@@ -9,34 +9,40 @@ import CustomTextInput from '../../components/TextInput';
 import CalenderInput from '../../components/CalenderInput';
 import { colors, fonts } from '../../constants/theme';
 import { AppScreenWidth, width } from '../../constants/sacling';
+import ErrorModal from '../../components/ErrorModal';
+import SuccessModal from '../../components/SuccessModal';
 import Spacer from '../../components/Spacer';
 import selectStyles from '../../styles/selectStyles';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
-import { getpolicylist } from '../../api';
+import { addLeaveRequest, getleavesBalance, getpolicylist } from '../../api';
 const _format = 'YYYY-MM-DD'
 const _today = moment().format(_format)
 const _maxDate = moment().add(1, 'days').format(_format)
     const AddLeaveScreen = ({navigation}) => {
-        const [endDate, setEndDate] = useState(_maxDate)
+        const [endDate, setEndDate] = useState(_today)
         const {user} = useSelector(state => state.LoginReducer)
         const [startDate, setStartDate] = useState(_today)
-        const [policy , setPolicy] = useState([
-         
-        ])
-       
-        const [_markedDates, setMarkedDates] = useState({_today})
+        const [policy , setPolicy] = useState([])
         const [leaveNote, setLeaveNotes] = useState("")
         const [leavenoteErrorMessage , setLeaveNoteErrorMessage] = useState("")
         const [selected_policy,setselectedPolicy] = useState(null)
-        const  [number_of_hours, setNumberofHours] = useState("")
+        const [number_of_hours, setNumberofHours] = useState("08:00")
         const [date_error, setDateError] = useState(false)
+        const [validation_error, setValidationError]= useState(false)
+        const [validation_error_messaage , setValidationErrorMessaage] = useState(null)
+        const [remaining_balance_hours , setRemainingBalanceHours] = useState(0)
+        const [remaining_balance_hours_int , setRemainingBalanceHoursInt] = useState(0)
+        const [total_hours, setTotalHours] = useState("")
+        const [All_Done , setAllDone] = useState(false)
+        const [submissionError , setsubmissionError] = useState(false)
+        const [processing , setProcessing] = useState(false)
         useEffect(() => {
             getpolicylist(user.account_id).then((response) => {
                 if(response.status === 200){
                     setPolicy(response.data.data);
                 }else{
-                    console.log(response.status);
+                    
                 }
             }).catch((err) => {
                 console.log(err)
@@ -50,8 +56,14 @@ const _maxDate = moment().add(1, 'days').format(_format)
                 setStartDate(date)
                 if(moment(date).isSameOrBefore(moment(endDate))){
                     setDateError(false)
-                    let hours =  moment(endDate).diff(moment(date), 'days') * 8
-                    setNumberofHours(moment.utc(hours*3600*1000).format('HH:mm'))
+                    let days =  moment(date).diff(moment(endDate), 'days')
+                    let hours = ((days+1)*8)
+                    if(hours.toString().length === 1){
+                        setNumberofHours(`0${hours}:00`)
+                    }else{
+                        setNumberofHours(`${hours}:00`)
+                    }
+                 
                 }else{
                         setDateError(true)
                 }
@@ -59,9 +71,15 @@ const _maxDate = moment().add(1, 'days').format(_format)
                 setEndDate(date)
                 if(moment(startDate).isSameOrBefore(moment(date))){
                     setDateError(false)
-                    let hours =  moment(date).diff(moment(startDate), 'days')
-                    console.log(hours);
-                    setNumberofHours(moment.utc((hours+1)*8*3600*1000).format('HH:mm'))
+                    let days =  moment(date).diff(moment(startDate), 'days')
+                    let hours = ((days+1)*8)
+                    console.log(hours.length);
+                    if(hours.toString().length === 1){
+                        setNumberofHours(`0${hours}:00`)
+                    }else{
+                        setNumberofHours(`${hours}:00`)
+                    }
+                
                 }else{
                         setDateError(true)
                 }
@@ -69,6 +87,98 @@ const _maxDate = moment().add(1, 'days').format(_format)
            
                       
         }
+
+        const getRemaningBalance = (value) => {
+            setselectedPolicy(value)
+            let hrs  = policy.filter(function(item){
+                return item.leave_policy_id === value
+            })
+            .map(function({maximum_leaves}){
+                return maximum_leaves
+            })  
+            let t_hrs = (parseInt(hrs[0].split(":")[0]) + parseFloat((hrs[0].split(":"))[1]/60) + parseFloat((hrs[0].split(":")[2])/3600))
+                setTotalHours(parseInt(t_hrs));
+                getleavesBalance(user.account_id, user.candidate_id, value).then((response) => {
+                    if(response.status === 200){
+                        if(response.data.data.length > 0){
+                            let t_r_h =  parseInt(t_hrs - response.data.data[0].total_hours)
+                            if(t_r_h.length < 2){
+                                setRemainingBalanceHours(`0${t_r_h}:00`)
+                                setRemainingBalanceHoursInt(t_r_h)
+                            }else{
+                                setRemainingBalanceHours(`${t_r_h}:00`)
+                                setRemainingBalanceHoursInt(t_r_h)
+                            }
+                  
+                        }else{
+                            if(t_hrs.length < 2){
+                                setRemainingBalanceHours(`0${parseInt(t_hrs)}:00`)
+                                setRemainingBalanceHoursInt(t_hrs)
+                            }else{
+                                setRemainingBalanceHours(`${parseInt(t_hrs)}:00`)
+                                setRemainingBalanceHoursInt(t_hrs)
+                            }
+                        }
+                    }else{
+                        alert(response.status)
+                    }
+                })
+            }
+
+        const validateLeaveApplication = () => {
+            setProcessing(true)
+            setValidationErrorMessaage(null)
+            setValidationError(false)
+            if(selected_policy == null){
+                setValidationErrorMessaage("Please select policy")
+                setValidationError(true)
+                setProcessing(false)
+                return
+            }
+            if(!(moment(startDate).isSameOrBefore(moment(endDate)))){
+                setValidationErrorMessaage("Start Date must be same or before then end date")
+                setValidationError(true)
+                setProcessing(false)
+                return
+            }
+            if(leaveNote === "") {
+                setValidationErrorMessaage("Please enter some notes.")
+                setValidationError(true)
+                setProcessing(false)
+                return
+            }
+
+            let data = {
+                "leave_policy_id":selected_policy,
+                "start_date":startDate,
+                "end_date":endDate,
+                "requested_hours":number_of_hours,
+                "is_half_day":"0",
+                "status":0,
+                "comments":leaveNote,
+                "module_id":"4",
+                "requested_by":user.candidate_id,
+                "requested_date":`${moment().format("YYYY-MM-DD HH:mm:ss")}`,
+                "account_id":user.account_id
+            }
+
+            addLeaveRequest(data).then((response) => {
+                if(response.status ===  200){
+                    setProcessing(false)
+                    setAllDone(true)
+                    setsubmissionError(false)
+                }else{
+                    setProcessing(false)
+                    setAllDone(true)
+                    setsubmissionError(true)
+                }
+            }).catch(err => {
+                setProcessing(false)
+                setAllDone(true)
+                setsubmissionError(true)
+            })
+        }
+
         return (
             <NativeBaseProvider>
                 <View style={commonStyles.container} >
@@ -114,7 +224,7 @@ const _maxDate = moment().add(1, 'days').format(_format)
                                 placeholder="Please select  policy"
                                 _item={selectStyles._item}
                                 _selectedItem={selectStyles._selectedItem}
-                                onValueChange={(itemValue) => setselectedPolicy(itemValue)}>
+                                onValueChange={(itemValue) => getRemaningBalance(itemValue)}>
                                 {
                                     policy.map((item, index) => {
                                         return(
@@ -137,14 +247,9 @@ const _maxDate = moment().add(1, 'days').format(_format)
                                     {
                                         selected_policy === null 
                                         ? 
-                                            "00:00:00"
+                                            "00:00"
                                         :
-                                        policy.filter(function(item){
-                                            return item.leave_policy_id === selected_policy
-                                        })
-                                        .map(function({maximum_leaves}){
-                                            return maximum_leaves
-                                        })   
+                                        `${total_hours}:00` 
                                     } Hours</Text>
                             </View>
 
@@ -154,14 +259,10 @@ const _maxDate = moment().add(1, 'days').format(_format)
                                     {
                                         selected_policy === null 
                                         ? 
-                                            "00:00:00"
+                                            "00:00"
                                         :
-                                        policy.filter(function(item){
-                                            return item.leave_policy_id === selected_policy
-                                        })
-                                        .map(function({maximum_leaves}){
-                                            return maximum_leaves
-                                        })   
+                                        remaining_balance_hours
+                                       
                                     } Hours</Text>
                             </View>
 
@@ -171,14 +272,9 @@ const _maxDate = moment().add(1, 'days').format(_format)
                                     {
                                         selected_policy === null 
                                         ? 
-                                            "00:00:00"
+                                            "00:00"
                                         :
-                                        policy.filter(function(item){
-                                            return item.leave_policy_id === selected_policy
-                                        })
-                                        .map(function({maximum_leaves}){
-                                            return maximum_leaves
-                                        })   
+                                        number_of_hours
                                     } Hours</Text>
                             </View>
 
@@ -188,14 +284,9 @@ const _maxDate = moment().add(1, 'days').format(_format)
                                     {
                                         selected_policy === null 
                                         ? 
-                                            "00:00:00"
+                                            "00:00"
                                         :
-                                        policy.filter(function(item){
-                                            return item.leave_policy_id === selected_policy
-                                        })
-                                        .map(function({maximum_leaves}){
-                                            return maximum_leaves
-                                        })   
+                                        `${parseInt(remaining_balance_hours_int) - parseInt(number_of_hours)}:00`
                                     } Hours</Text>
                             </View>
                         </View>
@@ -223,6 +314,7 @@ const _maxDate = moment().add(1, 'days').format(_format)
                             value={number_of_hours !== "" ?`${number_of_hours} Hours`:""}
                             onChangeText={text => setLeaveNotes(text)}
                             errorMessage={""}
+                            editable={false}
                             borderRadius={scale(5)}
                             borderWidth={1}
                             
@@ -249,18 +341,42 @@ const _maxDate = moment().add(1, 'days').format(_format)
                             <Text style={{...textStyles.smallheading, fontSize:scale(12)}}>Note: </Text>
                             <Text style={{...styles.buleText,width:AppScreenWidth-scale(40)}} >These employees will be notified through email when your leave request is approved</Text>
                         </View>
-                    
+                        {
+                            validation_error && 
+                            <View style={styles.RowDate}>
+                                <Text style={textStyles.errorText} >{validation_error_messaage} </Text>
+                            </View>
+                        }
                     </ScrollView>
                     <View 
                         style={styles.BottomView}>
                         <CustomButton 
-                            onPress={() => navigation.goBack()}
-                            loading={false}
+                            onPress={() => validateLeaveApplication()}
+                            loading={processing}
                             text={"Submit Application"}
-                            loadingText={"Processing"}
+                            loadingText={"Processing Application"}
                         />
                     </View>
                 </View>
+
+                {
+                        All_Done
+                        ?
+                        submissionError ? 
+                                <ErrorModal 
+                                    isVisible={All_Done}
+                                    title='Some Error in Adding Leave request'
+                                    onClose={() =>  setAllDone(false)}
+                                /> 
+                            : 
+                                <SuccessModal 
+                                    isVisible={All_Done}
+                                    title='Leave request Added Successfully'
+                                    onClose={() =>  setAllDone(false)}
+                                /> 
+                        :
+                        null
+                    }
             </NativeBaseProvider>
             
         );
