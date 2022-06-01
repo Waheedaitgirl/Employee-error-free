@@ -18,16 +18,17 @@ import { useSelector } from 'react-redux';
 import { addLeaveRequest, getleavesBalance, getpolicylist } from '../../api';
 const _format = 'YYYY-MM-DD'
 const _today = moment().format(_format)
-const _maxDate = moment().add(1, 'days').format(_format)
-    const AddLeaveScreen = ({navigation}) => {
+
+    const AddLeaveScreen = ({navigation, route}) => {
+        let item = route.params.item
         const [endDate, setEndDate] = useState(_today)
         const {user} = useSelector(state => state.LoginReducer)
         const [startDate, setStartDate] = useState(_today)
         const [policy , setPolicy] = useState([])
-        const [leaveNote, setLeaveNotes] = useState("")
+        const [leaveNote, setLeaveNotes] = useState(item.comments)
         const [leavenoteErrorMessage , setLeaveNoteErrorMessage] = useState("")
-        const [selected_policy,setselectedPolicy] = useState(null)
-        const [number_of_hours, setNumberofHours] = useState("08:00")
+        const [selected_policy,setselectedPolicy] = useState(item.leave_policy_id)
+        const [number_of_hours, setNumberofHours] = useState(item.requested_hours)
         const [date_error, setDateError] = useState(false)
         const [validation_error, setValidationError]= useState(false)
         const [validation_error_messaage , setValidationErrorMessaage] = useState(null)
@@ -41,6 +42,7 @@ const _maxDate = moment().add(1, 'days').format(_format)
             getpolicylist(user.account_id).then((response) => {
                 if(response.status === 200){
                     setPolicy(response.data.data);
+                    getRemaningBalance(item.leave_policy_id)
                 }else{
                     
                 }
@@ -123,7 +125,7 @@ const _maxDate = moment().add(1, 'days').format(_format)
                         alert(response.status)
                     }
                 })
-            }
+        }
 
         const validateLeaveApplication = () => {
             setProcessing(true)

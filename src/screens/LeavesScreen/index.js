@@ -54,6 +54,7 @@ import LeaveCard from './LeaveCard'
         const renderItem = ({ item }) => (
             <LeaveCard 
                item={item}
+               onPress={() => navigation.navigate(MainRoutes.EditLeaveScreen, {item})}
             />
         ); 
 
@@ -90,7 +91,7 @@ import LeaveCard from './LeaveCard'
                         onPress={() => navigation.openDrawer()}
                         title={"Leaves List"}
                     />
-                    {/* <View style={{flexDirection:"row",width:AppScreenWidth, justifyContent:"space-between"}} >
+                    <View style={{flexDirection:"row",width:AppScreenWidth, justifyContent:"space-between"}} >
                         <CalenderInput 
                             placeholder={"Start Date"}
                             value={startDate}
@@ -106,8 +107,8 @@ import LeaveCard from './LeaveCard'
                             w={AppScreenWidth/2-scale(5)}
                             onChangeText={(date) => filterbydate(date , false) }
                         />
-                    </View> */}
-                <FlatList 
+                    </View>
+                    <FlatList 
                         showsVerticalScrollIndicator={false}
                         data={filterdata}
                         renderItem={renderItem}

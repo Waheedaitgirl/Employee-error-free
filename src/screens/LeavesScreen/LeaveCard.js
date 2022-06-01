@@ -7,9 +7,10 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import moment from "moment"
-const LeaveCard = memo(({item}) => {
+const LeaveCard = memo(({item,onPress}) => {
       return(
         <TouchableOpacity 
+            onPress={onPress}
             style={styles.mainView}>
             <View   
                 style={styles.btnView}>
