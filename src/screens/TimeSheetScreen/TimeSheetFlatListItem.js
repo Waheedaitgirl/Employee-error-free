@@ -71,7 +71,7 @@ const TimeSheetFlatListItem = memo(({name,item, time, submittedto,status_style, 
                         size={scale(18)} 
                     />
                 </View>
-                <Text style={[styles.textStyle,ss,{paddingHorizontal:10, paddingVertical:2,borderRadius:5,}]}>{status}</Text>
+                <Text style={[styles.textStyle,ss,{paddingHorizontal:8,fontSize:scale(11), paddingVertical:1,borderRadius:5,}]}>{status}</Text>
             </View>
             <View   
                 style={styles.btnView}>

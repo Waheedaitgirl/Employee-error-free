@@ -65,6 +65,7 @@ import BaseUrl from '../../api/BaseUrl';
               //if()
               if(response.status === 200){
                 if(response.data.data.length === 1){
+                    console.log(response.data.data[0].job_id)
                     set_selected_job(response.data.data[0].job_id);
                     getJobtimetype(response.data.data[0].job_id)
                }
@@ -364,7 +365,7 @@ import BaseUrl from '../../api/BaseUrl';
                             show_backButton={true}
                             isdrawer={false}
                             onPress={() => navigation.goBack()}
-                            title={"Details TimeSheet"}
+                            title={"Add TimeSheet"}
                         />
                         <Spacer height={AppScreenWidth/2} />
                         <Image 

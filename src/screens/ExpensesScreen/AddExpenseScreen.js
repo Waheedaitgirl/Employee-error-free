@@ -25,6 +25,7 @@ import BaseUrl from '../../api/BaseUrl';
 const MODULE_ID = '54'
     const AddExpenseScreen = ({navigation}) => {
         const {user} = useSelector(state => state.LoginReducer)
+        console.log(user);
         const {status} = useSelector(state => state.StatusReducer)
         const [expense_status , setExpenseStatus] = useState(status.filter(obj => obj.module_id === MODULE_ID )) 
         const [submit , setSubmit] = useState(false)

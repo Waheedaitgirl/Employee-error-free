@@ -22,6 +22,7 @@ import LeaveCard from './LeaveCard'
         const [loading, setLoading] = useState(true)
         const [endDate, setEndDate] = useState("")
         const [startDate, setStartDate] = useState("")
+        const [error, setError] = useState(false)
         const isFocused = useIsFocused();
         useEffect(() => {
            gelocallist()
@@ -37,6 +38,7 @@ import LeaveCard from './LeaveCard'
                 setLoading(false)
             }).catch((err) => {
                 setLoading(false)
+                setError(true)
                 console.log(err);
             })
         }

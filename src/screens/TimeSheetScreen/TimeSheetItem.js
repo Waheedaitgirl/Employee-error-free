@@ -60,7 +60,7 @@ const TimeSheetItem = memo(({name, time, submittedto, status,status_style, conta
                         size={scale(20)} 
                     />
                 </View>
-                <Text style={[styles.textStyle,ss,{paddingHorizontal:10, paddingVertical:2,borderRadius:5,}]}>{status}</Text>
+                <Text style={[styles.textStyle,ss,{paddingHorizontal:10,fontSize:scale(12), paddingVertical:2,borderRadius:5,}]}>{status}</Text>
                 
             </View>
            
