@@ -15,7 +15,7 @@ import Spacer from '../../components/Spacer';
 import selectStyles from '../../styles/selectStyles';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
-import { addLeaveRequest, getleavesBalance, getpolicylist } from '../../api';
+import { updateLeaveRequest, getleavesBalance, getpolicylist } from '../../api';
 const _format = 'YYYY-MM-DD'
 const _today = moment().format(_format)
 
@@ -164,7 +164,7 @@ const _today = moment().format(_format)
                 "account_id":user.account_id
             }
 
-            addLeaveRequest(data).then((response) => {
+            updateLeaveRequest(data,item.leave_request_id).then((response) => {
                 if(response.status ===  200){
                     setProcessing(false)
                     setAllDone(true)
@@ -355,8 +355,8 @@ const _today = moment().format(_format)
                         <CustomButton 
                             onPress={() => validateLeaveApplication()}
                             loading={processing}
-                            text={"Submit Application"}
-                            loadingText={"Processing Application"}
+                            text={"Update"}
+                            loadingText={"Updating"}
                         />
                     </View>
                 </View>
@@ -367,13 +367,13 @@ const _today = moment().format(_format)
                         submissionError ? 
                                 <ErrorModal 
                                     isVisible={All_Done}
-                                    title='Some Error in Adding Leave request'
+                                    title='Some Error in Updating Leave request'
                                     onClose={() =>  setAllDone(false)}
                                 /> 
                             : 
                                 <SuccessModal 
                                     isVisible={All_Done}
-                                    title='Leave request Added Successfully'
+                                    title='Leave request Updated Successfully'
                                     onClose={() =>  setAllDone(false)}
                                 /> 
                         :

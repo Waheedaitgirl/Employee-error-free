@@ -53,7 +53,20 @@ export function addLeaveRequest(data){
     });
 }
 
+export function updateLeaveRequest(data,id){
+    return request({
+        url: `leaves/${id}`,
+        method: 'put',
+        data
+    });
+}
 
+export function DeleteLeaveRequest (id){
+    return request({
+        url: `leaves/${id}`,
+        method: 'delete',
+    });
+}
 /// get requests
 export function getCandidateDetailsById(id){
     return request({

@@ -117,7 +117,7 @@ import moment from 'moment';
                 let se = title.toLowerCase()
                 const regex = new RegExp(`${se}`);
                 let draft_data = data.filter(function(item){ 
-                    return item.job_title.toLowerCase().match(regex) || item.approver_name.toLowerCase().match(regex) ||  item.comments.toLowerCase().match(regex)
+                    return item.job_title.toLowerCase().match(regex) ||  item.comments.toLowerCase().match(regex)
                  })
                  setFilterData(draft_data)
         }

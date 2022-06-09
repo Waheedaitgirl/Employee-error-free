@@ -57,6 +57,10 @@ import LeaveCard from './LeaveCard'
             <LeaveCard 
                item={item}
                onPress={() => navigation.navigate(MainRoutes.EditLeaveScreen, {item})}
+               onDeleteItem={() => {
+                
+                gelocallist()
+               }}
             />
         ); 
 

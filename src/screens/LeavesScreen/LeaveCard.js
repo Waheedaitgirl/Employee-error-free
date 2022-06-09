@@ -1,4 +1,4 @@
-import React, {memo} from "react"
+import React, {memo,useState} from "react"
 import { View,Text, StyleSheet, TouchableOpacity } from "react-native"
 import { scale } from "react-native-size-matters"
 import { colors, fonts } from "../../constants/theme"
@@ -7,10 +7,25 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import moment from "moment"
-const LeaveCard = memo(({item,onPress}) => {
+import DeleteModal from "../../components/DeleteModal"
+import ErrorModal from "../../components/ErrorModal"
+import { DeleteLeaveRequest } from "../../api"
+const LeaveCard = memo(({item,onPress,onDeleteItem}) => {
+    const [isVisible , setIsVisible] = useState(false)
+    const [isErrorVisible , setIsErrorVisible] = useState(false)
+    const onDeleteItemLocal = (id) => {
+        DeleteLeaveRequest(id).then((response) => {
+            if(response.status === 200){
+                setIsVisible(false)
+                onDeleteItem()
+            }
+        }).catch((err) => {
+            setIsErrorVisible(true)
+        })
+    }
       return(
         <TouchableOpacity 
-            onPress={onPress}
+           
             style={styles.mainView}>
             <View   
                 style={styles.btnView}>
@@ -51,14 +66,35 @@ const LeaveCard = memo(({item,onPress}) => {
                 </View>
                 <Text 
                     style={{
-                        ...styles.textStyle, 
+                        ...styles.textStyle,
+                        fontSize:scale(11), 
                         color:item.status === "0" ? "#000" : item.status === 1 ? "#ffff" : item.status === 2 ? "#fff":"#fff", 
                         backgroundColor:item.status === "0" ? "#0002" : item.status === 1 ? "green" : item.status === 2 ? colors.delete_icon:colors.delete_icon, 
                         paddingHorizontal:scale(10), 
                         paddingVertical:scale(2), 
                         borderRadius:scale(5) }}>{item.status === "0" ? "Pending" : item.status === 1 ? "Approved" : item.status === 2 ? "Declined":"Declined"}</Text>
             </View>
-            
+            {
+                item.status !== "1" && item.status !== "2" &&
+                    <View style={styles.buttonView} >
+                        <TouchableOpacity onPress={onPress} style={{...styles.actionButton}} >
+                            <MaterialCommunityIcons name="clock-edit" color={colors.dark_primary_color} size={scale(22)} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() =>setIsVisible(true)} style={styles.actionButton}>
+                            <MaterialCommunityIcons name="delete" color={colors.delete_icon} size={scale(22)} />
+                        </TouchableOpacity>
+                    </View>
+            }
+            <DeleteModal 
+                isVisible={isVisible}
+                onCancel={() => setIsVisible(false)}
+                onDelete={() => onDeleteItemLocal(item.leave_request_id)}
+            />
+            <ErrorModal 
+                isVisible={isErrorVisible}
+                title='Some Error in Deleting Leave'
+                onClose={() =>  setIsErrorVisible(false)}
+            />
         </TouchableOpacity>
     )
 })
@@ -70,6 +106,7 @@ const styles = StyleSheet.create({
         width:AppScreenWidth, 
         alignSelf:"center",
         elevation:2,
+        marginHorizontal:scale(2),
         backgroundColor:"#fefefe",
         marginVertical:scale(5),
         padding:scale(10),
@@ -86,4 +123,21 @@ const styles = StyleSheet.create({
         fontFamily:fonts.Medium,
         color: colors.text_primary_color
     },
+    buttonView:{
+        position:"absolute",
+        bottom:scale(5),
+        right:scale(5),
+        height:scale(30),
+        borderWidth:0,
+        borderColor:colors.text_primary_color,
+        borderRadius:5,
+        justifyContent:"space-between",
+        flexDirection:"row"
+    },
+    actionButton:{
+        height:scale(30)-2, 
+        paddingHorizontal:scale(5), 
+        alignItems:"center", 
+        justifyContent:"center"
+    }
 })

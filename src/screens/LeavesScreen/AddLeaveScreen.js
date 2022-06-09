@@ -353,8 +353,8 @@ const _maxDate = moment().add(1, 'days').format(_format)
                         <CustomButton 
                             onPress={() => validateLeaveApplication()}
                             loading={processing}
-                            text={"Submit Application"}
-                            loadingText={"Processing Application"}
+                            text={"Submit"}
+                            loadingText={"Processing"}
                         />
                     </View>
                 </View>
