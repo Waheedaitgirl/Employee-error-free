@@ -59,7 +59,21 @@ import moment from 'moment';
                 time={`${item.time_sheet_view} Starts At ${item.log_date}`} 
                 name={item.job_title}
                 item={item}
-                submittedto={item?.approver_name}
+                submittedto={
+                            item.module_id === "3" 
+                        ? 
+                            item.cc_approver_name
+                        :
+                            item.module_id === "0"
+                        ?
+                            item.p_approver_name
+                        : 
+                            item.module_id === '4'
+                        ? 
+                            item.cn_approver_name
+                        :
+                            item.cc_approver_name
+                        }
                 status={item.module_status_name}
                 status_style={item.status_colour_code}
                 hours={`${item.log_hours} Hours`}

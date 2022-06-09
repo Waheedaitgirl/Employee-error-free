@@ -24,7 +24,7 @@ const AddWeeklySummary = ({
         <NativeBaseProvider>
             {
                alldata.map((item, maindex) => {
-           
+              
                 return(
                     <View style={styles.mainview} key={`${maindex}`}>
                     <View  style={styles.Row}>
@@ -45,7 +45,8 @@ const AddWeeklySummary = ({
                                     placeholder="Please select  type"
                                     _item={selectStyles._item}
                                     _selectedItem={selectStyles._selectedItem}
-                                    onValueChange={(itemValue) => {localTimeType(itemValue, maindex)}}>
+                                    onValueChange={(itemValue) => {
+                                        localTimeType(itemValue, maindex)}}>
                                     {
                                         job_time_types.map((item, index) => {
                                             return(

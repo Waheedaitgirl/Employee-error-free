@@ -65,7 +65,7 @@ import BaseUrl from '../../api/BaseUrl';
               //if()
               if(response.status === 200){
                 if(response.data.data.length === 1){
-                    console.log(response.data.data[0].job_id)
+                   
                     set_selected_job(response.data.data[0].job_id);
                     getJobtimetype(response.data.data[0].job_id)
                }
@@ -155,7 +155,8 @@ import BaseUrl from '../../api/BaseUrl';
 
         const FunsetHours = (i,text, index) => {
           
-            let temparray = [...alldata]
+            let temparray = alldata // [...alldata]
+          
             temparray[index][i].hours = text
             setAlldata(temparray)
             
@@ -306,11 +307,13 @@ import BaseUrl from '../../api/BaseUrl';
             }
             setDateErrorMessage(null)
             if(time_sheet_type === "Week"){
+             
                 let t_type = [...time_type]
                 t_type.push({name:null, error:false})
                 setTimeType(t_type)
                 let temp  = [...alldata]
                 temp.push(week_days)
+                console.log(temp);
                 setAlldata(temp)
             }else{
                 let t_type = [...time_type]

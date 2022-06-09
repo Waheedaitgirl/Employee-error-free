@@ -68,8 +68,7 @@ const MODULE_ID = '52'
                 item.job_id
                 )
                 .then((response) => {
-                
-                    setJobs(response.data.jobs)
+                  setJobs(response.data.jobs)
                     let arr2 = Object.entries(JSON.parse(response.data.working_days[0].working_days_config))
                     // convert two dmnentional arra to one dimentional array
                     set_job_working_days(arr2.map(([day, value]) => ({day, value })));
@@ -146,8 +145,9 @@ const MODULE_ID = '52'
             return dates;
         }
         const localTimeType = (val,index) => {
+            console.log(val,index);
             let temp  = [...time_type] ;
-            temp[index].name = val
+            temp[index].id = val
             setTimeType(temp)
     }
         
@@ -182,7 +182,7 @@ const MODULE_ID = '52'
         }
 
         const FunsetHours = (i,text, index) => {
-            let temparray = [...alldata]
+            let temparray = alldata
              temparray[index][i].hours = text
              setAlldata(temparray)
             
