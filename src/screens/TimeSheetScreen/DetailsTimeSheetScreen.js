@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {Image, ActivityIndicator,View,SafeAreaView,Text} from 'react-native';
+import {Image,Linking, ActivityIndicator,View,SafeAreaView,Text} from 'react-native';
 import { commonStyles,textStyles } from '../../styles';
-import CustomButton from '../../components/Button';
 import CustomHeader from '../../components/CustomHeader';
 import { scale, verticalScale } from 'react-native-size-matters';
 import TimeSheetItem from './TimeSheetItem';
@@ -15,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { timeSheetDetailsById } from '../../api';
 import CustomStatusBar from '../../components/StatusBar';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import RNFetchBlob from 'rn-fetch-blob'
     const DetailsSheetScreen = ({navigation, route}) => {
         const {user} =  useSelector(state => state.LoginReducer)
         const [loading , setLoading] = useState(true)
@@ -28,13 +28,14 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
         let item = route.params.item
         const status = item.module_status_name
         useEffect(() => {
-           
+         
             timeSheetDetailsById(item.time_sheet_id,user.account_id).then((response) => {
                 if(response.status === 200){
                     if(response.data.data.document_file !== null){
                        
-                        setFilePath({...filepath, path:response.data.data.document_file, name:response.data.data.document_title})
+                        setFilePath({...filepath, path:`https://storage.googleapis.com/recruitbpm-document/ghauritech/${response.data.data.document_file}`, name:response.data.data.document_title})
                     }
+                   
                     let data = groupBy(response.data.logs, 'type')
                     setTimeSheetDetails(response.data.data)
                     setTimeTypes(response.data.time_types)
@@ -57,7 +58,27 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
               return memo;
             }, {});
         }
-
+        const handleClick = () => {
+            RNFetchBlob
+                .config({
+                    addAndroidDownloads : {
+                        useDownloadManager : true, // <-- this is the only thing required
+                        
+                        notification : true,
+                        title : 'Great ! Download Success ! :O ',
+                        description : 'File downloaded by download manager.'
+                }
+                })
+                .fetch('GET', filepath.path, {
+                    //some headers ..
+                })
+                .then((res) => {
+                    // the temp file path
+                    console.log('The file saved to ',)
+                }).catch(err => {
+                    console.log(err);
+                })  
+          };
         if(loading || time_sheet_details === null ){
             return(
                 <SafeAreaProvider>
@@ -146,6 +167,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
                         <CommentsBox 
                             title={"Document Attached"}
                             comment={time_sheet_details.document_title}
+                            onPress={() => handleClick()}
                         />
                     </View>
                    

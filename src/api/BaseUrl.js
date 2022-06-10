@@ -1,2 +1,2 @@
-const BaseUrl  =  'https://27b3-203-82-55-110.ngrok.io/'
+const BaseUrl  =  'https://ce59-203-82-55-110.ngrok.io/'
 export default BaseUrl;
