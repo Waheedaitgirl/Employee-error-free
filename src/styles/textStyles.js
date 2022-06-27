@@ -39,6 +39,12 @@ export const textStyles = StyleSheet.create({
         color:colors.text_primary_color,
         backgroundColor:"#0000",
     },
+    icons_text:{
+        fontFamily:fonts.Medium,
+        fontSize:scale(12),
+        color:colors.text_primary_color,
+        backgroundColor:"#0000",
+    },
     small:{
         fontFamily:fonts.Light,
         fontSize:scale(12),

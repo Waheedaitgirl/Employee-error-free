@@ -19,7 +19,11 @@ import EditExpenseScreen from '../screens/ExpensesScreen/EditExpenseScreen';
 import MyTasksScreen from '../screens/MyTasksScreen';
 import MyTimeScreen from '../screens/MyTimeScreen';
 import LeavesScreen from '../screens/LeavesScreen';
+
+// Jobs Screen
 import CalendarScreen from '../screens/CalendarScreen';
+import JobApplyScreen from '../screens/CalendarScreen/JobApply';
+
 import DrawerContent from './DrawerContent';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -130,6 +134,7 @@ const MainStack = () => {
                     headerShown:false
                 }}
             />
+
             <Stack.Screen 
                 name="CalendarScreen" 
                 component={CalendarScreen} 
@@ -137,6 +142,15 @@ const MainStack = () => {
                     headerShown:false
                 }}
             />
+
+            <Stack.Screen 
+                name="JobApplyScreen" 
+                component={JobApplyScreen} 
+                options={{
+                    headerShown:false
+                }}
+            />
+
         </Stack.Navigator>
     )
 }

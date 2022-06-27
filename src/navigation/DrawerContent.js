@@ -4,6 +4,7 @@ import { View,SafeAreaView, Text, Image, TouchableOpacity, StyleSheet } from 're
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import LEAVE from '../assets/images/Leave.svg'
 import Entypo from 'react-native-vector-icons/Entypo'
 import {MainRoutes} from '../constants/routes'
@@ -89,13 +90,13 @@ const DrawerContentt = ({ navigation, props }) => {
                             onPress={() => navigation.navigate(MainRoutes.CalendarScreen) } 
                             style={styles.btnView}>
                             <View style={{width:scale(20), height:scale(20)}} >    
-                                <FontAwesome 
-                                    name="calendar" 
+                                <Ionicons 
+                                    name="md-briefcase" 
                                     color={colors.dark_primary_color} 
                                     size={scale(16)} 
                                 />
                             </View>
-                            <Text style={styles.textStyle}>Calendar</Text>
+                            <Text style={styles.textStyle}>New Openings</Text>
                         </TouchableOpacity>
                         <TouchableOpacity  
                             onPress={() => navigation.navigate(MainRoutes.MyTasksScreen) } 

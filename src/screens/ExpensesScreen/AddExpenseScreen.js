@@ -303,7 +303,7 @@ const MODULE_ID = '54'
                                         _item={selectStyles._item}
                                         _selectedItem={selectStyles._selectedItem}
                                         onValueChange={(itemValue) => {
-                                            console.log(itemValue);
+                                          
                                             fun_set_selected_job(jobs,itemValue)
                                         }}>
                                         {
