@@ -1,30 +1,110 @@
-import React from 'react';
-import { SafeAreaView,View,StyleSheet,Text} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {SafeAreaView,StatusBar, Text,View,StyleSheet,TouchableOpacity} from 'react-native';
+import { scale, verticalScale } from 'react-native-size-matters';
 import { commonStyles,textStyles } from '../../styles';
-import CustomButton from '../../components/Button';
 import CustomHeader from '../../components/CustomHeader';
-import { scale } from 'react-native-size-matters';
+import { colors, fonts } from '../../constants/theme';
+import { AppScreenWidth, hp, width } from '../../constants/sacling';
+import { useSelector } from 'react-redux';
+import {useDispatch} from 'react-redux';
+import { GetStatus } from "../../store/actions/StatusActions";
+
     const EditProfileScreen = ({navigation}) => {
+        const dispatch = useDispatch();
+        const  getstatus = (data) => dispatch(GetStatus(data))
+        const {user} = useSelector(state => state.LoginReducer)
+        
+      
         return (
-            <View style={commonStyles.container} >
-                <CustomHeader 
-                    show_backButton={true}
-                    isdrawer={true}
-                    onPress={() => navigation.openDrawer()}
-                    title={"Edit Profile"}
-                />
-                <Text style={textStyles.title} >Welcome to</Text>
-                <Text style={textStyles.heading} >Recruit BPM</Text>
-                <View style={{height:scale(20)}} />
-                <CustomButton 
-                    onPress={() => navigation.navigate.goBack()}
-                    loading={false}
-                    text={"Save"}
-                    loadingText={"Processing"}
-                />
-            </View>
+            <SafeAreaView style={{flex:1, backgroundColor:colors.dark_primary_color}} >
+                <StatusBar barStyle={"light-content"} />
+                <View style={commonStyles.container} >
+                    <CustomHeader 
+                        show_backButton={true}
+                        isdrawer={true}
+                        onPress={() => navigation.openDrawer()}
+                        title={"Edit Profile"}
+                    />
+                </View>
+            </SafeAreaView>
+            
         );
     };
 
 
 export default EditProfileScreen;
+
+const styles = StyleSheet.create({
+    main:{
+        height:hp(55),
+        width:width*1.2,
+        zIndex:-1,
+        position:"absolute",
+        top:verticalScale(40),
+        borderBottomRightRadius:hp(100),
+        backgroundColor:colors.dark_primary_color
+    },
+    main2:{
+        height:hp(5),
+        width:width,
+        zIndex:10,
+        position:"absolute",
+        justifyContent:"center",
+        alignItems:"center",
+        paddingHorizontal:scale(5),
+        bottom:scale(0),
+     
+        borderTopLeftRadius:hp(3),
+        borderTopRightRadius:hp(3),
+        backgroundColor:colors.dark_primary_color
+    },
+    headingtext:{
+        ...textStyles.heading,
+        fontSize:scale(22), 
+        color:"#fff", 
+        textAlign:"left"
+    },
+    nameText:{
+        ...textStyles.title,
+        fontSize:scale(18),
+        marginTop:scale(2), 
+        marginHorizontal:scale(5), 
+        color:"#fff", 
+        textAlign:"left"
+    },
+    paragraph:{
+        ...textStyles.paragraph,
+        fontSize:scale(12), 
+        color:"#fff", 
+       includeFontPadding:false,
+        marginHorizontal:scale(5), 
+        textAlign:"left"
+    },
+    row:{
+        width:AppScreenWidth,
+        alignSelf:"center",
+        flexDirection:"row",
+        marginVertical:hp(2),
+        justifyContent:"space-evenly"
+    },
+    box:{
+        width:((AppScreenWidth/2)-scale(20)),
+        height:((AppScreenWidth/2)-scale(20)),
+        backgroundColor:"#fff",
+        elevation:10,
+        padding:hp(5),
+        justifyContent:"center",
+        alignItems:"center",
+        borderRadius:scale(10),
+        borderBottomWidth:3,
+        borderWidth:0,
+        borderColor:"#fff",
+        borderBottomColor:colors.secondary_text_color,
+    },
+    textStyle: {
+        marginTop:scale(10),
+        fontFamily:fonts.Medium,
+        fontSize:scale(14),
+        color: colors.secondary_text_color
+    },
+})

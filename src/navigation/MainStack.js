@@ -25,7 +25,11 @@ import AddLeaveScreen from '../screens/LeavesScreen/AddLeaveScreen';
 import EditLeaveScreen from '../screens/LeavesScreen/EditLeaveScreen';
 
 
+
+// Jobs Screen
 import CalendarScreen from '../screens/CalendarScreen';
+import JobApplyScreen from '../screens/CalendarScreen/JobApply';
+
 import DrawerContent from './DrawerContent';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -136,6 +140,7 @@ const MainStack = () => {
                     headerShown:false
                 }}
             />
+
             <Stack.Screen 
                 name="AddLeaveScreen" 
                 component={AddLeaveScreen} 
@@ -157,6 +162,15 @@ const MainStack = () => {
                     headerShown:false
                 }}
             />
+
+            <Stack.Screen 
+                name="JobApplyScreen" 
+                component={JobApplyScreen} 
+                options={{
+                    headerShown:false
+                }}
+            />
+
         </Stack.Navigator>
     )
 }

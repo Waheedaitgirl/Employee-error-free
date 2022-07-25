@@ -28,6 +28,7 @@
     "react": "17.0.2",
     "react-native": "0.67.3",
     "react-native-calendars": "^1.1279.0",
+    "react-native-datatable-component": "^2.1.1",
     "react-native-date-picker": "^4.2.0",
     "react-native-dialog": "^9.2.1",
     "react-native-document-picker": "^8.0.0",
