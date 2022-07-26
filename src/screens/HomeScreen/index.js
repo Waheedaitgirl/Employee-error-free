@@ -80,14 +80,14 @@ import { getStatusList } from '../../api';
                             <Text style={styles.textStyle}>Leaves</Text>
                         </TouchableOpacity>
                         <TouchableOpacity 
-                        onPress={() => navigation.navigate(MainRoutes.MyTasksScreen) } 
+                        onPress={() => navigation.navigate(MainRoutes.CalendarScreen) } 
                             style={styles.box} >
                             <FontAwesome 
-                                name="tasks" 
+                                name="briefcase" 
                                 color={colors.dark_primary_color} 
                                 size={scale(50)} 
                             />
-                            <Text style={styles.textStyle}>Tasks</Text>
+                            <Text style={styles.textStyle}>Jobs</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.main2} >

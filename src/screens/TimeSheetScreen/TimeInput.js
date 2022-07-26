@@ -38,16 +38,17 @@ const styles = StyleSheet.create({
         backgroundColor:"rgba(0,0,0,1)",
         paddingTop:0,
         paddingBottom:0, 
-        width:AppScreenWidth/3,
+        width:AppScreenWidth-25,
         marginTop:scale(5),
         color:"#fff",
-        textAlign:"center",
+        textAlign:"left",
         height:scale(30),
         fontFamily:fonts.Regular,
         borderRadius:5,
     },
     mainview:{
-        width:((AppScreenWidth/3) + scale(10)),
+        // width:((AppScreenWidth/3) + scale(10)),
+        width:AppScreenWidth-12,
         marginTop:scale(5), 
         marginRight:scale(5),
         borderWidth:1,
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
     },
     label:{
         ...textStyles.title,
-        alignSelf:"center", 
+        alignSelf:"flex-start", 
         backgroundColor:"#0000"
     }
 })

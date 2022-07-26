@@ -3,12 +3,11 @@ import { View,Text, StyleSheet, TouchableOpacity } from "react-native"
 import { scale } from "react-native-size-matters"
 import { colors, fonts } from "../../constants/theme"
 import { AppScreenWidth } from "../../constants/sacling"
-import Bill from '../../assets/images/bill.svg'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import Date from '../../assets/images/date.svg'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Price from '../../assets/images/price.svg'
-import Person from '../../assets/images/person.svg'
-import Job from '../../assets/images/job.svg'
 import transform from 'css-to-react-native';
 import DeleteModal from '../../components/DeleteModal';
 import { DeleteExpense } from '../../api';
@@ -40,21 +39,33 @@ const ExpansesItem = memo(({item, billtype, company, status,date,List, job,statu
             <View   
                 style={styles.btnView}>
                 <View style={{width:scale(20), height:scale(20)}} >
-                    <Job width={scale(20)} height={scale(20)} />
+                    <FontAwesome 
+                        name="briefcase" 
+                        color={colors.dark_primary_color} 
+                        size={scale(18)} 
+                    />
                 </View>
                 <Text style={styles.textStyle}>{job}</Text>
             </View>
             <View   
                 style={styles.btnView}>
                 <View style={{width:scale(20), height:scale(20)}} >
-                <Price width={scale(20)} height={scale(20)} />
+                    <MaterialCommunityIcons 
+                        name="format-title" 
+                        color={colors.dark_primary_color} 
+                        size={scale(20)} 
+                    />
                 </View>
                 <Text style={styles.textStyle}>{billtype}</Text>
             </View>
             <View   
                 style={styles.btnView}>
                 <View style={{width:scale(20), height:scale(20)}} >
-                    <Person width={scale(20)} height={scale(20)} />
+                    <FontAwesome 
+                        name="user" 
+                        color={colors.dark_primary_color} 
+                        size={scale(18)} 
+                    />
                 </View>
                 <Text style={styles.textStyle}>{company}</Text>
             </View>
@@ -63,7 +74,11 @@ const ExpansesItem = memo(({item, billtype, company, status,date,List, job,statu
             <View   
                 style={styles.btnView}>
                 <View style={{width:scale(20), height:scale(20)}} >
-                    <Date width={scale(20)} height={scale(20)} />
+                    <Entypo 
+                        name="calendar" 
+                        color={colors.dark_primary_color} 
+                        size={scale(20)}
+                    />
                 </View>
                 <Text style={styles.textStyle}>{date}</Text>
             </View>
@@ -71,12 +86,14 @@ const ExpansesItem = memo(({item, billtype, company, status,date,List, job,statu
                 price !== null &&
                     <View   
                         style={styles.btnView}>
-                        <View style={{width:scale(20), height:scale(20)}} >
-                            <Bill width={scale(20)} height={scale(20)} />
+                        <View style={{width:scale(20),alignItems:"center", justifyContent:"center", height:scale(20)}} >
+                            <FontAwesome5 
+                                name="money-check-alt" 
+                                color={colors.dark_primary_color} 
+                                size={scale(15)}
+                            />
                         </View>
-                        <Text 
-                            
-                            style={styles.pricetxt}>{price}</Text>
+                        <Text style={styles.pricetxt}>{price}</Text>
                     </View>
             }
             <View   

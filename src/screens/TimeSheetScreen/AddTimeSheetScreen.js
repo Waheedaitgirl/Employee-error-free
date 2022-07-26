@@ -87,6 +87,7 @@ import BaseUrl from '../../api/BaseUrl';
         const getJobtimetype = (itemValue) => {
             setAlldata([])
             setLoading(true)
+            console.log(user.account_id, itemValue, "Valuue");
             getJobWorkingDays(user.account_id, itemValue).then((response) => {
                 if(response.status === 200){
                     // convert object to two dimentional arrays ,

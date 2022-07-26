@@ -98,9 +98,9 @@ const CustomHeader = ({
               </MenuOptions>
             </Menu>
           </TouchableOpacity>
-          <TouchableOpacity onPress={NotificationPress}>
+          {/* <TouchableOpacity onPress={NotificationPress}>
             <Ionicons name={'notifications'} color={'#fff'} size={scale(18)} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     );
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   },
   LeftIconView: {
     flexDirection: 'row',
-    width: width / 3,
+    width: width / 5,
     justifyContent: 'space-around',
   },
 });

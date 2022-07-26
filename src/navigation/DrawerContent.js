@@ -1,15 +1,17 @@
 import React from "react";
 import { colors, fonts } from "../constants/theme";
 import { View,SafeAreaView, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { Signout } from "../store/actions/LoginActions";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import LEAVE from '../assets/images/Leave.svg'
 import Entypo from 'react-native-vector-icons/Entypo'
 import {MainRoutes} from '../constants/routes'
 import { scale } from "react-native-size-matters";
+import {useDispatch} from 'react-redux';
 const DrawerContentt = ({ navigation, props }) => {
+    const dispatch = useDispatch();
+    const  localSignout = () => dispatch(Signout(null))
     return (
         <SafeAreaView style={{flex:1, backgroundColor:colors.dark_primary_color}}>
             <DrawerContentScrollView 
@@ -31,7 +33,7 @@ const DrawerContentt = ({ navigation, props }) => {
                                 <Text style={styles.textStyleHeader}>Aftab Ameen</Text>
                             </View> 
                             <TouchableOpacity
-                                onPress={() => navigation.navigate(MainRoutes.EditProfileScreen) }
+                               // onPress={() => navigation.navigate(MainRoutes.EditProfileScreen) }
                                 style={{
                                     position:"absolute",
                                     top:scale(10),
@@ -82,7 +84,11 @@ const DrawerContentt = ({ navigation, props }) => {
                             onPress={() => navigation.navigate(MainRoutes.LeavesScreen) } 
                             style={styles.btnView}>
                             <View style={{width:scale(20), height:scale(20)}} > 
-                                <LEAVE width={scale(20)} height={scale(20)} />
+                                <Entypo 
+                                    name="calendar" 
+                                    color={colors.dark_primary_color} 
+                                    size={scale(20)}
+                                />
                             </View>
                             <Text style={styles.textStyle}>Leaves</Text>
                         </TouchableOpacity>
@@ -98,7 +104,7 @@ const DrawerContentt = ({ navigation, props }) => {
                             </View>
                             <Text style={styles.textStyle}>New Openings</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity  
+                        {/* <TouchableOpacity  
                             onPress={() => navigation.navigate(MainRoutes.MyTasksScreen) } 
                             style={styles.btnView}>
                             <View style={{width:scale(20), height:scale(20)}} >    
@@ -109,9 +115,21 @@ const DrawerContentt = ({ navigation, props }) => {
                                 />
                             </View>
                             <Text style={styles.textStyle}>My Tasks</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
               
             </DrawerContentScrollView>
+            <TouchableOpacity  
+                onPress={() => localSignout() } 
+                style={styles.logoutbutton}>
+                <View style={{width:scale(20), height:scale(20)}} > 
+                    <Entypo 
+                        name="log-out" 
+                        color={colors.dark_primary_color} 
+                        size={scale(20)}
+                    />
+                </View>  
+                <Text style={{...styles.textStyle}}>Log Out</Text>
+                </TouchableOpacity>
         </SafeAreaView>
     )
 }
@@ -150,5 +168,14 @@ const styles = StyleSheet.create({
         fontFamily:fonts.Medium,
         fontSize:scale(12),
         color: colors.white
-    }
+    },
+    logoutbutton:{
+        marginLeft:scale(15),
+        marginBottom:scale(12),
+        flexDirection: 'row',
+        alignItems:"center", marginLeft:0,
+        paddingBottom:scale(10), 
+        paddingLeft:scale(15), 
+        backgroundColor:"#fff"
+    },
 })

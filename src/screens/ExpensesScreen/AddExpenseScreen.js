@@ -335,7 +335,7 @@ const MODULE_ID = '54'
                                     expense_list.map((item, index) => {
                                         return(
                                             <View key={`${index}`} style={styles.cardView} >
-                                            <View style={styles.Row} >
+                                            <View  >
                                             
                                                 <View>
                                                     <Text
@@ -347,7 +347,7 @@ const MODULE_ID = '54'
                                                         placeholder={"Expense Date"}
                                                         value={item.date}
                                                         errorMessage={""}
-                                                        w={AppScreenWidth/2-scale(5)}
+                                                        w={AppScreenWidth}
                                                         show_label={false}
                                                         hght={scale(40)}
                                                         onChangeText={(data) => {
@@ -370,7 +370,7 @@ const MODULE_ID = '54'
                                                     <Spacer  height={scale(5)}  />
                                                     <Select
                                                         selectedValue={item.expense_type}
-                                                        width={AppScreenWidth/2-scale(10)}
+                                                        width={AppScreenWidth}
                                                         bg={"#fff"}
                                                         placeholderTextColor={colors.text_primary_color}
                                                     
@@ -404,7 +404,7 @@ const MODULE_ID = '54'
                                                 </View>
                                             </View>
                                     
-                                            <View style={styles.Row} >
+                                            <View >
                                                 <View>
                                                     <Text
                                                         style={styles.label}>
@@ -413,7 +413,7 @@ const MODULE_ID = '54'
                                                     <Spacer  height={scale(5)}  />
                                                     <Select
                                                         selectedValue={item.expense_bill_type}
-                                                        width={AppScreenWidth/2-scale(10)}
+                                                        width={AppScreenWidth}
                                                         placeholderTextColor={colors.text_primary_color}
                                                         fontFamily={fonts.Medium}
                                                         fontSize={scale(13)}
@@ -452,7 +452,7 @@ const MODULE_ID = '54'
                                                     <Spacer  height={scale(5)}  />
                                                     <Select
                                                         selectedValue={item.expense_category}
-                                                        width={AppScreenWidth/2-scale(10)}
+                                                        width={AppScreenWidth}
                                                         placeholderTextColor={colors.text_primary_color}
                                                         fontFamily={fonts.Medium}
                                                         fontSize={scale(13)}
@@ -511,7 +511,7 @@ const MODULE_ID = '54'
                                                 }
                                             </View>
 
-                                            <View>
+                                            <View >
                                                 <CustomTextInput
                                                     placeholder={'Comments'}
                                                     value={item.comments}
@@ -526,7 +526,7 @@ const MODULE_ID = '54'
                                                     errorMessage={""}
                                                 />
                                             </View>
-                                            <View style={styles.Row} >
+                                            <View style={styles.Row}>
                                                 <UpLoadComponent 
                                                     filepath={item.filepath}
                                                     setFilePath={(file) => {
@@ -639,6 +639,9 @@ const styles = StyleSheet.create({
     label:{
         ...textStyles.smallheading , 
         fontSize:scale(12),
+        includeFontPadding:false,
+        marginTop:10,
+        marginBottom:0,
         color:colors.dark_primary_color,
        
     },
@@ -685,6 +688,6 @@ const styles = StyleSheet.create({
         paddingVertical:10,
         backgroundColor:"#fff",
         alignSelf:"center", 
-        bottom:10,
+        bottom:0,
     }
 })

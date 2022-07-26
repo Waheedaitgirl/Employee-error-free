@@ -73,7 +73,7 @@ const AddWeeklySummary = ({
                     <Text style={styles.text}>{editable?"Enter Summary":"Daily Summary"}</Text>
                         <FlatList 
                             data={item}
-                            horizontal={true}
+                                    
                             showsHorizontalScrollIndicator={false}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({item,index}) => {

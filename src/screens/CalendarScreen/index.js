@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import {SafeAreaView,StyleSheet, FlatList,Text,TouchableOpacity, StatusBar,View} from 'react-native';
+import {SafeAreaView,StyleSheet,Image, FlatList,Text,TouchableOpacity, StatusBar,View} from 'react-native';
 import { commonStyles, textStyles } from '../../styles';
 import CustomHeader from '../../components/CustomHeader';
 import { colors, fonts } from '../../constants/theme';
 import { useSelector } from 'react-redux';
 import { getJobs } from '../../api';
 import { AppScreenWidth, width } from '../../constants/sacling';
+import { scale, verticalScale } from 'react-native-size-matters';
     const CalendarScreen = ({navigation}) => {
     const [jobs , setJobs] = useState([])
         const {user} = useSelector(state => state.LoginReducer)
          useEffect(() => {
-            getJobs(user.account_id).then((response) => {
+            getJobs(1).then((response) => {
                 if(response.status === 200){
                     setJobs(response.data.result);
                 }else{
@@ -83,6 +84,29 @@ import { AppScreenWidth, width } from '../../constants/sacling';
                                         </TouchableOpacity>
                                     </View>
                                 )
+                            }}
+                            ListEmptyComponent={() => {
+                                return(
+                                    <View style={{alignSelf:"center",marginTop:verticalScale(150), flex:1, justifyContent:"center", alignItems:"center"}} >
+                                        <Image 
+                                            source={require("../../assets/images/norecord.gif")}
+                                            style={{
+                                                width:verticalScale(150), 
+                                                height:verticalScale(150),
+                                                resizeMode:"contain"
+                                            }} 
+                                        />
+                                      
+                                    </View>
+                                )
+                            }}
+                            windowSize={35}
+                            getItemLayout={(filterdata, index) => {
+                                return {
+                                length: verticalScale(100),
+                                offset: verticalScale(100) * filterdata.length,
+                                index,
+                                }
                             }}
                         />
                     </View>

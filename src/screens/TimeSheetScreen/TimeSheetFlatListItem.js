@@ -5,7 +5,7 @@ import { colors, fonts } from "../../constants/theme"
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Manager from '../../assets/images/Manager.svg'
-import Job from '../../assets/images/job.svg'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { AppScreenWidth } from "../../constants/sacling"
 import transform from 'css-to-react-native';
 import DeleteModal from "../../components/DeleteModal"
@@ -51,14 +51,22 @@ const TimeSheetFlatListItem = memo(({name,item, time, submittedto,status_style, 
             <View   
                 style={styles.btnView}>
                 <View style={{width:scale(20), height:scale(20)}} >
-                    <Job width={scale(20)} height={scale(20)} />
+                    <FontAwesome 
+                        name="briefcase" 
+                        color={colors.dark_primary_color} 
+                        size={scale(18)} 
+                    />
                 </View>
                 <Text style={styles.textStyle}>{name}</Text>
             </View>
             <View   
                 style={styles.btnView}>
                 <View style={{width:scale(20), height:scale(20)}} >
-                    <Manager width={scale(20)} height={scale(20)} />
+                    <FontAwesome 
+                        name="users" 
+                        color={colors.dark_primary_color} 
+                        size={scale(18)} 
+                    />
                 </View>
                 <Text style={styles.textStyle}>{submittedto}</Text>
             </View>
