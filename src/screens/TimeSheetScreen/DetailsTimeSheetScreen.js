@@ -58,7 +58,9 @@ import RNFetchBlob from 'rn-fetch-blob'
               return memo;
             }, {});
         }
-        const handleClick = () => {
+        const handleClick = (title) => {
+            if(title === null && title === null)
+            return
             RNFetchBlob
                 .config({
                     addAndroidDownloads : {
@@ -120,6 +122,7 @@ import RNFetchBlob from 'rn-fetch-blob'
                 </SafeAreaProvider>
             )
         }
+        
         return (
             <SafeAreaProvider>
                 <CustomStatusBar />
@@ -156,18 +159,21 @@ import RNFetchBlob from 'rn-fetch-blob'
                         <CommentsBox 
                             title={"Approver Comment"}
                             name={"Approver"}
+                            disable={true}
                             comment={time_sheet_details.approver_comments === ""?null:time_sheet_details.approver_comments }
                         />
                         <CommentsBox 
                             title={"Submitter Comment"}
+                            disable={true}
                             name={time_sheet_details.comments}
                             comment={time_sheet_details.comments}
                         />
 
                         <CommentsBox 
                             title={"Document Attached"}
+                            disable={false}
                             comment={time_sheet_details.document_title}
-                            onPress={() => handleClick()}
+                            onPress={() => handleClick(time_sheet_details.document_title)}
                         />
                     </View>
                    

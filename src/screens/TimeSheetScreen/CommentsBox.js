@@ -5,9 +5,9 @@ import DrawLine from "../../components/DrawLine";
 import { AppScreenWidth } from "../../constants/sacling";
 import { fonts } from "../../constants/theme";
 import { textStyles } from "../../styles/textStyles";
-const CommentsBox = ({title, comment, onPress=() => {}}) => {
+const CommentsBox = ({title, disable=false, comment, onPress=() => {}}) => {
     return(
-        <TouchableOpacity onPress={onPress} style={{marginTop:scale(5),width:AppScreenWidth, marginRight:scale(5)}} >
+        <TouchableOpacity disabled={disable} onPress={onPress} style={{marginTop:scale(5),width:AppScreenWidth, marginRight:scale(5)}} >
             <Text style={{...textStyles.smallheading, backgroundColor:"#0000"}}>{title}</Text>
             {
                 comment !== null 

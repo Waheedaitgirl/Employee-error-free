@@ -243,7 +243,7 @@ import BaseUrl from '../../api/BaseUrl';
                     fetch(`${BaseUrl}files`, requestOptions)
                     .then((data) => data.json()) 
                     .then((data2) => {
-                       
+                       console.log(data2, "dataaaa 222");
                         let data = {
                             job_id:selected_job,
                             candidate_id:user.candidate_id,

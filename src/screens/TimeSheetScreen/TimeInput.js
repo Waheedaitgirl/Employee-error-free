@@ -15,7 +15,7 @@ const TimeInput = ({item , index ,editable, setHours}) => {
             <TextInput 
                 keyboardType={"numeric"}
                 placeholder={editable?"0.0":"Disable"}
-                placeholderTextColor={"rgba(255,255,255,.5)"}
+                placeholderTextColor={"rgba(0,0,0,.5)"}
                 value={item.hours}
                 editable={editable}
                 onChangeText={(data) =>  {
@@ -26,7 +26,7 @@ const TimeInput = ({item , index ,editable, setHours}) => {
                     }  
                     setHours(index, data)
                 }}
-                style={{...styles.textinput, backgroundColor:editable?"rgba(0,0,0,1)":"rgba(0,0,0,1)"}}
+                style={{...styles.textinput, backgroundColor:editable?"rgba(0,0,0,.1)":"rgba(0,0,0,.1)"}}
             />
             {error &&  <Text style={{...styles.label, color:colors.delete_icon}} >Invalid</Text>}
         </View>
@@ -35,12 +35,12 @@ const TimeInput = ({item , index ,editable, setHours}) => {
 export default TimeInput
 const styles = StyleSheet.create({
     textinput:{
-        backgroundColor:"rgba(0,0,0,1)",
+        backgroundColor:"rgba(0,0,0,.1)",
         paddingTop:0,
         paddingBottom:0, 
         width:AppScreenWidth-25,
         marginTop:scale(5),
-        color:"#fff",
+        color:"#000",
         textAlign:"left",
         height:scale(30),
         fontFamily:fonts.Regular,
