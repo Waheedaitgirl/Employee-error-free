@@ -17,6 +17,7 @@ import { getStatusList } from '../../api';
         const dispatch = useDispatch();
         const  getstatus = (data) => dispatch(GetStatus(data))
         const {user} = useSelector(state => state.LoginReducer)
+        console.log(user, "Userrrr")
         useEffect(() => {
             getStatusList(user.account_id).then((response) => {
                 if(response.status === 200){

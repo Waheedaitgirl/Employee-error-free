@@ -81,7 +81,7 @@ const MODULE_ID = '52'
                         name:response.data.timesheet_data.document_title
                     })
                     let data = groupBy(response.data.timesheet_logs, 'type')
-                  
+                    console.log(data, "dataa");
                     let d2 = Object.entries(data)
                     let temp  = [...alldata]
                     d2.map((item, index) => temp.push(item[1]))

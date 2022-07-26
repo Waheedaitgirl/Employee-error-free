@@ -20,7 +20,7 @@ const WeeklySummary = ({logs,editable, time_types}) => {
                             </View>
                             <FlatList 
                                 data={item[1]}
-                                horizontal={true}
+                               
                                 showsHorizontalScrollIndicator={false}
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem={({item, index}) => {

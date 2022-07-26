@@ -64,8 +64,8 @@ import BaseUrl from '../../api/BaseUrl';
             listCandidateJobs(user.account_id, user.candidate_id ,"1").then((response) => {
               //if()
               if(response.status === 200){
+                console.log(response.data.data, "response.data.dat");
                 if(response.data.data.length === 1){
-                   
                     set_selected_job(response.data.data[0].job_id);
                     getJobtimetype(response.data.data[0].job_id)
                }
@@ -87,7 +87,6 @@ import BaseUrl from '../../api/BaseUrl';
         const getJobtimetype = (itemValue) => {
             setAlldata([])
             setLoading(true)
-            console.log(user.account_id, itemValue, "Valuue");
             getJobWorkingDays(user.account_id, itemValue).then((response) => {
                 if(response.status === 200){
                     // convert object to two dimentional arrays ,
@@ -156,8 +155,7 @@ import BaseUrl from '../../api/BaseUrl';
 
         const FunsetHours = (i,text, index) => {
           
-            let temparray = alldata // [...alldata]
-          
+            let temparray = [...alldata]
             temparray[index][i].hours = text
             setAlldata(temparray)
             
@@ -243,7 +241,7 @@ import BaseUrl from '../../api/BaseUrl';
                     fetch(`${BaseUrl}files`, requestOptions)
                     .then((data) => data.json()) 
                     .then((data2) => {
-                       console.log(data2, "dataaaa 222");
+                       
                         let data = {
                             job_id:selected_job,
                             candidate_id:user.candidate_id,
@@ -267,7 +265,6 @@ import BaseUrl from '../../api/BaseUrl';
                             alert("TimeSheet Added Successfully")
                             setLoading(false)
                          }).catch((err) => {
-                            console.log(err ,"Error");
                              alert("Some Error in Adding Time Sheet")
                              setLoading(false)
                          })
@@ -309,13 +306,11 @@ import BaseUrl from '../../api/BaseUrl';
             }
             setDateErrorMessage(null)
             if(time_sheet_type === "Week"){
-             
                 let t_type = [...time_type]
                 t_type.push({name:null, error:false})
                 setTimeType(t_type)
                 let temp  = [...alldata]
                 temp.push(week_days)
-                console.log(temp);
                 setAlldata(temp)
             }else{
                 let t_type = [...time_type]
@@ -370,7 +365,7 @@ import BaseUrl from '../../api/BaseUrl';
                             show_backButton={true}
                             isdrawer={false}
                             onPress={() => navigation.goBack()}
-                            title={"Add TimeSheet"}
+                            title={"Details TimeSheet"}
                         />
                         <Spacer height={AppScreenWidth/2} />
                         <Image 

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Image,Linking, ActivityIndicator,View,SafeAreaView,Text} from 'react-native';
+import {Image,ScrollView, ActivityIndicator,View,SafeAreaView,Text} from 'react-native';
 import { commonStyles,textStyles } from '../../styles';
 import CustomHeader from '../../components/CustomHeader';
 import { scale, verticalScale } from 'react-native-size-matters';
@@ -37,6 +37,7 @@ import RNFetchBlob from 'rn-fetch-blob'
                     }
                    
                     let data = groupBy(response.data.logs, 'type')
+                    console.log(data, "dddddd");
                     setTimeSheetDetails(response.data.data)
                     setTimeTypes(response.data.time_types)
                     setLogs(Object.entries(data))
@@ -134,7 +135,7 @@ import RNFetchBlob from 'rn-fetch-blob'
                         title={"Details TimeSheet"}
                     />
                 
-                
+                <ScrollView showsVerticalScrollIndicator={false} >
                     <TimeSheetItem 
                         time={`${item.time_sheet_view} Starts At ${item.log_date}`} 
                         name={`${item.job_title} - ${time_sheet_details?.company_name}`}
@@ -145,13 +146,13 @@ import RNFetchBlob from 'rn-fetch-blob'
                     
                         onPress={() => {}}
                     />
-
-                    <WeeklySummary 
-                        editable={status === 'Draft'?true:false}
-                        logs={logs} 
-                        time_types={time_types}
-                    />
-                
+                  
+                        <WeeklySummary 
+                            editable={status === 'Draft'?true:false}
+                            logs={logs} 
+                            time_types={time_types}
+                        />
+                   
                     <View style={{width:AppScreenWidth}} >
                         <Text style={{...textStyles.smallheading,color:"#0090FF"}}>Comments</Text>
                         <DrawLine marginTop={scale(5)} />
@@ -177,7 +178,7 @@ import RNFetchBlob from 'rn-fetch-blob'
                         />
                     </View>
                    
-                        
+                    </ScrollView>
                 </SafeAreaView>
             </SafeAreaProvider>
         );
