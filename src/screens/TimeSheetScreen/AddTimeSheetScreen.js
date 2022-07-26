@@ -101,7 +101,7 @@ import BaseUrl from '../../api/BaseUrl';
                 console.log(err);
                 setLoading(false)
             })
-            console.log(user.account_id,  itemValue, "itemValue");
+
             jobTimeTypes(user.account_id, itemValue).then((response) => {
                 if(response.status === 200){
                     set_job_time_types(response.data.data);
@@ -266,6 +266,7 @@ import BaseUrl from '../../api/BaseUrl';
                             alert("TimeSheet Added Successfully")
                             setLoading(false)
                          }).catch((err) => {
+                            console.log(err ,"Error");
                              alert("Some Error in Adding Time Sheet")
                              setLoading(false)
                          })
@@ -359,7 +360,6 @@ import BaseUrl from '../../api/BaseUrl';
             }
            
         }
-        
         if(api_error){
             return(
                 <SafeAreaProvider>
