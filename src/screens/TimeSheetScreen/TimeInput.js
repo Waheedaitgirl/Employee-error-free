@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
         width:AppScreenWidth-25,
         marginTop:scale(5),
         color:"#000",
+        paddingLeft:scale(10),
         textAlign:"left",
         height:scale(30),
         fontFamily:fonts.Regular,

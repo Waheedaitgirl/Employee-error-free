@@ -80,7 +80,7 @@ import { getStatusList } from '../../api';
                             />
                             <Text style={styles.textStyle}>Leaves</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity 
+                        {/* <TouchableOpacity 
                         onPress={() => navigation.navigate(MainRoutes.CalendarScreen) } 
                             style={styles.box} >
                             <FontAwesome 
@@ -89,7 +89,7 @@ import { getStatusList } from '../../api';
                                 size={scale(50)} 
                             />
                             <Text style={styles.textStyle}>Jobs</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                     <View style={styles.main2} >
                         <Text style={styles.paragraph}>

@@ -92,7 +92,7 @@ const DrawerContentt = ({ navigation, props }) => {
                             </View>
                             <Text style={styles.textStyle}>Leaves</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity  
+                        {/* <TouchableOpacity  
                             onPress={() => navigation.navigate(MainRoutes.CalendarScreen) } 
                             style={styles.btnView}>
                             <View style={{width:scale(20), height:scale(20)}} >    
@@ -103,7 +103,7 @@ const DrawerContentt = ({ navigation, props }) => {
                                 />
                             </View>
                             <Text style={styles.textStyle}>New Openings</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         {/* <TouchableOpacity  
                             onPress={() => navigation.navigate(MainRoutes.MyTasksScreen) } 
                             style={styles.btnView}>
