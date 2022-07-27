@@ -28,6 +28,8 @@ const SignInScreen = ({navigation}) => {
   const [UseremailErrorMesage, setUseremailErrorMessaage] = useState('');
   const [password, setPassword] = useState(''); //123456
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [is_api_error,  set_api_error] = useState("")
+  const [apiErrorMessage , setApiErrorMessage] = useState("")
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const  userLogin = (data) => dispatch(Login(data))
@@ -57,14 +59,18 @@ const SignInScreen = ({navigation}) => {
           if(response.data.status){
             userLogin(response.data)
           }else{
-            alert("Invalid crenditlas")
+            setApiErrorMessage(response.data.error)
+            set_api_error(true)
           }
         }else{
-          alert("error")
+          setApiErrorMessage(`Server Error ${response.status} occured. Please try again`)
+          set_api_error(true)
         }
     }).catch((err) => {
-      setLoading(false);
       console.log(err);
+      setLoading(false);
+      setApiErrorMessage(`Server Error  occured. Please try again`)
+      set_api_error(true)
     })
   };
   return (
@@ -73,6 +79,8 @@ const SignInScreen = ({navigation}) => {
           title={"Sign In"}
         />
       <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
         contentContainerStyle={{
           backgroundColor: '#fff',
           flexGrow: 1,
@@ -97,6 +105,14 @@ const SignInScreen = ({navigation}) => {
           onChangeText={text => setPassword(text)}
           errorMessage={passwordErrorMessage}
         />
+         <View style={{alignSelf:"center", width:AppScreenWidth}}>
+              {is_api_error ?
+                <Text style={{...textStyles.errorText, textAlign:"left"}}>
+                  {apiErrorMessage}
+                </Text>
+                :null
+              }
+              </View>
         <TouchableOpacity
           onPress={() => navigation.navigate(AuthRoutes.ForgotPasswordScreen)}
           style={{width: AppScreenWidth, alignItems: 'flex-end'}}>
@@ -116,7 +132,7 @@ const SignInScreen = ({navigation}) => {
         <DrawLine height={0.6} />
         <Spacer />
         <Text style={{...textStyles.Label, textAlign: 'center'}}>OR</Text>
-        <View
+        {/* <View
           style={{
             width: AppScreenWidth,
             flexDirection: 'row',
@@ -145,14 +161,14 @@ const SignInScreen = ({navigation}) => {
               Sign In With Microsoft
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
-        <View
-          style={{width: width, paddingBottom: 10, backgroundColor: '#fff'}}>
-          <Text style={textStyles.disabletext}>
-            Copyright @{new Date().getFullYear()} RecruitBPM All Rights Reserved
-          </Text>
-        </View>
+              <View
+                style={{width: width, position:"absolute", bottom:0, paddingBottom: 10, backgroundColor: '#fff'}}>
+                <Text style={textStyles.disabletext}>
+                  Copyright @{new Date().getFullYear()} RecruitBPM All Rights Reserved
+                </Text>
+              </View>
       </ScrollView>
     </View>
   );

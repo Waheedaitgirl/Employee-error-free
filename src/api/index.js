@@ -139,9 +139,10 @@ export function getExpenseTypeCategoryBillType(account_id,company_id){
     });
 }
 
-export function getJobs(account_id){
+export function getJobs(account_id, item_id){
+    console.log(`jobs?associatedjobs=career_portal_jobs&account_id=${account_id}&type=candidate&item_id=${item_id}`);
     return request({
-        url:`jobs?associatedjobs=career_portal_jobs&account_id=${account_id}&type=candidate&item_id=1336`,
+        url:`jobs?associatedjobs=career_portal_jobs&account_id=${account_id}&type=candidate&item_id=${item_id}`,
         method:"get"
     })
 }

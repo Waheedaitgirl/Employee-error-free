@@ -59,7 +59,7 @@ export const textStyles = StyleSheet.create({
     },
     disabletext:{
         fontFamily:fonts.Regular,
-        fontSize:scale(14),
+        fontSize:scale(12),
         textAlign:"center",
         color:"rgba(0,0,0,.2)",
         backgroundColor:"#0000",

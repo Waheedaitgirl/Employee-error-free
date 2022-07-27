@@ -11,9 +11,10 @@ import { scale, verticalScale } from 'react-native-size-matters';
     const [jobs , setJobs] = useState([])
         const {user} = useSelector(state => state.LoginReducer)
          useEffect(() => {
-            getJobs(1).then((response) => {
+            getJobs(user.account_id,  user.candidate_id).then((response) => {
+                    console.log(response.status);
                 if(response.status === 200){
-                    setJobs(response.data.result);
+                    setJobs(response.data);
                 }else{
                     alert("Error")
                 }
@@ -35,7 +36,7 @@ import { scale, verticalScale } from 'react-native-size-matters';
                     <View style={{flex:1}} >
                         <FlatList 
                             data={jobs}
-                            keyExtractor={item => `${item.job_publish_id}${item.item_id}`}
+                            keyExtractor={(item, index) => index.toString()}
                             renderItem={({item, index}) => {
                                 return(
                                     <View style={styles.CardView}>
@@ -44,16 +45,16 @@ import { scale, verticalScale } from 'react-native-size-matters';
                                                 <Text style={textStyles.title} >Job Title:</Text>
                                             </View>
                                             <View style={styles.ColumnRight} >
-                                                <Text style={textStyles.title} > {item.JobTitle}</Text>
+                                                <Text style={textStyles.title} >{item.job_title}</Text>
                                             </View>
                                         </View>
 
                                         <View style={styles.Row}>
                                             <View style={styles.ColumnLeft} >
-                                                <Text style={textStyles.title} >Job Type:</Text>
+                                                <Text style={textStyles.title} >Company name:</Text>
                                             </View>
                                             <View style={styles.ColumnRight} >
-                                                <Text style={textStyles.title} >{item.JobType}</Text>
+                                                <Text style={textStyles.title} >{item.company_name}</Text>
                                             </View>
                                         </View>
 
@@ -125,7 +126,8 @@ const styles = StyleSheet.create({
         overflow:"hidden",
         width:width-10, 
         margin:5, 
-        borderWidth:2, 
+        borderWidth:1, 
+        borderColor:"rgba(0,0,0,.05)",
         borderRadius:5,  
         alignSelf:"center",
         shadowColor: "#000",
@@ -141,11 +143,14 @@ const styles = StyleSheet.create({
     Row:{
         flexDirection:"row",
         borderBottomWidth:1,
+        borderColor:"rgba(0,0,0,.05)",
     },
     ColumnLeft:{
         width:AppScreenWidth/2,
         paddingVertical:5, 
+        justifyContent:"center",
         paddingHorizontal:10, 
+        borderColor:"rgba(0,0,0,.05)",
         borderRightWidth:1
     },
     ColumnRight:{
@@ -154,7 +159,7 @@ const styles = StyleSheet.create({
         paddingHorizontal:10
     },
     button:{
-        width:width-14,
+        width:width-12,
         justifyContent:"center",
         backgroundColor:colors.dark_primary_color,
         padding:10, 

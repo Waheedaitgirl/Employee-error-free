@@ -22,8 +22,8 @@ export const fonts = {
 }
 
 export const colors = {
-    dark_primary_color: "#0090FF",
-    default_primary_color:"#FFC107",
+    dark_primary_color: "#03a9f4",
+    default_primary_color:"#0090FF",
     light_primary_color:"#FFECB3",
     text_primary_color:"#212121",
     accent_color:"#FF9800",

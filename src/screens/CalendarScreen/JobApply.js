@@ -89,10 +89,10 @@ import RenderHtml from 'react-native-render-html';
                            
                           
                        </View> */}
-                    <RenderHtml
-                        contentWidth={AppScreenWidth}
-                        source={{html:`${job.job_description}`}}
-                    />
+                        <RenderHtml
+                            contentWidth={AppScreenWidth}
+                            source={{html:`${job.job_description}`}}
+                        />
                    
                     </View>
                 </View>

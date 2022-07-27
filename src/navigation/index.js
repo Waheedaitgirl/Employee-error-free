@@ -12,7 +12,7 @@ const MainApp = () => {
         <NavigationContainer>
             <StatusBar
                 backgroundColor={colors.dark_primary_color}
-                barStyle={'dark-content'}
+                barStyle={'light-content'}
             />
             {
                 is_logged_in
