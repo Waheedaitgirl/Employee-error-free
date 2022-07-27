@@ -23,6 +23,7 @@ const LeaveCard = memo(({item,onPress,onDeleteItem}) => {
             setIsErrorVisible(true)
         })
     }
+    
       return(
         <TouchableOpacity 
            

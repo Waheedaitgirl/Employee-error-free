@@ -45,12 +45,18 @@ import LeaveCard from './LeaveCard'
         
 
         const FilterByTitle = (title) => {
-            let se = title.toLowerCase()
-            const regex = new RegExp(`${se}`);
-            let draft_data = data.filter(function(item){ 
-                return item.job_title.toLowerCase().match(regex) || item.expense_report_title.toLowerCase().match(regex) ||  item.module_status_name.toLowerCase().match(regex)
-             })
-             setFilterData(draft_data)
+            try{
+                let se = title.toLowerCase()
+                const regex = new RegExp(`${se}`);
+                let draft_data = data.filter(function(item){ 
+                    return item.policy_name.toLowerCase().match(regex)
+                 })
+                 setFilterData(draft_data)
+            }
+            catch(err){
+                setFilterData(data)
+            }
+          
         }
 
         const renderItem = ({ item }) => (
@@ -63,6 +69,47 @@ import LeaveCard from './LeaveCard'
                }}
             />
         ); 
+        const filterbydate = (date , is_start) => {
+            if(is_start){
+                setStartDate(date)
+            }else{
+                setEndDate(date)
+            }
+            if(startDate !== "" || endDate !== ""){
+                let date_filter = data.filter(function(item){
+                   
+                        if(moment(item.requested_date).isBetween(moment(startDate), moment(endDate))){
+                            return item
+                        }
+                    })
+              
+                setFilterData(date_filter)
+            }           
+        }
+        const FilterbyStatus = (status) => {
+            
+            if(status == "All"){
+                setFilterData(data)
+            }else if(status == "0" || status == 0){
+                let draft_data = data.filter(function(item){
+                    return item.status == "0" || item.status == 0
+                })
+                setFilterData(draft_data) 
+            }
+            else if(status == "1" || status == 1){
+                let draft_data = data.filter(function(item){
+                    return item.status == "1" || item.status == 1
+                })
+                setFilterData(draft_data) 
+            }
+            else if(status == "2" || status == 2){
+                let draft_data = data.filter(function(item){
+                    return item.status == "2" || item.status == 2
+                })
+                setFilterData(draft_data) 
+            }
+            
+        }
 
         if(loading){
             return(  
@@ -74,7 +121,7 @@ import LeaveCard from './LeaveCard'
                         isdrawer={true}
                         SearchPress={(text) => FilterByTitle(text)}
                         NotificationPress={() => alert("NotificationPress")}
-                        FilterPress={(data) => alert(data)}
+                        FilterPress={(data) => FilterbyStatus(data)}
                         onPress={() => navigation.openDrawer()}
                         title={"Leaves List"}
                     />
@@ -93,8 +140,9 @@ import LeaveCard from './LeaveCard'
                         isdrawer={true}
                         SearchPress={(text) => FilterByTitle(text)}
                         NotificationPress={() => alert("NotificationPress")}
-                        FilterPress={(data) => alert(data)}
+                        FilterPress={(data) => FilterbyStatus(data)}
                         onPress={() => navigation.openDrawer()}
+                        is_leave_header = {true}
                         title={"Leaves List"}
                     />
                     <View style={{flexDirection:"row",width:AppScreenWidth, justifyContent:"space-between"}} >

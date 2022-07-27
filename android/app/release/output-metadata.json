@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.newtest",
+  "applicationId": "com.recruitbpm.emp",
   "variantName": "release",
   "elements": [
     {
