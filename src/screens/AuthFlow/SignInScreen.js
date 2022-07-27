@@ -129,9 +129,9 @@ const SignInScreen = ({navigation}) => {
           loadingText={'Processing'}
         />
         <Spacer />
-        <DrawLine height={0.6} />
-        <Spacer />
-        <Text style={{...textStyles.Label, textAlign: 'center'}}>OR</Text>
+        {/* <DrawLine height={0.6} />
+        <Spacer /> */}
+        {/* <Text style={{...textStyles.Label, textAlign: 'center'}}>OR</Text> */}
         {/* <View
           style={{
             width: AppScreenWidth,
