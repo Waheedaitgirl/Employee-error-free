@@ -42,9 +42,9 @@ import { getStatusList } from '../../api';
                         title={"DashBoard"}
                     />
                     <View style={{width:AppScreenWidth,marginVertical:scale(5) ,alignItems:"flex-start", alignSelf:"center"}} >
-                        <Text style={styles.headingtext} >Welcome !</Text>
+                        <Text style={styles.headingtext} >Welcome!</Text>
                         <Text style={styles.nameText} >{user.preferred_name}</Text>
-                        <Text style={styles.paragraph} >Streamline your company’s business efficiently managing candidates, jobs and placements</Text>
+                        {/* <Text style={styles.paragraph} >Streamline your company’s business efficiently managing candidates, jobs and placements</Text> */}
                     </View>
                     <View style={styles.main} />
                     <View style={styles.row} >
@@ -139,8 +139,8 @@ const styles = StyleSheet.create({
     nameText:{
         ...textStyles.title,
         fontSize:scale(18),
-        marginTop:scale(2), 
-        marginHorizontal:scale(5), 
+        marginTop:-10,
+        marginHorizontal:scale(55), 
         color:"#fff", 
         textAlign:"left"
     },
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
         justifyContent:"center",
         alignItems:"center",
         borderRadius:scale(10),
-        borderBottomWidth:3,
+        borderBottomWidth:0,
         borderWidth:0,
         borderColor:"#fff",
         borderBottomColor:colors.secondary_text_color,
