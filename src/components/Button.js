@@ -8,6 +8,7 @@ const CustomButton = ({onPress,width=AppScreenWidth, loading ,backgroundColor= c
     <TouchableOpacity
         style={{
         ...styles.button,
+        alignSelf:"center",
         width:width,
         backgroundColor:backgroundColor
     }}

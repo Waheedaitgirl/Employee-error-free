@@ -7,11 +7,12 @@ import { AppScreenWidth } from "../constants/sacling";
 import Modal from 'react-native-modal';
 import Entypo from 'react-native-vector-icons/Entypo'
 import FontAwesome from  'react-native-vector-icons/FontAwesome'
-import Camera from '../assets/images/camera.svg'
+
 import Disk from '../assets/images/Disk.svg'
 import { textStyles } from "../styles";
 import { colors, fonts } from "../constants/theme";
-const UpLoadComponent = ({wdt= AppScreenWidth-scale(10),filepath, setFilePath}) => {
+import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsive-screen";
+const UpLoadComponent = ({wdt= AppScreenWidth-scale(10),filepath, setFilePath ,is_profile_image=false, title="Upload Document"}) => {
     const [isModalVisible,  setIsModalVisible] = useState(false)
     const Pickimage = () => {
         ImagePicker.openPicker({
@@ -57,10 +58,11 @@ const UpLoadComponent = ({wdt= AppScreenWidth-scale(10),filepath, setFilePath}) 
           setIsModalVisible(false)
         }
       }
+
     return(
-        <View style={{...styles.mainView,  width:wdt, }}>
-            <Text style={styles.text}>Upload Document</Text>
-            <TouchableOpacity 
+        <View style={{...styles.mainView,marginVertical:is_profile_image? 0 :scale(10),  width:wdt, }}>
+            {!is_profile_image && <Text style={styles.text}>{title}</Text> }
+            {!is_profile_image && <TouchableOpacity 
                 onPress={() => {
                     setIsModalVisible(true)
                 }}
@@ -77,6 +79,14 @@ const UpLoadComponent = ({wdt= AppScreenWidth-scale(10),filepath, setFilePath}) 
                     />
               </View>
             </TouchableOpacity>
+            }
+            {is_profile_image && 
+                <TouchableOpacity 
+                    onPress={() => {
+                    setIsModalVisible(true)
+                }} style={{position:"absolute",right:widthPercentageToDP(32), top:heightPercentageToDP(-6),}}>
+                    <Entypo  name="camera" style={{backgroundColor:"#0008", padding:5,borderRadius:100}} color={colors.dark_primary_color} size={scale(22)} />
+                </TouchableOpacity>}
             <Modal
                 style={{
                     justifyContent: 'flex-end',
@@ -99,7 +109,7 @@ const UpLoadComponent = ({wdt= AppScreenWidth-scale(10),filepath, setFilePath}) 
                         onPress={() => {
                             Pickfromcamera()
                         }} >
-                        <Camera width={scale(20)} height={scale(20)} />
+                       <Entypo  name="camera" color={colors.dark_primary_color} size={scale(20)} />
                         <Text style={{...styles.upLoadText, color:colors.text_primary_color}}>Camera</Text>
                     </TouchableOpacity>
 
@@ -108,18 +118,18 @@ const UpLoadComponent = ({wdt= AppScreenWidth-scale(10),filepath, setFilePath}) 
                         onPress={() => {
                             Pickimage()
                         }} >
-                        <FontAwesome size={scale(20)} name="image"  color={"#000380"} />
+                        <FontAwesome size={scale(20)} name="image"  color={"#0090FF"} />
                         <Text style={{...styles.upLoadText, color:colors.text_primary_color}}>Gallery</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity 
+                    {!is_profile_image&& <TouchableOpacity 
                         style={styles.buttonStyle}
                         onPress={() => {
                             pickDocument()
                         }} >
                           <Disk width={scale(20)} height={scale(20)} />
                         <Text style={{...styles.upLoadText, color:colors.text_primary_color}}>Pick File</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> }
 
                     <TouchableOpacity
                         style={styles.cancel_button}
@@ -204,7 +214,7 @@ const styles = StyleSheet.create({
         alignSelf:"center",
         marginVertical:scale(10),
         width:AppScreenWidth,
-        borderRadius: scale(14),
+        borderRadius: scale(5),
         height: verticalScale(40),
       },
     

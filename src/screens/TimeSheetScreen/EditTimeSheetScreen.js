@@ -17,6 +17,8 @@ import { AppScreenWidth } from '../../constants/sacling';
 import { colors, fonts } from '../../constants/theme';
 import BlockLoading from '../../components/BlockLoading';
 import AlertModal from '../../components/AlertModal';
+import ErrorModal from '../../components/ErrorModal';
+import SuccessModal from '../../components/SuccessModal';
 import {getEditTimeSheetDetails, getJobWorkingDays,EditTimeSheet, jobTimeTypes } from '../../api';
 import BaseUrl from '../../api/BaseUrl';
 import CustomStatusBar from '../../components/StatusBar';
@@ -58,6 +60,10 @@ const MODULE_ID = '52'
         const [date_error_message , setDateErrorMessage] = useState(null)
         const [error_messaage , set_error_messsage] = useState(null)
         const [visible, setVisible] = useState(false);
+        const [All_Done , setAllDone] = useState(false)
+        const [submissionError , setsubmissionError] = useState(false)
+        const [processing , setProcessing] = useState(false)
+        const [message_to_show_in_modal, setMessageToShowInMdodal] = useState("")
         useEffect(() => {
            
             getnumberofworkingdays(item.log_date)
@@ -290,21 +296,46 @@ const MODULE_ID = '52'
                         } 
                        
                         EditTimeSheet(item.time_sheet_id, data).then((response) => {
-                            if(response.status === 200){
-                                alert("TimeSheet Added Successfully")
+                            if(response.status ===  200){
+                                if(is_draft){
+                                    setMessageToShowInMdodal("TimeSheet draft saved successfully")
+                                }else{
+                                    setMessageToShowInMdodal("TimeSheet submitted successfully")
+                                }
+                                
+                                setProcessing(false)
+                                setAllDone(true)
+                                setsubmissionError(false)
+
                             }else{
-                                alert("Some Error in Adding Time Sheet")
+                                if(is_draft){
+                                    setMessageToShowInMdodal("TimeSheet draft has some error")
+                                }else{
+                                    setMessageToShowInMdodal("TimeSheet has some error")
+                                }
+                                
+                                setProcessing(false)
+                                setAllDone(true)
+                                setsubmissionError(true)
                             }
-                            
-                            setLoading(false)
+                           setLoading(false)
                          }).catch((err) => {
-                             alert("Some Error in Adding Time Sheet")
-                             setLoading(false)
+                            if(is_draft){
+                                setMessageToShowInMdodal("TimeSheet draft has some error")
+                            }else{
+                                setMessageToShowInMdodal("TimeSheet has some error")
+                            }
+                            setProcessing(false)
+                            setAllDone(true)
+                            setsubmissionError(true)
+                            setLoading(false)
                          })
                     }).catch((err) => {
+                        setMessageToShowInMdodal("Attachment does not uploaded")
+                        setProcessing(false)
+                        setAllDone(true)
+                        setsubmissionError(true)
                         setLoading(false)
-                        alert("Error in File Upload")
-                        console.log(err, "err");
                     })
                     
                 }else{
@@ -327,16 +358,39 @@ const MODULE_ID = '52'
                     } 
                   
                     EditTimeSheet(item.time_sheet_id, data).then((response) => {
-                        if(response.status === 200){
-                            alert("TimeSheet Added Successfully")
+                        if(response.status ===  200){
+                            if(is_draft){
+                                setMessageToShowInMdodal("TimeSheet draft saved successfully")
+                            }else{
+                                setMessageToShowInMdodal("TimeSheet submitted successfully")
+                            }
+                            
+                            setProcessing(false)
+                            setAllDone(true)
+                            setsubmissionError(false)
+
                         }else{
-                            alert("Some Error in Adding Time Sheet")
+                            if(is_draft){
+                                setMessageToShowInMdodal("TimeSheet draft has some error")
+                            }else{
+                                setMessageToShowInMdodal("TimeSheet has some error")
+                            }
+                            
+                            setProcessing(false)
+                            setAllDone(true)
+                            setsubmissionError(true)
                         }
-                        
-                        setLoading(false)
+                       setLoading(false)
                      }).catch((err) => {
-                         alert("Some Error in Adding Time Sheet")
-                         setLoading(false)
+                        if(is_draft){
+                            setMessageToShowInMdodal("TimeSheet draft has some error")
+                        }else{
+                            setMessageToShowInMdodal("TimeSheet has some error")
+                        }
+                        setProcessing(false)
+                        setAllDone(true)
+                        setsubmissionError(true)
+                        setLoading(false)
                      })
                 }
             }
@@ -554,7 +608,7 @@ const MODULE_ID = '52'
                                 loading={draft}
                                 loadingText={"Saving"}
                                 onPress={() => ValidateData(true)}
-                                text={"Draft"}
+                                text={"Update"}
                                 //backgroundColor={colors.delete_icon}
                                 marginTop={scale(10)}
                             />
@@ -570,6 +624,30 @@ const MODULE_ID = '52'
                         setVisible={() => setVisible(false)}
                         error_messaage={error_messaage}
                         title={"Form Submission Error"} />
+                    }
+                    {
+                        All_Done
+                        ?
+                        submissionError ? 
+                            <ErrorModal 
+                                is_error={true}
+                                isVisible={visible}
+                                
+                                onClose={() => setVisible(false)}
+                                error_messaage={error_messaage}
+                                title={error_messaage} 
+                            />
+                            : 
+                                <SuccessModal 
+                                    isVisible={All_Done}
+                                    title={`${message_to_show_in_modal}`}
+                                    onClose={() =>  {
+                                        setAllDone(false)
+                                        navigation.goBack()
+                                    }}
+                                /> 
+                        :
+                        null
                     }
                 </NativeBaseProvider>
             </SafeAreaProvider>

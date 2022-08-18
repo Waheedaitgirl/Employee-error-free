@@ -30,6 +30,14 @@ import EditLeaveScreen from '../screens/LeavesScreen/EditLeaveScreen';
 import CalendarScreen from '../screens/CalendarScreen';
 import JobApplyScreen from '../screens/CalendarScreen/JobApply';
 
+
+
+// Refraals Screen
+
+import MyReferencesScreen from '../screens/MyReferencesScreen';
+import MyRefrerralsScreen from '../screens/MyReferralsScreen';
+import AddCertificateScreen from '../screens/EditProfileScreen/AddCertificateScreen';
+
 import DrawerContent from './DrawerContent';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -50,6 +58,27 @@ const MainStack = () => {
             <Stack.Screen 
                 name="EditProfileScreen" 
                 component={EditProfileScreen} 
+                options={{
+                    headerShown:false
+                }}
+            />
+            <Stack.Screen 
+                name="AddCertificateScreen" 
+                component={AddCertificateScreen} 
+                options={{
+                    headerShown:false
+                }}
+            />
+            <Stack.Screen 
+                name="MyReferencesScreen" 
+                component={MyReferencesScreen} 
+                options={{
+                    headerShown:false
+                }}
+            />
+            <Stack.Screen 
+                name="MyRefrerralsScreen" 
+                component={MyRefrerralsScreen} 
                 options={{
                     headerShown:false
                 }}

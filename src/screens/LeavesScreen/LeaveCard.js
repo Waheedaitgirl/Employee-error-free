@@ -23,7 +23,7 @@ const LeaveCard = memo(({item,onPress,onDeleteItem}) => {
             setIsErrorVisible(true)
         })
     }
-    
+    console.log(item.status, "Leave iTem");
       return(
         <TouchableOpacity 
            
@@ -69,14 +69,14 @@ const LeaveCard = memo(({item,onPress,onDeleteItem}) => {
                     style={{
                         ...styles.textStyle,
                         fontSize:scale(11), 
-                        color:item.status === "0" ? "#000" : item.status === 1 ? "#ffff" : item.status === 2 ? "#fff":"#fff", 
-                        backgroundColor:item.status === "0" ? "#0002" : item.status === 1 ? "green" : item.status === 2 ? colors.delete_icon:colors.delete_icon, 
+                        color:"#fff", //item.status == "0" ? "#000" : item.status == 1 ? "#ffff" : item.status == 2 ? "#fff":"#fff", 
+                        backgroundColor:item.status === "0" ? "#1caf9a" : item.status == 1 ? "green" : item.status == 2 ? colors.delete_icon:colors.delete_icon, 
                         paddingHorizontal:scale(10), 
                         paddingVertical:scale(2), 
-                        borderRadius:scale(5) }}>{item.status === "0" ? "Pending" : item.status === 1 ? "Approved" : item.status === 2 ? "Declined":"Declined"}</Text>
+                        borderRadius:scale(5) }}>{item.status == "0" ? "Pending" : item.status == 1 ? "Accepted" : item.status == 2 ? "Declined":"Declined"}</Text>
             </View>
             {
-                item.status !== "1" && item.status !== "2" &&
+                item.status != "1" && item.status != "2" &&
                     <View style={styles.buttonView} >
                         <TouchableOpacity onPress={onPress} style={{...styles.actionButton}} >
                             <MaterialCommunityIcons name="clock-edit" color={colors.dark_primary_color} size={scale(22)} />

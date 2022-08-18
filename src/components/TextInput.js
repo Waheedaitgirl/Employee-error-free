@@ -31,8 +31,7 @@ const CustomTextInput = ({
                 paddingTop:scale(5), 
                 marginVertical:scale(0)
             }} >
-            { 
-                value !== "" && 
+          
                 <Animated.Text 
                     entering={FadeInDown} 
                     exiting={FadeOutDown}
@@ -40,7 +39,7 @@ const CustomTextInput = ({
                     style={{...textStyles.Label, color:lableColor}}>
                         {placeholder}
                 </Animated.Text>
-            }
+          
             <View>
             <TextInput
                 secureTextEntry={eyeon}
@@ -51,7 +50,7 @@ const CustomTextInput = ({
                 onChangeText={(text) => onChangeText(text)}
                 style={{
                     backgroundColor:"#fff", 
-                    marginVertical:verticalScale(5),
+                    marginBottom:verticalScale(5),
                     width:width-scale(20), 
                     borderColor:colors.divide_color,
                     borderBottomWidth:1,

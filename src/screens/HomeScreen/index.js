@@ -39,7 +39,7 @@ import { getStatusList } from '../../api';
                         show_backButton={true}
                         isdrawer={true}
                         onPress={() => navigation.openDrawer()}
-                        title={"DashBoard"}
+                        title={"Dashboard"}
                     />
                     <View style={{width:AppScreenWidth,marginVertical:scale(5) ,alignItems:"flex-start", alignSelf:"center"}} >
                         <Text style={styles.headingtext} >Welcome!</Text>
@@ -66,7 +66,7 @@ import { getStatusList } from '../../api';
                                 color={colors.dark_primary_color} 
                                 size={scale(50)} 
                             />
-                            <Text style={{...styles.textStyle}}>Expenses</Text>
+                            <Text style={{...styles.textStyle}}>My Expense</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.row} >
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
         height:((AppScreenWidth/2)-scale(20)),
         backgroundColor:"#fff",
         elevation:10,
-        padding:hp(5),
+        padding:hp(4),
         justifyContent:"center",
         alignItems:"center",
         borderRadius:scale(10),

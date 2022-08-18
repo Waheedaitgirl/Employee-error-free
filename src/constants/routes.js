@@ -23,5 +23,8 @@ export const MainRoutes = {
     EditExpenseScreen:"EditExpenseScreen",
     AddLeaveScreen:"AddLeaveScreen",
     EditLeaveScreen:"EditLeaveScreen",
-    JobApplyScreen:"JobApplyScreen"
+    JobApplyScreen:"JobApplyScreen",
+    AddCertificateScreen:"AddCertificateScreen",
+    MyRefrerralsScreen:"MyRefrerralsScreen",
+    MyReferencesScreen:"MyReferencesScreen"
 }

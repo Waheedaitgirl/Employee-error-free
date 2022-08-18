@@ -5,6 +5,7 @@ import { Signout } from "../store/actions/LoginActions";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Entypo from 'react-native-vector-icons/Entypo'
 import {MainRoutes} from '../constants/routes'
 import { scale } from "react-native-size-matters";
@@ -32,10 +33,10 @@ const DrawerContentt = ({ navigation, props }) => {
                                 }}
                             />
                             <View style={{justifyContent:"flex-start"}}>
-                                <Text style={styles.textStyleHeader}>{user.preferred_name}</Text>
+                                <Text style={styles.textStyleHeader}>{user.first_name} {user.last_name}</Text>
                             </View> 
                             <TouchableOpacity
-                               // onPress={() => navigation.navigate(MainRoutes.EditProfileScreen) }
+                                onPress={() => navigation.navigate(MainRoutes.EditProfileScreen) }
                                 style={{
                                     position:"absolute",
                                     top:scale(10),
@@ -94,8 +95,8 @@ const DrawerContentt = ({ navigation, props }) => {
                             </View>
                             <Text style={styles.textStyle}>Leaves</Text>
                         </TouchableOpacity>
-                        {/* <TouchableOpacity  
-                            onPress={() => navigation.navigate(MainRoutes.CalendarScreen) } 
+                        <TouchableOpacity  
+                            onPress={() => navigation.navigate(MainRoutes.MyReferencesScreen) } 
                             style={styles.btnView}>
                             <View style={{width:scale(20), height:scale(20)}} >    
                                 <Ionicons 
@@ -104,10 +105,10 @@ const DrawerContentt = ({ navigation, props }) => {
                                     size={scale(16)} 
                                 />
                             </View>
-                            <Text style={styles.textStyle}>New Openings</Text>
-                        </TouchableOpacity> */}
-                        {/* <TouchableOpacity  
-                            onPress={() => navigation.navigate(MainRoutes.MyTasksScreen) } 
+                            <Text style={styles.textStyle}>My References</Text>
+                        </TouchableOpacity>
+                         <TouchableOpacity  
+                            onPress={() => navigation.navigate(MainRoutes.MyRefrerralsScreen) } 
                             style={styles.btnView}>
                             <View style={{width:scale(20), height:scale(20)}} >    
                                 <FontAwesome 
@@ -116,8 +117,8 @@ const DrawerContentt = ({ navigation, props }) => {
                                     size={scale(16)} 
                                 />
                             </View>
-                            <Text style={styles.textStyle}>My Tasks</Text>
-                        </TouchableOpacity> */}
+                            <Text style={styles.textStyle}>My Refrerrals</Text>
+                        </TouchableOpacity>
               
             </DrawerContentScrollView>
             <TouchableOpacity  

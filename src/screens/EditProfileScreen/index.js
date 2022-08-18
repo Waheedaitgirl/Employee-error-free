@@ -5,16 +5,14 @@ import { commonStyles,textStyles } from '../../styles';
 import CustomHeader from '../../components/CustomHeader';
 import { colors, fonts } from '../../constants/theme';
 import { AppScreenWidth, hp, width } from '../../constants/sacling';
-import { useSelector } from 'react-redux';
-import {useDispatch} from 'react-redux';
-import { GetStatus } from "../../store/actions/StatusActions";
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import GeneralProfileScreen from './GeneralProfileScreen';
+import ListCertificateScreen from './ListCertificateScreen';
+import AddEducationScreen from './AddEducationScreen';
+import AddExperienceScreen from './AddExperienceScreen';
 
     const EditProfileScreen = ({navigation}) => {
-        const dispatch = useDispatch();
-        const  getstatus = (data) => dispatch(GetStatus(data))
-        const {user} = useSelector(state => state.LoginReducer)
-        
-      
+        const Tab = createMaterialTopTabNavigator();
         return (
             <SafeAreaView style={{flex:1, backgroundColor:colors.dark_primary_color}} >
                 <StatusBar barStyle={"light-content"} />
@@ -25,9 +23,68 @@ import { GetStatus } from "../../store/actions/StatusActions";
                         onPress={() => navigation.openDrawer()}
                         title={"Edit Profile"}
                     />
+                    <View
+                        style={{
+                            height: hp(93),
+                            backgroundColor: '#fff',
+                            alignSelf: 'center',
+                        }}>
+                        <Tab.Navigator
+                            screenOptions={{
+                            activeTintColor: '#50d3a7',
+                            inactiveTintColor: 'gray',
+                            tabBarScrollEnabled: true,
+                            swipeEnabled:false,
+                            tabBarIndicatorStyle: {
+                                backgroundColor: colors.dark_primary_color,
+                                height: 2,
+                            },
+                            tabBarLabelStyle: {
+                                fontSize: scale(12),
+                                fontFamily: fonts.Medium,
+
+                                textTransform: 'none',
+                            },
+                            tabBarItemStyle: {
+                                width: 120,
+                                padding: 0,
+                                paddingTop: 0,
+
+                                borderRadius: 100,
+                            },
+                            tabBarStyle: {
+                                backgroundColor: 'white',
+                            },
+                            }}
+                            sceneContainerStyle={{
+                                backgroundColor: 'white',
+                            }}>
+                            <Tab.Screen
+                                name={'GeneralProfileScreen'}
+                                children={() =>  <GeneralProfileScreen/>}
+                                options={{tabBarLabel: 'General'}}
+                            />
+                          
+                            <Tab.Screen
+                                name={'AddEducationScreen'}
+
+                                children={() =>  <AddEducationScreen />}
+                                options={{tabBarLabel: 'Education'}}
+                            />
+                            <Tab.Screen
+                                name={'AddExperienceScreen'}
+                                children={() =>  <AddExperienceScreen />}
+                                options={{tabBarLabel: 'Experience'}}
+                            />
+                              <Tab.Screen
+                                name={'ListCertificateScreen'}
+                                children={() =>  <ListCertificateScreen />}
+                                options={{tabBarLabel: 'Certificate'}}
+                            />
+                        </Tab.Navigator>
+                    </View>
                 </View>
-            </SafeAreaView>
-            
+            </SafeAreaView> 
         );
     };
 

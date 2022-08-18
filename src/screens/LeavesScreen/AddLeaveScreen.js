@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {ScrollView, Text,View,StyleSheet} from 'react-native';
+import {ScrollView,TouchableOpacity, Text,View,StyleSheet} from 'react-native';
 import CustomButton from '../../components/Button';
 import {NativeBaseProvider, Select, Icon } from "native-base";
 import { scale, verticalScale } from 'react-native-size-matters';
@@ -13,6 +13,7 @@ import ErrorModal from '../../components/ErrorModal';
 import SuccessModal from '../../components/SuccessModal';
 import Spacer from '../../components/Spacer';
 import selectStyles from '../../styles/selectStyles';
+import Entypo from 'react-native-vector-icons/Entypo'
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { addLeaveRequest, getleavesBalance, getpolicylist } from '../../api';
@@ -27,7 +28,7 @@ const _maxDate = moment().add(1, 'days').format(_format)
         const [leaveNote, setLeaveNotes] = useState("")
         const [leavenoteErrorMessage , setLeaveNoteErrorMessage] = useState("")
         const [selected_policy,setselectedPolicy] = useState(null)
-        const [number_of_hours, setNumberofHours] = useState("08:00")
+        const [number_of_hours, setNumberofHours] = useState( moment(endDate).diff(moment(startDate), 'days') < 2 && is_half_day ? "04:00":"08:00")
         const [date_error, setDateError] = useState(false)
         const [validation_error, setValidationError]= useState(false)
         const [validation_error_messaage , setValidationErrorMessaage] = useState(null)
@@ -37,6 +38,7 @@ const _maxDate = moment().add(1, 'days').format(_format)
         const [All_Done , setAllDone] = useState(false)
         const [submissionError , setsubmissionError] = useState(false)
         const [processing , setProcessing] = useState(false)
+        const [is_half_day, setIsHalfDay] = useState(false)
         useEffect(() => {
             getpolicylist(user.account_id).then((response) => {
                 if(response.status === 200){
@@ -49,6 +51,9 @@ const _maxDate = moment().add(1, 'days').format(_format)
             })
         },[])
         
+        useEffect(() => {
+            setNumberofHours(moment(endDate).diff(moment(startDate), 'days') < 2 && is_half_day ? "04:00":"08:00")
+        },[is_half_day])
         
         const filterbydate = (date , is_start) => {
             setDateError(false)
@@ -153,7 +158,7 @@ const _maxDate = moment().add(1, 'days').format(_format)
                 "start_date":startDate,
                 "end_date":endDate,
                 "requested_hours":number_of_hours,
-                "is_half_day":"0",
+                "is_half_day":is_half_day ? "1":"0",
                 "status":0,
                 "comments":leaveNote,
                 "module_id":"4",
@@ -309,6 +314,12 @@ const _maxDate = moment().add(1, 'days').format(_format)
                                 onChangeText={(date) => filterbydate(date , false) }
                             />
                         </View>
+                        {
+                            date_error && 
+                            <View style={styles.RowDate}>
+                                <Text style={textStyles.errorText} >End date must greater or same then start date </Text>
+                            </View>
+                        }
                         <CustomTextInput
                             placeholder={'Requested Hours'}
                             value={number_of_hours !== "" ?`${number_of_hours} Hours`:""}
@@ -321,11 +332,18 @@ const _maxDate = moment().add(1, 'days').format(_format)
                             lableColor={colors.dark_primary_color}
                         />
                         {
-                            date_error && 
-                            <View style={styles.RowDate}>
-                                <Text style={textStyles.errorText} >End date must greater or same then start date </Text>
+                            moment(endDate).diff(moment(startDate), 'days') < 2 ? 
+                            <View> 
+                                <Text style={{...styles.buleText, fontSize:scale(14)}}>Half day </Text>
+                            <TouchableOpacity 
+                                onPress={() => setIsHalfDay(!is_half_day)}
+                                style={{width:20, backgroundColor:is_half_day?colors.dark_primary_color:"#fff", height:20, borderWidth:1, borderRadius:3, borderColor:"#0002"}} >
+                                    {is_half_day && <Entypo name='check'  color={"#fff"} size={18} />}
+                            </TouchableOpacity> 
                             </View>
+                            : null
                         }
+                        
                         <CustomTextInput
                             placeholder={'Reason Note'}
                             value={leaveNote}
@@ -365,14 +383,14 @@ const _maxDate = moment().add(1, 'days').format(_format)
                         submissionError ? 
                                 <ErrorModal 
                                     isVisible={All_Done}
-                                    title='Some Error in Adding Leave request'
-                                    onClose={() =>  setAllDone(false)}
+                                    title='Some Error in submitting leave request'
+                                    onClose={() => { setAllDone(false) , navigation.goBack()}}
                                 /> 
                             : 
                                 <SuccessModal 
                                     isVisible={All_Done}
                                     title='Leave request Added Successfully'
-                                    onClose={() =>  setAllDone(false)}
+                                    onClose={() => { setAllDone(false) , navigation.goBack()}}
                                 /> 
                         :
                         null

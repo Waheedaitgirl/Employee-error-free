@@ -24,7 +24,7 @@ import CustomHeader from '../../components/CustomHeader';
 import MICROSOFT from '../../assets/images/microsoft.svg';
 import { candidateLogin } from '../../api';
 const SignInScreen = ({navigation}) => {
-  const [email_address, setUseremail] = useState(''); // dr.aftabufaq@gmail.com
+  const [email_address, setUseremail] = useState('niveba2588@shbiso.com'); // dr.aftabufaq@gmail.com
   const [UseremailErrorMesage, setUseremailErrorMessaage] = useState('');
   const [password, setPassword] = useState(''); //123456
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
@@ -35,7 +35,7 @@ const SignInScreen = ({navigation}) => {
   const  userLogin = (data) => dispatch(Login(data))
   const submitdate = () => {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    if (!reg.test(email_address)) {
+    if (!reg.test(email_address.trim())) {
       setUseremailErrorMessaage('Please enter valid email');
       setPasswordErrorMessage('');
       return;
@@ -49,7 +49,7 @@ const SignInScreen = ({navigation}) => {
     setPasswordErrorMessage('');
     setUseremailErrorMessaage('');
     let data ={
-      email_address:email_address,
+      email_address:email_address.trim(),
       userpassword:password,
       type:"candidate"
     }

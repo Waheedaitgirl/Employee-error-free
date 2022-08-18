@@ -19,6 +19,8 @@ import { AppScreenWidth } from '../../constants/sacling';
 import { colors, fonts } from '../../constants/theme';
 import BlockLoading from '../../components/BlockLoading';
 import AlertModal from '../../components/AlertModal';
+import ErrorModal from '../../components/ErrorModal';
+import SuccessModal from '../../components/SuccessModal';
 import { getJobWorkingDays,addTimeSheet, jobTimeTypes, listCandidateJobs } from '../../api';
 import CustomTextInput from '../../components/TextInput';
 const MODULE_ID = '52'
@@ -57,8 +59,10 @@ import BaseUrl from '../../api/BaseUrl';
         const [date_error_message , setDateErrorMessage] = useState(null)
         const [error_messaage , set_error_messsage] = useState(null)
         const [visible, setVisible] = useState(false);
-
-
+        const [All_Done , setAllDone] = useState(false)
+        const [submissionError , setsubmissionError] = useState(false)
+        const [processing , setProcessing] = useState(false)
+        const [message_to_show_in_modal, setMessageToShowInMdodal] = useState("")
        
         useEffect(() => {
             listCandidateJobs(user.account_id, user.candidate_id ,"1").then((response) => {
@@ -172,7 +176,7 @@ import BaseUrl from '../../api/BaseUrl';
             }
             if(startDate === ""){
                 setVisible(true)
-                set_error_messsage("Please select start Date");
+                set_error_messsage("Please select start date");
                 return  
             }
             if(alldata.length < 1){
@@ -262,16 +266,47 @@ import BaseUrl from '../../api/BaseUrl';
                         } 
                        
                         addTimeSheet(data).then((data) => {
-                            alert("TimeSheet Added Successfully")
-                            setLoading(false)
+                            if(response.status ===  200){
+                                if(is_draft){
+                                    setMessageToShowInMdodal("TimeSheet draft saved successfully")
+                                }else{
+                                    setMessageToShowInMdodal("TimeSheet submitted successfully")
+                                }
+                                
+                                setProcessing(false)
+                                setAllDone(true)
+                                setsubmissionError(false)
+
+                            }else{
+                                if(is_draft){
+                                    setMessageToShowInMdodal("TimeSheet draft has some error")
+                                }else{
+                                    setMessageToShowInMdodal("TimeSheet has some error")
+                                }
+                                
+                                setProcessing(false)
+                                setAllDone(true)
+                                setsubmissionError(true)
+                            }
+                           setLoading(false)
                          }).catch((err) => {
-                             alert("Some Error in Adding Time Sheet")
-                             setLoading(false)
+                                if(is_draft){
+                                    setMessageToShowInMdodal("TimeSheet draft has some error")
+                                }else{
+                                    setMessageToShowInMdodal("TimeSheet has some error")
+                                }
+                                setProcessing(false)
+                                setAllDone(true)
+                                setsubmissionError(true)
+                                setLoading(false)
                          })
                     }).catch((err) => {
+                       
+                        setMessageToShowInMdodal("Attachment does not uploaded")
+                        setProcessing(false)
+                        setAllDone(true)
+                        setsubmissionError(true)
                         setLoading(false)
-                        alert("Error in File Upload")
-                        console.log(err, "err");
                     })
                     
                 }else{
@@ -280,20 +315,53 @@ import BaseUrl from '../../api/BaseUrl';
                         job_id:selected_job,
                         candidate_id:user.candidate_id,
                         account_id:user.account_id,
-                        module_status_id:is_draft?"902196":"902197",
+                        module_status_id:is_draft
+                                ?
+                                timesheet_status.filter(obj => obj.module_status_name === 'Draft').map(o => o.module_status_id)[0]
+                                :
+                                timesheet_status.filter(obj => obj.module_status_name === 'Submitted').map(o => o.module_status_id)[0],
+                            
                         time_sheet_view:time_sheet_type,
                         placement_id:s_job.placement_id,
                         comments:comments,
                         is_attachment:"0",
                         logs:logs
                     } 
-                    addTimeSheet(data).then((data) => {
-                       alert("TimeSheet Added Successfully")
+                    addTimeSheet(data).then((response) => {
+                        if(response.status ===  200){
+                            if(is_draft){
+                                setMessageToShowInMdodal("TimeSheet draft saved successfully")
+                            }else{
+                                setMessageToShowInMdodal("TimeSheet submitted successfully")
+                            }
+                            
+                            setProcessing(false)
+                            setAllDone(true)
+                            setsubmissionError(false)
+
+                        }else{
+                            if(is_draft){
+                                setMessageToShowInMdodal("TimeSheet draft has some error")
+                            }else{
+                                setMessageToShowInMdodal("TimeSheet has some error")
+                            }
+                            
+                            setProcessing(false)
+                            setAllDone(true)
+                            setsubmissionError(true)
+                        }
                        setLoading(false)
-                    }).catch((err) => {
-                        alert("Some Error in Adding Time Sheet")
-                        setLoading(false)
-                    })
+                     }).catch((err) => {
+                            if(is_draft){
+                                setMessageToShowInMdodal("TimeSheet draft has some error")
+                            }else{
+                                setMessageToShowInMdodal("TimeSheet has some error")
+                            }
+                            setProcessing(false)
+                            setAllDone(true)
+                            setsubmissionError(true)
+                            setLoading(false)
+                     })
                 }
             }
         }
@@ -356,6 +424,7 @@ import BaseUrl from '../../api/BaseUrl';
             }
            
         }
+
         if(api_error){
             return(
                 <SafeAreaProvider>
@@ -365,7 +434,7 @@ import BaseUrl from '../../api/BaseUrl';
                             show_backButton={true}
                             isdrawer={false}
                             onPress={() => navigation.goBack()}
-                            title={"Details TimeSheet"}
+                            title={"Add TimeSheet"}
                         />
                         <Spacer height={AppScreenWidth/2} />
                         <Image 
@@ -532,7 +601,7 @@ import BaseUrl from '../../api/BaseUrl';
                                 loading={draft}
                                 loadingText={"Saving"}
                                 onPress={() =>ValidateData(true) }
-                                text={"Save as a Draft"}
+                                text={"Save as a draft"}
                                 marginTop={scale(10)}
                             />
                         </View>
@@ -545,13 +614,38 @@ import BaseUrl from '../../api/BaseUrl';
                     }
                     { 
                         visible && 
-                            <AlertModal 
+                            <ErrorModal 
                                 is_error={true}
-                                visible={visible}
-                                setVisible={() => setVisible(false)}
+                                isVisible={visible}
+                                
+                                onClose={() => setVisible(false)}
                                 error_messaage={error_messaage}
-                                title={"Form Submission Error"} 
+                                title={error_messaage} 
                             />
+                    }
+                    {
+                        All_Done
+                        ?
+                        submissionError ? 
+                                <ErrorModal 
+                                    isVisible={All_Done}
+                                    title={`${message_to_show_in_modal}`}
+                                    onClose={() =>  {
+                                        setAllDone(false)
+                                        navigation.goBack()
+                                    }}
+                                /> 
+                            : 
+                                <SuccessModal 
+                                    isVisible={All_Done}
+                                    title={`${message_to_show_in_modal}`}
+                                    onClose={() =>  {
+                                        setAllDone(false)
+                                        navigation.goBack()
+                                    }}
+                                /> 
+                        :
+                        null
                     }
                 </NativeBaseProvider>
             </SafeAreaProvider>

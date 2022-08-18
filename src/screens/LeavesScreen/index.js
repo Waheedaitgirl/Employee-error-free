@@ -31,8 +31,9 @@ import LeaveCard from './LeaveCard'
         const gelocallist = () => {
             getLeavesList(user.account_id, user.candidate_id).then((response) => {
                 if(response.status === 200){
-                    setData(response.data.data);
-                    setFilterData(response.data.data);
+                    let tempd = response.data.data.reverse()
+                    setData(tempd);
+                    setFilterData(tempd);
                   
                 }
                 setLoading(false)
