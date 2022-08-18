@@ -1,16 +1,77 @@
 import React, { useEffect, useState } from 'react';
-import {SafeAreaView,StatusBar, Text,View,StyleSheet,TouchableOpacity} from 'react-native';
+import {SafeAreaView,StatusBar, Text,View,StyleSheet,Animated, TouchableOpacity} from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 import { commonStyles,textStyles } from '../../styles';
 import CustomHeader from '../../components/CustomHeader';
 import { colors, fonts } from '../../constants/theme';
-import { AppScreenWidth, hp, width } from '../../constants/sacling';
+import { AppScreenWidth, hp, width,  } from '../../constants/sacling';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import GeneralProfileScreen from './GeneralProfileScreen';
 import ListCertificateScreen from './ListCertificateScreen';
 import AddEducationScreen from './AddEducationScreen';
 import AddExperienceScreen from './AddExperienceScreen';
-
+import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
+function MyTabBar({ state, descriptors, navigation, position }) {
+    return (
+      <View style={{ 
+            flexDirection: 'row',alignItems:"center", justifyContent:"space-evenly", backgroundColor:colors.dark_primary_color, height:heightPercentageToDP(6), width:widthPercentageToDP(100) }}>
+        {state.routes.map((route, index) => {
+          const { options } = descriptors[route.key];
+          const label =
+            options.tabBarLabel !== undefined
+              ? options.tabBarLabel
+              : options.title !== undefined
+              ? options.title
+              : route.name;
+  
+          const isFocused = state.index === index;
+  
+          const onPress = () => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
+  
+            if (!isFocused && !event.defaultPrevented) {
+              // The `merge: true` option makes sure that the params inside the tab screen are preserved
+              navigation.navigate({ name: route.name, merge: true });
+            }
+          };
+  
+          const onLongPress = () => {
+            navigation.emit({
+              type: 'tabLongPress',
+              target: route.key,
+            });
+          };
+  
+          const inputRange = state.routes.map((_, i) => i);
+          const opacity = position.interpolate({
+            inputRange,
+            outputRange: inputRange.map(i => (i === index ? 1 : 0)),
+          });
+  
+          return (
+            <TouchableOpacity
+                key={`${index}`}
+                accessibilityRole="button"
+                accessibilityState={isFocused ? { selected: true } : {}}
+                accessibilityLabel={options.tabBarAccessibilityLabel}
+                testID={options.tabBarTestID}
+                onPress={onPress}
+                onLongPress={onLongPress}
+                style={{ alignItems:"center",height:heightPercentageToDP(4),borderRadius:scale(100), justifyContent:"center", width:widthPercentageToDP(23), backgroundColor:"#fff" }}
+            >
+              <Animated.Text style={{...textStyles.Label, color:colors.dark_primary_color }}>
+                {label}
+              </Animated.Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    );
+  }
     const EditProfileScreen = ({navigation}) => {
         const Tab = createMaterialTopTabNavigator();
         return (
@@ -21,7 +82,7 @@ import AddExperienceScreen from './AddExperienceScreen';
                         show_backButton={true}
                         isdrawer={true}
                         onPress={() => navigation.openDrawer()}
-                        title={"Edit Profile"}
+                        title={"Profile"}
                     />
                     <View
                         style={{
@@ -30,35 +91,8 @@ import AddExperienceScreen from './AddExperienceScreen';
                             alignSelf: 'center',
                         }}>
                         <Tab.Navigator
-                            screenOptions={{
-                            activeTintColor: '#50d3a7',
-                            inactiveTintColor: 'gray',
-                            tabBarScrollEnabled: true,
-                            swipeEnabled:false,
-                            tabBarIndicatorStyle: {
-                                backgroundColor: colors.dark_primary_color,
-                                height: 2,
-                            },
-                            tabBarLabelStyle: {
-                                fontSize: scale(12),
-                                fontFamily: fonts.Medium,
-
-                                textTransform: 'none',
-                            },
-                            tabBarItemStyle: {
-                                width: 120,
-                                padding: 0,
-                                paddingTop: 0,
-
-                                borderRadius: 100,
-                            },
-                            tabBarStyle: {
-                                backgroundColor: 'white',
-                            },
-                            }}
-                            sceneContainerStyle={{
-                                backgroundColor: 'white',
-                            }}>
+                            tabBar={props => <MyTabBar {...props} />}
+                            >
                             <Tab.Screen
                                 name={'GeneralProfileScreen'}
                                 children={() =>  <GeneralProfileScreen/>}

@@ -11,6 +11,7 @@ import {MainRoutes} from '../constants/routes'
 import { scale } from "react-native-size-matters";
 import {useDispatch} from 'react-redux';
 import { useSelector } from 'react-redux';
+import { widthPercentageToDP } from "react-native-responsive-screen";
 const DrawerContentt = ({ navigation, props }) => {
     const dispatch = useDispatch();
     const  localSignout = () => dispatch(Signout(null))
@@ -45,6 +46,7 @@ const DrawerContentt = ({ navigation, props }) => {
                                 <Entypo name="edit" color={"#fff"} size={scale(20)} />
                             </TouchableOpacity>
                         </View>
+
                         <TouchableOpacity   
                             onPress={() => navigation.navigate(MainRoutes.HomeScreen)} 
                             style={styles.btnView}>
@@ -117,7 +119,7 @@ const DrawerContentt = ({ navigation, props }) => {
                                     size={scale(16)} 
                                 />
                             </View>
-                            <Text style={styles.textStyle}>My Refrerrals</Text>
+                            <Text style={styles.textStyle}>My Referrals</Text>
                         </TouchableOpacity>
               
             </DrawerContentScrollView>
@@ -147,17 +149,21 @@ const styles = StyleSheet.create({
     drawercontent:{
         padding:scale(10), 
         flex:1,
-       width:"100%",
+        width:"100%",
         alignSelf:"flex-start",
         flexDirection: 'row',
-        marginBottom:scale(20),
+       
         alignItems:"center",
         backgroundColor:colors.dark_primary_color
     },
    
     btnView: {
-        marginLeft:scale(15),
-        marginBottom:scale(12),
+        paddingLeft:scale(15),
+        marginLeft:scale(5),
+        paddingVertical:scale(8),
+        borderBottomColor:colors.divide_color,
+        borderBottomWidth:1,
+        width:widthPercentageToDP(75),
         flexDirection: 'row',
         alignItems:"center"
     },
