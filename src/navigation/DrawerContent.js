@@ -9,9 +9,11 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import {MainRoutes} from '../constants/routes'
 import { scale } from "react-native-size-matters";
 import {useDispatch} from 'react-redux';
+import { useSelector } from 'react-redux';
 const DrawerContentt = ({ navigation, props }) => {
     const dispatch = useDispatch();
     const  localSignout = () => dispatch(Signout(null))
+    const {user} = useSelector(state => state.LoginReducer)
     return (
         <SafeAreaView style={{flex:1, backgroundColor:colors.dark_primary_color}}>
             <DrawerContentScrollView 
@@ -30,7 +32,7 @@ const DrawerContentt = ({ navigation, props }) => {
                                 }}
                             />
                             <View style={{justifyContent:"flex-start"}}>
-                                <Text style={styles.textStyleHeader}>Aftab Ameen</Text>
+                                <Text style={styles.textStyleHeader}>{user.preferred_name}</Text>
                             </View> 
                             <TouchableOpacity
                                // onPress={() => navigation.navigate(MainRoutes.EditProfileScreen) }

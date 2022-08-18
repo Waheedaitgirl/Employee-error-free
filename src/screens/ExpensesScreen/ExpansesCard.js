@@ -7,7 +7,6 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import Price from '../../assets/images/price.svg'
 import transform from 'css-to-react-native';
 import DeleteModal from '../../components/DeleteModal';
 import { DeleteExpense } from '../../api';
