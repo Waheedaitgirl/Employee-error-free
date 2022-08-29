@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {SafeAreaView,StatusBar, Text,View,StyleSheet,TouchableOpacity} from 'react-native';
+import {SafeAreaView,StatusBar,Image, Text,View,StyleSheet,TouchableOpacity} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -79,6 +79,30 @@ import { getStatusList } from '../../api';
                                 size={scale(50)} 
                             />
                             <Text style={styles.textStyle}>Leaves</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity 
+                        onPress={() => navigation.navigate(MainRoutes.MyRefrerralsScreen) } 
+                            style={styles.box} >
+                            <Image 
+                                resizeMethod={"resize"}
+                                resizeMode={"contain"}
+                               source={require("../../assets/images/referral.png")}
+                               style={{width:scale(50),tintColor:colors.dark_primary_color, height:scale(50)}}
+                            />
+                            <Text style={styles.textStyle}>My Referrals</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.row} >
+                        <TouchableOpacity 
+                            onPress={() => navigation.navigate(MainRoutes.MyReferencesScreen) } 
+                            style={styles.box} >
+                            <Image 
+                                resizeMethod={"resize"}
+                                resizeMode={"contain"}
+                               source={require("../../assets/images/referral.png")}
+                               style={{width:scale(50),tintColor:colors.dark_primary_color, height:scale(50)}}
+                            />
+                            <Text style={styles.textStyle}>My References</Text>
                         </TouchableOpacity>
                         {/* <TouchableOpacity 
                         onPress={() => navigation.navigate(MainRoutes.CalendarScreen) } 
@@ -164,7 +188,7 @@ const styles = StyleSheet.create({
         height:((AppScreenWidth/2)-scale(20)),
         backgroundColor:"#fff",
         elevation:10,
-        padding:hp(4),
+        padding:hp(2),
         justifyContent:"center",
         alignItems:"center",
         borderRadius:scale(10),

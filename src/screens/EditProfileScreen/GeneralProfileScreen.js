@@ -16,6 +16,7 @@ import {scale, verticalScale} from 'react-native-size-matters';
 import {commonStyles, selectStyles, textStyles} from '../../styles';
 import {colors, fonts} from '../../constants/theme';
 import CustomTextInput from '../../components/TextInput';
+import DropdownAddComponent from '../../components/DropdownAddComponent';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -24,7 +25,13 @@ import {
 import UpLoadComponent from '../../components/Uploadcomponent';
 import CustomButton from '../../components/Button';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
+import SkillsAdd from '../../components/SkillsAdd';
+import Gravatar from '../../components/Gravatar';
+import {
+  country_data,
+  state_data,
+} from '../../data/data';
+
 import moment from 'moment';
 const initialState = {
   firstName: '',
@@ -149,7 +156,13 @@ EducationSection = () => {
 };
 const GeneralProfileScreen = ({navigation}) => {
   const [profileData, dispatch] = useReducer(reducer, initialState);
+  const [states, setstates] = useState(state_data);
+  const [selected_state, setSelectstate] = useState('');
+  const [state_modal_visible, setstatesModalVisibe] = useState(false);
 
+  const [countrys, setcountrys] = useState(country_data);
+  const [selected_country, setSelectcountry] = useState('');
+  const [country_modal_visible, setcountrysModalVisibe] = useState(false);
   const [is_Editabe, setisEditable] = useState(false);
   function reducer(state, action) {
     switch (action.type) {
@@ -194,22 +207,14 @@ const GeneralProfileScreen = ({navigation}) => {
                   style={{
                     justifyContent: 'flex-end',
                     flex: 1,
-                    padding: 25,
-                    paddingBottom: hp(7),
+                   
+                  
                     alignItems: 'flex-start',
                   }}>
-                  <Image
-                    style={{
-                      width: wp(35),
-                      height: wp(35),
-                      alignSelf: 'center',
-
-                      marginBottom: wp(5),
-                      borderRadius: wp(50),
-                    }}
-                    resizeMode={'cover'}
-                    source={require('../../assets/images/dp.jpg')}
-                  />
+                    <Gravatar 
+                      emailAddress=''  
+                    />
+                  
                   <Text style={styles.profileInfoText}>Name: Hasir Numan</Text>
                   <Text style={styles.profileInfoText}>
                     Email: engr.hashirnumman@gmail.com
@@ -241,10 +246,12 @@ const GeneralProfileScreen = ({navigation}) => {
             </View>
           </ScrollView>
         </View>
-        <TouchableOpacity onPress={() => setisEditable(true)} style={styles.EditButton}>
+        <TouchableOpacity
+          onPress={() => setisEditable(true)}
+          style={styles.EditButton}>
           <AntDesign
             name={'edit'}
-            size={widthPercentageToDP(8)}
+            size={widthPercentageToDP(5)}
             color={colors.white}
           />
         </TouchableOpacity>
@@ -325,6 +332,7 @@ const GeneralProfileScreen = ({navigation}) => {
               }}
               errorMessage={''}
             />
+            <SkillsAdd />
             <CustomTextInput
               placeholder={'Address'}
               value={profileData.address}
@@ -347,7 +355,31 @@ const GeneralProfileScreen = ({navigation}) => {
               }}
               errorMessage={''}
             />
+            <DropdownAddComponent
+              show_add_button={false}
+              width={wp(96)}
+              placeholder={'country'}
+              items={countrys}
+              setItems={setcountrys}
+              selectedItems={selected_country}
+              setSelectItems={setSelectcountry}
+              isVisible={country_modal_visible}
+              setIsVisible={setcountrysModalVisibe}
+            />
+
+            <DropdownAddComponent
+              show_add_button={false}
+              width={wp(96)}
+              placeholder={'state'}
+              items={states}
+              setItems={setstates}
+              selectedItems={selected_state}
+              setSelectItems={setSelectstate}
+              isVisible={state_modal_visible}
+              setIsVisible={setstatesModalVisibe}
+            />
             <UpLoadComponent
+              wdt={wp(94)}
               setFilePath={() => alert('fdfg')}
               filepath={{
                 path: null,

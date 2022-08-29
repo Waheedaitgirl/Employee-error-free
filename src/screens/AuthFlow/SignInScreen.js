@@ -24,9 +24,9 @@ import CustomHeader from '../../components/CustomHeader';
 import MICROSOFT from '../../assets/images/microsoft.svg';
 import { candidateLogin } from '../../api';
 const SignInScreen = ({navigation}) => {
-  const [email_address, setUseremail] = useState('niveba2588@shbiso.com'); // dr.aftabufaq@gmail.com
+  const [email_address, setUseremail] = useState('dr.aftabufaq@gmail.com'); // niveba2588@shbiso.com
   const [UseremailErrorMesage, setUseremailErrorMessaage] = useState('');
-  const [password, setPassword] = useState(''); //123456
+  const [password, setPassword] = useState('!23456'); //123456
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const [is_api_error,  set_api_error] = useState("")
   const [apiErrorMessage , setApiErrorMessage] = useState("")

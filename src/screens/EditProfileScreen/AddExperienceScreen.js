@@ -1,16 +1,24 @@
+import moment from 'moment';
 import React, {useReducer} from 'react';
-import {SafeAreaView, ScrollView,Image, Text, StatusBar, View} from 'react-native';
-import {commonStyles} from '../../styles';
-import CalenderInput from '../../components/DateInputMethod';
-import {colors, fonts} from '../../constants/theme';
-import CustomTextInput from '../../components/TextInput';
-import {scale} from 'react-native-size-matters';
-import {AppScreenWidth} from '../../constants/sacling';
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  Text,
+  View,
+} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import {scale} from 'react-native-size-matters';
 import Entypo from 'react-native-vector-icons/Entypo';
 import CustomButton from '../../components/Button';
-import {widthPercentageToDP as wp,heightPercentageToDP as hp,} from 'react-native-responsive-screen';
-import moment from 'moment';
+import CustomHeader from '../../components/CustomHeader';
+import CalenderInput from '../../components/DateInputMethod';
+import CustomTextInput from '../../components/TextInput';
+import {AppScreenWidth} from '../../constants/sacling';
+import {colors, fonts} from '../../constants/theme';
+import {commonStyles} from '../../styles';
 const initialState = {
   companyName: '',
   jobTitle: '',
@@ -19,8 +27,35 @@ const initialState = {
   currentlyWorking: true,
   jobDuties: '',
 };
-const AddExperienceScreen = ({navigation}) => {
-  const [experienceData, dispatch] = useReducer(reducer, initialState);
+
+function init(initialState) {
+  if (initialState == undefined) {
+    return {
+      companyName: '',
+      jobTitle: '',
+      startDate: '',
+      endDate: '',
+      currentlyWorking: true,
+      jobDuties: '',
+    };
+  } else {
+    return {
+      companyName: initialState.candidate_employer_id,
+      jobTitle: initialState.job_title,
+      startDate: moment(initialState.experience_start_date).format('MMM YYYY'),
+      endDate: moment(initialState.experience_end_date).format('MMM YYYY'),
+      currentlyWorking: initialState.is_currently_working == 0 ? false : true,
+      jobDuties: initialState.job_duties,
+    };
+  }
+}
+
+const AddExperienceScreen = ({navigation, route}) => {
+  const [experienceData, dispatch] = useReducer(
+    reducer,
+    route.params?.item,
+    init,
+  );
 
   function reducer(state, action) {
     switch (action.type) {
@@ -40,10 +75,19 @@ const AddExperienceScreen = ({navigation}) => {
         return initialState;
     }
   }
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <StatusBar barStyle={'light-content'} />
       <View style={commonStyles.container}>
+        <CustomHeader
+          show_backButton={true}
+          isdrawer={false}
+          onPress={() => navigation.goBack()}
+          title={
+            route.params !== undefined ? 'Edit Education' : 'Add Education'
+          }
+        />
         <ScrollView>
           <View
             style={{
@@ -52,11 +96,11 @@ const AddExperienceScreen = ({navigation}) => {
             }}>
             <Image
               style={{
-                width:wp(25), 
-                height:wp(25),
-                marginVertical:wp(5),
-               // tintColor:colors.dark_primary_color, 
-                borderRadius:wp(15)
+                width: wp(25),
+                height: wp(25),
+                marginVertical: wp(5),
+                // tintColor:colors.dark_primary_color,
+                borderRadius: wp(15),
               }}
               source={require('../../assets/images/job.png')}
             />
@@ -111,6 +155,7 @@ const AddExperienceScreen = ({navigation}) => {
             placeholder={'Job Duties'}
             value={experienceData.jobDuties}
             borderWidth={1}
+            multilines={true}
             lableColor={colors.dark_primary_color}
             borderRadius={scale(5)}
             onChangeText={text => {
@@ -140,20 +185,20 @@ const AddExperienceScreen = ({navigation}) => {
                 });
               }}
               style={{
-                width: scale(25),
+                width: scale(20),
                 justifyContent: 'center',
                 alignItems: 'center',
                 backgroundColor: experienceData.currentlyWorking
                   ? colors.dark_primary_color
                   : '#fff',
-                height: scale(25),
+                height: scale(20),
                 marginTop: scale(5),
                 borderWidth: experienceData.currentlyWorking ? 0 : 1,
-                borderRadius: scale(5),
+                borderRadius: scale(2),
                 borderColor: '#0002',
               }}>
               {experienceData.currentlyWorking && (
-                <Entypo name="check" color={'#fff'} size={scale(20)} />
+                <Entypo name="check" color={'#fff'} size={scale(15)} />
               )}
             </TouchableOpacity>
           </View>

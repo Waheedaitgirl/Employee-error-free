@@ -207,3 +207,10 @@ export async function DeleteExpense (id){
         method: 'delete'
     });
 }
+
+export const GetProfileDetails = async (id) => {
+    return request({
+        url: `candidate/${id}`,
+        method: 'get'
+    });
+}

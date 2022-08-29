@@ -1,0 +1,75 @@
+[
+    {
+        "value":"Block Chain Developer",
+        "label":"Block Chain Developer"
+    },
+    {
+        "value":"Biochemist",
+        "label":"Biochemist"
+    },
+    {
+        "value":"Food scientist",
+        "label":"Food scientist"
+    },
+    {
+        "value":"Horticulturist",
+        "label":"Horticulturist"
+    },
+    {
+        "value":"Project manager",
+        "label":"Project manager"
+    },
+    {
+        "value":"Salon manager",
+        "label":"Salon manager"
+    },
+    {
+        "value":"Fashion designer",
+        "label":"Fashion designer"
+    },
+    {
+        "value":"Client services coordinator",
+        "label":"Client services coordinator"
+    },
+    {
+        "value":"Public relations specialist",
+        "label":"Public relations specialist"
+    },
+    {
+        "value":"Assistant professor",
+        "label":"Assistant professor"
+    },
+
+    {
+        "value":"Financial advisor",
+        "label":"Financial advisor"
+    },
+    {
+        "value":"Physical therapist",
+        "label":"Physical therapist"
+    },
+    {
+        "value":"Meeting planner",
+        "label":"Meeting planner"
+    },
+    {
+        "value":"Compensations and benefits manager",
+        "label":"Compensations and benefits manager"
+    },
+    {
+        "value":"Human resources systems administrator",
+        "label":"Human resources systems administrator"
+    },
+    {
+        "value":"UX designer",
+        "label":"UX designer"
+    },
+    {
+        "value":"Business intelligence developer",
+        "label":"Business intelligence developer"
+    },
+    {
+        "value":"Mobile application developer",
+        "label":"Mobile application developer"
+    }
+]

@@ -26,5 +26,7 @@ export const MainRoutes = {
     JobApplyScreen:"JobApplyScreen",
     AddCertificateScreen:"AddCertificateScreen",
     MyRefrerralsScreen:"MyRefrerralsScreen",
-    MyReferencesScreen:"MyReferencesScreen"
+    MyReferencesScreen:"MyReferencesScreen",
+    AddExperienceScreen:"AddExperienceScreen",
+    AddEducationScreen:'AddEducationScreen'
 }
