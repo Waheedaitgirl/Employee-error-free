@@ -1,5 +1,5 @@
 import {decode} from 'html-entities';
-import React, {useReducer, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -22,6 +22,8 @@ import {scale, verticalScale} from 'react-native-size-matters';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useSelector} from 'react-redux';
+import BlockLoading from '../../components/BlockLoading';
 import CustomButton from '../../components/Button';
 import CustomHeader from '../../components/CustomHeader';
 import DropdownAddComponent from '../../components/DropdownAddComponent';
@@ -37,12 +39,78 @@ import CertificateItem from './CertificateItem';
 import EducationItem from './EducationItem';
 import ExperienceItem from './ExperienceItem';
 const initialState = {
-  firstName: '',
-  lastName: '',
-  primaryEmail: '',
-  phone: '',
-  address: true,
+  account_id: '',
+  address: '',
+  annual_salary: null,
+  available_date: null,
+  best_time_tocontact: '',
+  candidate_id: '',
+  candidate_name: '',
+  candidate_owner_id: '',
+  candidate_owner_username: '',
+  certifications: '',
   city: '',
+  country_name: '',
+  created_by: '',
+  created_date: '',
+  created_username: '',
+  date_of_birth: null,
+  email1: '',
+  email2: '',
+  emergency_contact: '',
+  emergency_no: '',
+  ethnicity_id: null,
+  ethnicity_name: null,
+  fax: '',
+  first_name: '',
+  gender: null,
+  is_active: '',
+  is_career: '',
+  is_disability: null,
+  is_relocate: null,
+  job_title: '',
+  last_name: '',
+  location: '',
+  mobile: '',
+  module_status_id: '',
+  module_status_name: '',
+  nationality: '',
+  pay_rate: '1000',
+  pay_type_id: null,
+  pay_type_name: null,
+  phone_direct: '',
+  phone_direct_ext: '',
+  phone_home: '',
+  phone_mobile: '',
+  phone_work: '',
+  phone_work_ext: '',
+  preferred_contact: '',
+  preferred_name: '',
+  profile_summary: '',
+  resource_key: '',
+  resource_url: '',
+  salutation: null,
+  skills: '',
+  source: '',
+  source_id: '',
+  ssn: '',
+  state_name: '',
+  status_colour_code: '',
+  tags: null,
+  tax_id: '',
+  tax_term_id: null,
+  tax_term_name: null,
+  travel_requirement_id: null,
+  travel_requirement_name: null,
+  updated_by: '546',
+  updated_date: '',
+  updated_username: '',
+  vendor_id: '0',
+  vendor_name: null,
+  veteran: 'No',
+  visa_status_id: null,
+  visa_status_name: null,
+  zipcode: '',
 };
 
 ExperienceSection = ({data}) => {
@@ -114,29 +182,41 @@ CertificateSection = ({data}) => {
     </View>
   );
 };
+
 const GeneralProfileScreen = ({navigation}) => {
-  const {data, isError, isLoading, isSuccess} = useGetCandidatesQuery('1336');
+  const {user} = useSelector(state => state.LoginReducer);
+  const {data, isError, isLoading, isSuccess} = useGetCandidatesQuery(
+    user.candidate_id,
+  );
   const [profileData, dispatch] = useReducer(reducer, initialState);
   const [states, setstates] = useState(state_data);
   const [selected_state, setSelectstate] = useState('');
   const [state_modal_visible, setstatesModalVisibe] = useState(false);
-
+  const [isApiLoading, setIsApiLoading] = useState(false);
   const [countrys, setcountrys] = useState(country_data);
   const [selected_country, setSelectcountry] = useState('');
   const [country_modal_visible, setcountrysModalVisibe] = useState(false);
   const [is_Editabe, setisEditable] = useState(false);
   const regex = /(<([^>]+)>)/gi;
-
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch({type: 'INITIALIZE', payload: data.profile_data});
+      setSelectstate(data.profile_data.state_name);
+      setSelectcountry(data.profile_data.country_name);
+    }
+  }, [isSuccess]);
   function reducer(state, action) {
     switch (action.type) {
-      case 'firstName':
-        return {...state, firstName: action.payload};
-      case 'lastName':
-        return {...state, lastName: action.payload};
-      case 'primaryEmail':
-        return {...state, primaryEmail: action.payload};
-      case 'phone':
-        return {...state, phone: action.payload};
+      case 'INITIALIZE':
+        return action.payload;
+      case 'first_name':
+        return {...state, first_name: action.payload};
+      case 'last_name':
+        return {...state, last_name: action.payload};
+      case 'email1':
+        return {...state, email1: action.payload};
+      case 'mobile':
+        return {...state, mobile: action.payload};
       case 'address':
         return {...state, address: action.payload};
       case 'city':
@@ -247,7 +327,7 @@ const GeneralProfileScreen = ({navigation}) => {
               </View>
               <View style={styles.tabViewRow}>
                 <View style={{width: wp(9)}}>
-                  <FontAwesome name={'phone'} size={wp(7)} color={'#fff'} />
+                  <FontAwesome name={'mobile'} size={wp(7)} color={'#fff'} />
                 </View>
 
                 <View>
@@ -344,45 +424,45 @@ const GeneralProfileScreen = ({navigation}) => {
               </View>
               <CustomTextInput
                 placeholder={'First Name *'}
-                value={profileData.firstName}
+                value={profileData.first_name}
                 borderWidth={1}
                 lableColor={colors.dark_primary_color}
                 borderRadius={scale(5)}
                 onChangeText={text => {
-                  dispatch({type: 'firstName', payload: text});
+                  dispatch({type: 'first_name', payload: text});
                 }}
                 errorMessage={''}
               />
               <CustomTextInput
                 placeholder={'Last Name *'}
-                value={profileData.lastName}
+                value={profileData.last_name}
                 borderWidth={1}
                 lableColor={colors.dark_primary_color}
                 borderRadius={scale(5)}
                 onChangeText={text => {
-                  dispatch({type: 'lastName', payload: text});
+                  dispatch({type: 'last_name', payload: text});
                 }}
                 errorMessage={''}
               />
               <CustomTextInput
                 placeholder={'Primary Email *'}
-                value={profileData.primaryEmail}
+                value={profileData.email1}
                 borderWidth={1}
                 lableColor={colors.dark_primary_color}
                 borderRadius={scale(5)}
                 onChangeText={text => {
-                  dispatch({type: 'primaryEmail', payload: text});
+                  dispatch({type: 'email1', payload: text});
                 }}
                 errorMessage={''}
               />
               <CustomTextInput
                 placeholder={'Phone (Direct)'}
-                value={profileData.phone}
+                value={profileData.mobile}
                 borderWidth={1}
                 lableColor={colors.dark_primary_color}
                 borderRadius={scale(5)}
                 onChangeText={text => {
-                  dispatch({type: 'phone', payload: text});
+                  dispatch({type: 'mobile', payload: text});
                 }}
                 errorMessage={''}
               />
@@ -449,6 +529,7 @@ const GeneralProfileScreen = ({navigation}) => {
             </ScrollView>
           </View>
         </SafeAreaView>
+        {isApiLoading && <BlockLoading />}
       </KeyboardAvoidingView>
     );
   }

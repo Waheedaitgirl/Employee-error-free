@@ -2,6 +2,7 @@ import moment from 'moment';
 import {NativeBaseProvider, Select} from 'native-base';
 import React, {useReducer} from 'react';
 import {
+  Alert,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -15,71 +16,170 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {scale} from 'react-native-size-matters';
 import Entypo from 'react-native-vector-icons/Entypo';
+import {useSelector} from 'react-redux';
 import CustomButton from '../../components/Button';
 import CustomHeader from '../../components/CustomHeader';
 import CalenderInput from '../../components/DateInputMethod';
 import CustomTextInput from '../../components/TextInput';
 import {AppScreenWidth} from '../../constants/sacling';
 import {colors, fonts} from '../../constants/theme';
+import {useUpdateEducationMutation} from '../../store/services/taskApi';
 import {commonStyles, selectStyles} from '../../styles';
 const initialState = {
-  degreeLevel: '',
-  degreeTitle: '',
-  startDate: '',
-  endDate: '',
-  currentlyWorking: true,
-  educationDetails: '',
+  education_level: '',
+  education_title: '',
+  candidate_id: '',
+  education_start_date: '',
+  education_end_date: '',
+  is_currently_studying: true,
+  education_details: '',
 };
 
 function init(initialState) {
   if (initialState == undefined) {
     return {
-      degreeLevel: '',
-      degreeTitle: '',
-      startDate: '',
-      endDate: '',
-      currentlyWorking: true,
-      educationDetails: '',
+      education_level: '',
+      education_title: '',
+      education_start_date: '',
+      candidate_id: '',
+      education_end_date: '',
+      is_currently_studying: true,
+      education_details: '',
     };
   } else {
     return {
-      degreeLevel: initialState.education_level,
-      degreeTitle: initialState.education_title,
-      startDate:
+      education_level: initialState.education_level,
+      education_title: initialState.education_title,
+      candidate_id: initialState.candidate_id,
+      education_start_date:
         initialState.education_start_date !== null
-          ? moment(initialState.education_start_date).format('MMM YYYY')
+          ? moment(initialState.education_start_date).format('YYYY-MM-DD')
           : '',
-      endDate: moment(initialState.experience_end_date).format('MMM YYYY'),
-      currentlyWorking: initialState.is_currently_studying == 0 ? false : true,
-      educationDetails: initialState.education_details,
+      education_end_date: moment(initialState.experience_end_date).format(
+        'YYYY-MM-DD',
+      ),
+      is_currently_studying:
+        initialState.is_currently_studying == 0 ? false : true,
+      education_details: initialState.education_details,
     };
   }
 }
 const AddEducationScreen = ({navigation, route}) => {
-  const [experienceData, dispatch] = useReducer(
+  const {user} = useSelector(state => state.LoginReducer);
+  const [educationData, dispatch] = useReducer(
     reducer,
     route.params?.item,
     init,
   );
+  const [updateEducation, {isLoading, isSuccess, isError}] =
+    useUpdateEducationMutation();
 
   function reducer(state, action) {
     switch (action.type) {
-      case 'degreeLevel':
-        return {...state, degreeLevel: action.payload};
-      case 'degreeTitle':
-        return {...state, degreeTitle: action.payload};
-      case 'startDate':
-        return {...state, startDate: action.payload};
-      case 'endDate':
-        return {...state, endDate: action.payload};
-      case 'educationDetails':
-        return {...state, educationDetails: action.payload};
-      case 'currentlyWorking':
-        return {...state, currentlyWorking: action.payload};
+      case 'education_level':
+        return {...state, education_level: action.payload};
+      case 'education_title':
+        return {...state, education_title: action.payload};
+      case 'education_start_date':
+        return {...state, education_start_date: action.payload};
+      case 'education_end_date':
+        return {...state, education_end_date: action.payload};
+      case 'education_details':
+        return {...state, education_details: action.payload};
+      case 'is_currently_studying':
+        return {...state, is_currently_studying: action.payload};
       default:
         return initialState;
     }
   }
+
+  const validateDataAndSubmit = () => {
+    if (educationData.education_title.trim().length < 5) {
+      alert('Please enter education title at least 5 chars');
+      return;
+    }
+    if (educationData.education_level.trim().length < 1) {
+      alert('Please enter education level at least 5 chars');
+      return;
+    }
+    if (
+      educationData.education_start_date == null ||
+      educationData.education_start_date == undefined ||
+      educationData.education_start_date == ''
+    ) {
+      alert('Please enter education start date');
+      return;
+    }
+    if (educationData.is_currently_studying == false) {
+      if (
+        educationData.education_end_date == null ||
+        educationData.education_end_date == undefined ||
+        educationData.education_end_date == ''
+      ) {
+        alert('Please enter education end date');
+        return;
+      }
+      if (
+        moment(educationData.education_end_date).isBefore(
+          moment(educationData.education_start_date),
+        )
+      ) {
+        alert('start date must be before then end date');
+        return;
+      }
+    }
+    if (
+      educationData.education_details.trim() == '' ||
+      educationData.education_details.length < 20
+    ) {
+      alert('Please enter at least 20 character');
+      return;
+    }
+
+    updateEducation({
+      ...educationData,
+      candidate_id: user.candidate_id,
+      id: route.params?.item.candidate_education_id,
+    });
+    if (isSuccess) {
+      Alert.alert('Eucation Update', 'Education Updated Succcessfully', [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Go Back',
+          onPress: () => {
+            dispatch({
+              type: 'reset',
+              payload: null,
+            });
+            navigation.goBack();
+          },
+        },
+      ]);
+    }
+    if (isError) {
+      Alert.alert('Eucation Update ', 'Education Update Failed', [
+        {
+          text: 'Try Again',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Go Back',
+          onPress: () => {
+            dispatch({
+              type: 'reset',
+              payload: null,
+            });
+            navigation.goBack();
+          },
+        },
+      ]);
+    }
+  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -121,12 +221,12 @@ const AddEducationScreen = ({navigation, route}) => {
             </View>
             <CustomTextInput
               placeholder={'Degree Title'}
-              value={experienceData.degreeTitle}
+              value={educationData.education_title}
               borderWidth={1}
               lableColor={colors.dark_primary_color}
               borderRadius={scale(5)}
               onChangeText={text => {
-                dispatch({type: 'degreeTitle', payload: text});
+                dispatch({type: 'education_title', payload: text});
               }}
               errorMessage={''}
             />
@@ -148,7 +248,7 @@ const AddEducationScreen = ({navigation, route}) => {
                   </Text>
                 </View>
                 <Select
-                  selectedValue={experienceData.degreeLevel}
+                  selectedValue={educationData.education_level}
                   width={AppScreenWidth}
                   placeholderTextColor={colors.text_primary_color}
                   maxHeight={'10'}
@@ -159,7 +259,7 @@ const AddEducationScreen = ({navigation, route}) => {
                   _item={selectStyles._item}
                   _selectedItem={selectStyles._selectedItem}
                   onValueChange={itemValue => {
-                    dispatch({type: 'degreeLevel', payload: itemValue});
+                    dispatch({type: 'education_level', payload: itemValue});
                   }}>
                   <Select.Item key={'0'} label={'Associate'} value={'0'} />
                   <Select.Item key={'1'} label={'Bachelor'} value={'1'} />
@@ -178,37 +278,37 @@ const AddEducationScreen = ({navigation, route}) => {
             </View>
             <CalenderInput
               placeholder={'Start Date'}
-              value={experienceData.startDate}
+              value={educationData.education_start_date}
               errorMessage={''}
               onChangeText={date =>
                 dispatch({
-                  type: 'startDate',
-                  payload: moment(new Date(date)).format('MMM-YYYY'),
+                  type: 'education_start_date',
+                  payload: moment(new Date(date)).format('YYYY-MM-DD'),
                 })
               }
             />
 
             <CalenderInput
               placeholder={'End Date'}
-              value={experienceData.endDate}
+              value={educationData.education_end_date}
               errorMessage={''}
               onChangeText={date =>
                 dispatch({
-                  type: 'endDate',
-                  payload: moment(new Date(date)).format('MMM-YYYY'),
+                  type: 'education_end_date',
+                  payload: moment(new Date(date)).format('YYYY-MM-DD'),
                 })
               }
             />
 
             <CustomTextInput
               placeholder={'Education Details'}
-              value={experienceData.educationDetails}
+              value={educationData.education_details}
               borderWidth={1}
               multilines={true}
               lableColor={colors.dark_primary_color}
               borderRadius={scale(5)}
               onChangeText={text => {
-                dispatch({type: 'educationDetails', payload: text});
+                dispatch({type: 'education_details', payload: text});
               }}
               errorMessage={''}
             />
@@ -230,37 +330,32 @@ const AddEducationScreen = ({navigation, route}) => {
               <TouchableOpacity
                 onPress={() => {
                   dispatch({
-                    type: 'currentlyWorking',
-                    payload: !experienceData.currentlyWorking,
+                    type: 'is_currently_studying',
+                    payload: !educationData.is_currently_studying,
                   });
                 }}
                 style={{
                   width: scale(22),
                   justifyContent: 'center',
                   alignItems: 'center',
-                  backgroundColor: experienceData.currentlyWorking
+                  backgroundColor: educationData.is_currently_studying
                     ? colors.dark_primary_color
                     : '#fff',
                   height: scale(22),
                   marginTop: scale(5),
-                  borderWidth: experienceData.currentlyWorking ? 0 : 1,
+                  borderWidth: educationData.is_currently_studying ? 0 : 1,
                   borderRadius: scale(2),
                   borderColor: '#0002',
                 }}>
-                {experienceData.currentlyWorking && (
+                {educationData.is_currently_studying && (
                   <Entypo name="check" color={'#fff'} size={scale(20)} />
                 )}
               </TouchableOpacity>
             </View>
             <CustomButton
-              loading={false}
+              loading={isLoading}
               loadingText={'Saving'}
-              onPress={() =>
-                dispatch({
-                  type: 'reset',
-                  payload: !experienceData.currentlyWorking,
-                })
-              }
+              onPress={() => validateDataAndSubmit()}
               text={'Save'}
             />
             <View style={{height: wp(10)}} />

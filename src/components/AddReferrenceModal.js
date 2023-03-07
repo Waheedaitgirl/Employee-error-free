@@ -1,26 +1,20 @@
 import React, {useReducer} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
   KeyboardAvoidingView,
-  Image,
   Platform,
+  StyleSheet,
   Text,
-  StatusBar,
   View,
 } from 'react-native';
-import {scale, verticalScale} from 'react-native-size-matters';
-import {AppScreenWidth, hp} from '../constants/sacling';
 import Modal from 'react-native-modal';
-import CustomTextInput from './TextInput';
-import CustomButton from './Button';
+import {scale, verticalScale} from 'react-native-size-matters';
+import {useSelector} from 'react-redux';
+import {AppScreenWidth, hp} from '../constants/sacling';
+import {colors} from '../constants/theme';
+import {useAddReferenceMutation} from '../store/services/taskApi';
 import {textStyles} from '../styles';
-import {colors, fonts} from '../constants/theme';
-import {
-  heightPercentageToDP,
-  widthPercentageToDP,
-} from 'react-native-responsive-screen';
+import CustomButton from './Button';
+import CustomTextInput from './TextInput';
 const initialState = {
   firstName: '',
   lastName: '',
@@ -48,6 +42,45 @@ const AddReferrenceModal = ({
         return initialState;
     }
   }
+  const [addReference, {isLoading, isSuccess, isError}] =
+    useAddReferenceMutation();
+  const {user} = useSelector(state => state.LoginReducer);
+
+  const AddValidation = async () => {
+    const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (referrenceData.firstName.trim().length <= 3) {
+      alert('Please enter first name');
+      return;
+    }
+    if (referrenceData.lastName.trim().length <= 3) {
+      alert('Please enter last name');
+      return;
+    }
+    if (!reg.test(referrenceData.email.trim())) {
+      alert('Please correct email');
+      return;
+    }
+    if (referrenceData.phone.trim().length <= 10) {
+      alert('Please enter correct mobile number');
+      return;
+    }
+    let data = {
+      first_name: referrenceData.firstName,
+      last_name: referrenceData.lastName,
+      phone: referrenceData.phone,
+      candidate_id: user.candidate_id,
+      email: referrenceData.email,
+    };
+    await addReference(data);
+    if (isSuccess) {
+      dispatch({type: 'RESET'});
+      alert('Reference added successfully');
+      setIsModalVisible(false);
+    }
+    if (isError) {
+      alert('Some error has occued in adding refrence');
+    }
+  };
   return (
     <Modal
       style={{
@@ -66,73 +99,65 @@ const AddReferrenceModal = ({
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={{flex: 1}}>
-            <CustomTextInput
-                placeholder={'First Name'}
-                value={referrenceData.firstName}
-                borderWidth={1}
-                lableColor={colors.dark_primary_color}
-                borderRadius={scale(5)}
-                onChangeText={text => {
-                dispatch({type: 'firstName', payload: text});
-                }}
-                errorMessage={''}
-            />
-            <CustomTextInput
-                placeholder={'Last Name'}
-                value={referrenceData.lastName}
-                borderWidth={1}
-                lableColor={colors.dark_primary_color}
-                borderRadius={scale(5)}
-                onChangeText={text => {
-                dispatch({type: 'lastName', payload: text});
-                }}
-                errorMessage={''}
-            />
-            <CustomTextInput
-                placeholder={'Email'}
-                value={referrenceData.email}
-                borderWidth={1}
-                lableColor={colors.dark_primary_color}
-                borderRadius={scale(5)}
-                onChangeText={text => {
-                dispatch({type: 'email', payload: text});
-                }}
-                errorMessage={''}
-            />
-            <CustomTextInput
-                placeholder={'Phone'}
-                value={referrenceData.phone}
-                borderWidth={1}
-                lableColor={colors.dark_primary_color}
-                borderRadius={scale(5)}
-                onChangeText={text => {
-                dispatch({type: 'phone', payload: text});
-                }}
-                errorMessage={''}
-            />
-             <View  style={{height:hp(1)}} />
-            <CustomButton
-                loading={false}
-                loadingText={'Saving'}
-                onPress={() =>
-                    dispatch({
-                        type: 'reset',
-                        payload: !referrenceData.currentlyWorking,
-                    })
-                }
-                text={'Save'}
-            />
-            <View  style={{height:hp(1)}} />
-            <CustomButton
-                loading={false}
-                backgroundColor={"red"}
-                loadingText={'Saving'}
-                onPress={() =>
-                    setIsModalVisible(false)
-                }
-                text={'Cancel'}
-            />
-          
+          <CustomTextInput
+            placeholder={'First Name'}
+            value={referrenceData.firstName}
+            borderWidth={1}
+            lableColor={colors.dark_primary_color}
+            borderRadius={scale(5)}
+            onChangeText={text => {
+              dispatch({type: 'firstName', payload: text});
+            }}
+            errorMessage={''}
+          />
+          <CustomTextInput
+            placeholder={'Last Name'}
+            value={referrenceData.lastName}
+            borderWidth={1}
+            lableColor={colors.dark_primary_color}
+            borderRadius={scale(5)}
+            onChangeText={text => {
+              dispatch({type: 'lastName', payload: text});
+            }}
+            errorMessage={''}
+          />
+          <CustomTextInput
+            placeholder={'Email'}
+            value={referrenceData.email}
+            borderWidth={1}
+            lableColor={colors.dark_primary_color}
+            borderRadius={scale(5)}
+            onChangeText={text => {
+              dispatch({type: 'email', payload: text});
+            }}
+            errorMessage={''}
+          />
+          <CustomTextInput
+            placeholder={'Phone'}
+            value={referrenceData.phone}
+            borderWidth={1}
+            lableColor={colors.dark_primary_color}
+            borderRadius={scale(5)}
+            onChangeText={text => {
+              dispatch({type: 'phone', payload: text});
+            }}
+            errorMessage={''}
+          />
+          <View style={{height: hp(1)}} />
+          <CustomButton
+            loading={isLoading}
+            loadingText={'Saving'}
+            onPress={() => AddValidation()}
+            text={'Save'}
+          />
+          <View style={{height: hp(1)}} />
+          <CustomButton
+            loading={false}
+            backgroundColor={'red'}
+            loadingText={'Saving'}
+            onPress={() => setIsModalVisible(false)}
+            text={'Cancel'}
+          />
         </KeyboardAvoidingView>
       </View>
     </Modal>
@@ -178,7 +203,7 @@ const styles = StyleSheet.create({
   main_view: {
     justifyContent: 'center',
     backgroundColor: colors.white,
-    height:hp(60),
+    height: hp(60),
     borderTopLeftRadius: scale(20),
     borderTopRightRadius: scale(20),
   },

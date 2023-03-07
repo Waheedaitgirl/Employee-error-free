@@ -219,7 +219,7 @@ import BaseUrl from '../../api/BaseUrl';
                 if(filepath.path !== null){
                     let s_job = jobs.find(x => x.job_id = selected_job)
                     var formdata = new FormData();
-                    formdata.append("account_id", user.account_id);
+                    // formdata.append("account_id", user.account_id);
                     formdata.append("module_pk_id", "52");
                     formdata.append("module_id", "52");
                     formdata.append("user_id",user.candidate_id);

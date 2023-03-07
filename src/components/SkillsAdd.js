@@ -1,18 +1,52 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import AntDesign from 'react-native-vector-icons/Entypo';
+import {useSelector} from 'react-redux';
+import BaseUrl from '../api/BaseUrl';
 import {colors} from '../constants/theme';
 import {textStyles} from '../styles/textStyles';
 import ArrayInput from './ArrayInput';
-
 const SkillsAdd = () => {
-  const [skills, setSkills] = useState([
-    {
-      name: '',
-      exp: '',
-    },
-  ]);
+  const {user} = useSelector(state => state.LoginReducer);
+  const [skills, setSkills] = useState([]);
+  useEffect(() => {
+    var myHeaders = new Headers();
+    myHeaders.append(
+      'Authorization',
+      'Bearer 4545980ce66bd555d903f7dc739f91e631606eb1',
+    );
+    myHeaders.append('Content-Type', 'application/json');
+    myHeaders.append('Accept', '*/*');
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+
+      redirect: 'follow',
+    };
+    fetch(
+      `${BaseUrl}moduleskills?module_pk_id=${user.candidate_id}`,
+      requestOptions,
+    )
+      .then(data => {
+        if (data.status == 200) {
+          data
+            .json()
+            .then(res => {
+              setSkills(res._embedded.ModuleSkills);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        } else {
+          console.log(data.status);
+        }
+      })
+      .catch(error => {
+        console.log('ERRRRRRRRRRRRRRRRRRR');
+        //  console.log(error);
+      });
+  }, []);
 
   return (
     <View
@@ -34,11 +68,6 @@ const SkillsAdd = () => {
             borderWidth={1}
             lableColor={colors.dark_primary_color}
             borderRadius={wp(2)}
-            onAdd={skill => {
-              let temp_skills = [...skills];
-              temp_skills.push(skill);
-              setSkills(temp_skills);
-            }}
             onDelete={() => {
               let temp_skills = [...skills];
               temp_skills.splice(index, 1);
@@ -52,8 +81,9 @@ const SkillsAdd = () => {
         onPress={() => {
           let temp_skils = [...skills];
           temp_skils.push({
-            name: '',
-            exp: '',
+            skill_name: '',
+            total_experience: '3',
+            is_new: true,
           });
           setSkills(temp_skils);
         }}

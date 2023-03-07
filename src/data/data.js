@@ -138,131 +138,129 @@ export const companies_data = [
 
 export const state_data = [
   {
-    value: 1,
+    value: 'Panjab',
     label: 'Panjab',
   },
   {
-    value: 2,
+    value: 'KPK',
     label: 'KPK',
   },
   {
-      value: 6,
-      label: 'Baloch',
-    },
-  {
-    value: 3,
-    label: 'Sindh',
+    value: 'Baloch',
+    label: 'Baloch',
   },
   {
-    value: 4,
+    value: 'Alabama',
+    label: 'Alabama',
+  },
+  {
+    value: 'Gilgithh',
     label: 'Gilgithh',
   },
   {
-    value: 5,
+    value: 'Kashmir',
     label: 'Kashmir',
   },
-]
+];
 
 export const country_data = [
   {
-    value: 1,
+    value: 'Pakistan',
     label: 'Pakistan',
   },
   {
-    value: 2,
+    value: 'Iran',
     label: 'Iran',
   },
   {
-    value: 3,
-    label: 'India',
+    value: 'United States',
+    label: 'United States',
   },
   {
-    value: 4,
+    value: 'Afghanistan',
     label: 'Afghanistan',
   },
   {
-    value: 5,
+    value: 'Russia',
     label: 'Russia',
   },
-  
+
   {
-    value: 6,
+    value: 'Austrilia',
     label: 'Austrilia',
   },
-  
+
   {
-    value: 7,
+    value: 'Saudia',
     label: 'Saudia',
   },
-  
+
   {
-    value: 8,
+    value: 'Uzbakistan',
     label: 'Uzbakistan',
   },
-  
+
   {
-    value: 9,
-    label: 'Misar',
+    value: 'Egypt',
+    label: 'Egypt',
   },
+];
 
- ]
-
- export const socail_links_data = [
+export const socail_links_data = [
   {
-    value: "Disqus",
+    value: 'Disqus',
     label: 'Disqus',
   },
   {
-    value: "Facebook",
+    value: 'Facebook',
     label: 'Facebook',
   },
   {
-    value: "Google+",
+    value: 'Google+',
     label: 'Google+',
   },
   {
-    value: "LinkedIn",
+    value: 'LinkedIn',
     label: 'LinkedIn',
   },
   {
-    value: "Pinterest",
+    value: 'Pinterest',
     label: 'Pinterest',
   },
   {
-    value: "Renren",
+    value: 'Renren',
     label: 'Renren',
   },
   {
-    value: "Skype",
+    value: 'Skype',
     label: 'Skype',
   },
   {
-    value: "Snapchat",
+    value: 'Snapchat',
     label: 'Snapchat',
   },
   {
-    value: "Tumblr",
+    value: 'Tumblr',
     label: 'Tumblr',
   },
   {
-    value: "Twitter",
+    value: 'Twitter',
     label: 'Twitter',
   },
   {
-    value: "Vine",
+    value: 'Vine',
     label: 'Vine',
   },
   {
-    value: "Whatsapp",
+    value: 'Whatsapp',
     label: 'Whatsapp',
   },
- 
+
   {
-    value: "Youtube",
+    value: 'Youtube',
     label: 'Youtube',
   },
- 
-]
+];
 
 export const company_status_data = [
   {
@@ -301,9 +299,7 @@ export const company_status_data = [
     value: 9,
     label: 'Compaign',
   },
-
- 
-]
+];
 
 export const company_names_data = [
   {
@@ -326,8 +322,7 @@ export const company_names_data = [
     value: 5,
     label: 'Right Source',
   },
- 
-]
+];
 
 export const company_owner_list_data = [
   {
@@ -350,8 +345,7 @@ export const company_owner_list_data = [
     value: 5,
     label: 'Faryal Amin',
   },
- 
-]
+];
 
 export const preferred_contact_data = [
   {
@@ -374,8 +368,7 @@ export const preferred_contact_data = [
     value: 5,
     label: 'Fax',
   },
-
-]
+];
 
 export const reports_to_data = [
   {
@@ -394,45 +387,50 @@ export const reports_to_data = [
     value: 4,
     label: 'Sohaib Latif',
   },
-  
-
-]
+];
 
 export const contactAddScreenInitialState = {
-  first_name:"",
-  first_name_error:"",
-  last_name:"",
-  last_name_error:"",
-  primary_email:"",
-  primary_email_error:"",
-  secondary_email:"",
-  secondary_email_error:"",
-  status:"",
-  status_error:"",
-  mobile:"",
-  mobile_error:"",
-  skills:["React-Native" , "React", "BlockChain","DB", "Data Analysis", "Content Writer SEO Specilist"],
-  profile_summary:"",
-  candidate_owner:"",
-  attach_resume:"",
-  phone_home:"",
-  phone_home_error:"",
-  phone_work:"",
-  phone_work_error:"",
-  phone_direct:"",
-  phone_direct_error:"",
-  fax:"",
-  fax_error:"",
-  emergency_contact:"",
-  emergency_contact_error:"",
-  emergency_no:"",
-  emergency_no_error:"",
-  socail_media:"",
-  socail_media_error:"",
-  address:"",
-  address_error:"",
-  city:"",
-  city_error:"",
-  zip:"",
-  zip_error:""
-}
+  first_name: '',
+  first_name_error: '',
+  last_name: '',
+  last_name_error: '',
+  primary_email: '',
+  primary_email_error: '',
+  secondary_email: '',
+  secondary_email_error: '',
+  status: '',
+  status_error: '',
+  mobile: '',
+  mobile_error: '',
+  skills: [
+    'React-Native',
+    'React',
+    'BlockChain',
+    'DB',
+    'Data Analysis',
+    'Content Writer SEO Specilist',
+  ],
+  profile_summary: '',
+  candidate_owner: '',
+  attach_resume: '',
+  phone_home: '',
+  phone_home_error: '',
+  phone_work: '',
+  phone_work_error: '',
+  phone_direct: '',
+  phone_direct_error: '',
+  fax: '',
+  fax_error: '',
+  emergency_contact: '',
+  emergency_contact_error: '',
+  emergency_no: '',
+  emergency_no_error: '',
+  socail_media: '',
+  socail_media_error: '',
+  address: '',
+  address_error: '',
+  city: '',
+  city_error: '',
+  zip: '',
+  zip_error: '',
+};

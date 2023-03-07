@@ -42,8 +42,10 @@ function init(initialState) {
     return {
       companyName: initialState.candidate_employer_id,
       jobTitle: initialState.job_title,
-      startDate: moment(initialState.experience_start_date).format('MMM YYYY'),
-      endDate: moment(initialState.experience_end_date).format('MMM YYYY'),
+      startDate: moment(initialState.experience_start_date).format(
+        'YYYY-MM-DD',
+      ),
+      endDate: moment(initialState.experience_end_date).format('YYYY-MM-DD'),
       currentlyWorking: initialState.is_currently_working == 0 ? false : true,
       jobDuties: initialState.job_duties,
     };
@@ -56,7 +58,7 @@ const AddExperienceScreen = ({navigation, route}) => {
     route.params?.item,
     init,
   );
-
+  console.log(route.params?.item);
   function reducer(state, action) {
     switch (action.type) {
       case 'companyName':
@@ -85,7 +87,7 @@ const AddExperienceScreen = ({navigation, route}) => {
           isdrawer={false}
           onPress={() => navigation.goBack()}
           title={
-            route.params !== undefined ? 'Edit Education' : 'Add Education'
+            route.params !== undefined ? 'Edit Experience' : 'Add Experience'
           }
         />
         <ScrollView>
@@ -134,7 +136,7 @@ const AddExperienceScreen = ({navigation, route}) => {
             onChangeText={date =>
               dispatch({
                 type: 'startDate',
-                payload: moment(new Date(date)).format('MMM-YYYY'),
+                payload: moment(new Date(date)).format('YYYY-MM-DD'),
               })
             }
           />
@@ -146,7 +148,7 @@ const AddExperienceScreen = ({navigation, route}) => {
             onChangeText={date =>
               dispatch({
                 type: 'endDate',
-                payload: moment(new Date(date)).format('MMM-YYYY'),
+                payload: moment(new Date(date)).format('YYYY-MM-DD'),
               })
             }
           />

@@ -6,10 +6,10 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {wp} from '../constants/sacling';
 import {colors, fonts} from '../constants/theme';
 
-const ArrayInput = ({skills, onAdd, onDelete}) => {
+const ArrayInput = ({skills, onDelete}) => {
   const [skill, setSkill] = useState({
-    name: '',
-    exp: '',
+    skill_name: skills.skill_name,
+    total_experience: `${skills.total_experience} Year`,
   });
 
   const [experiencelist] = useState([
@@ -53,8 +53,8 @@ const ArrayInput = ({skills, onAdd, onDelete}) => {
         flatListPorps={{
           showsVerticalScrollIndicator: false,
         }}
-        onTextChange={text => console.log(text)}
-        onItemSelect={text => setSkill({...skill, exp: text})}
+        onTextChange={text => setSkill({...skill, skill_name: text})}
+        onItemSelect={text => setSkill({...skill, skill_name: text.name})}
         containerStyle={{
           backgroundColor: '#0000',
         }}
@@ -81,6 +81,16 @@ const ArrayInput = ({skills, onAdd, onDelete}) => {
           fontFamily: fonts.Medium,
           color: colors.primary_text_color,
         }}
+        textInputProps={{
+          style: {
+            ...styles.textInput,
+            padding: 12,
+            marginTop: 0,
+
+            alignSelf: 'center',
+          },
+          value: `${skill.skill_name}`,
+        }}
         itemsContainerStyle={{
           marginTop: 2,
           borderRadius: wp(2),
@@ -106,8 +116,10 @@ const ArrayInput = ({skills, onAdd, onDelete}) => {
           flatListPorps={{
             showsVerticalScrollIndicator: false,
           }}
-          onTextChange={text => console.log(text)}
-          onItemSelect={text => setSkill({...skill, exp: text})}
+          onTextChange={text => setSkill({...skill, total_experience: text})}
+          onItemSelect={text =>
+            setSkill({...skill, total_experience: text.name})
+          }
           containerStyle={{
             paddingTop: 0,
             marginTop: 0,
@@ -126,7 +138,7 @@ const ArrayInput = ({skills, onAdd, onDelete}) => {
               width: wp(80),
               alignSelf: 'center',
             },
-            value: skills.exp,
+            value: `${skill.total_experience}`,
           }}
           itemStyle={{
             borderRadius: 0,

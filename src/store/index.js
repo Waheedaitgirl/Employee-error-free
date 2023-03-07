@@ -1,9 +1,10 @@
-import LoginReducer from './reducers/LoginReducer';
-import {taskApi} from './services/taskApi';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {configureStore} from '@reduxjs/toolkit';
+import {setupListeners} from '@reduxjs/toolkit/query';
 import {persistReducer, persistStore} from 'redux-persist';
+import LoginReducer from './reducers/LoginReducer';
+import StatusReducer from './reducers/StatusReducer';
+import {taskApi} from './services/taskApi';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
@@ -18,11 +19,15 @@ const persistConfig = {
 export const store = configureStore({
   reducer: {
     [taskApi.reducerPath]: taskApi.reducer,
-
+    StatusReducer: StatusReducer,
     LoginReducer: persistReducer(persistConfig, LoginReducer),
   },
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware({serializableCheck: false}).concat(taskApi.middleware),
+    getDefaultMiddleware({
+      serializableCheck: false,
+      immutableCheck: false,
+      serializableCheck: false,
+    }).concat(taskApi.middleware),
 });
-// export const store =  createStore(rootReducer,applyMiddleware());
+setupListeners(store.dispatch);
 export const persistor = persistStore(store);
